@@ -1,13 +1,22 @@
-const express = require('express');
-const mysql = require('promise-mysql');
-const bodyParser = require('body-parser');
+module.exports = (express, pool, jwt, secret) => {
+    const productRouter = express.Router();
 
-// const checkAuth = require('../middleware/check-auth');
+    productRouter.get('/', (req, res) => {
+        res.json({ message: 'Welcome to the web store API.'});
+    });
 
-const router = express.Router();
-router.use(bodyParser.json());
+    productRouter.route('/all').get(async (req, res) => {
+        try {
+            let conn = await pool.getConnection();
+            let rows = await conn.query('SELECT * FROM complete_products');
+            conn.release();
+            res.json(rows);
 
-// Getting all posts
-router.get('/', (req, res, next) => {
+        } catch(e) {
+            console.log(e);
+            return res.json({ 'code': 500, 'status': 'Error with query' })
+        }
+    })
 
-});
+    return productRouter;
+}
