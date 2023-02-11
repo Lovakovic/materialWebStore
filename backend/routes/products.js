@@ -1,14 +1,19 @@
 module.exports = (express, pool, jwt, secret) => {
     const productRouter = express.Router();
 
-    productRouter.get('/', (req, res) => {
-        res.json({ message: 'Welcome to the web store API.'});
-    });
-
-    productRouter.route('/all').get(async (req, res) => {
+    productRouter.route('/').get(async (req, res) => {
         try {
+            const sort = (req.query.sort || 'desc');
+            const limit = req.query.limit;
+
             let conn = await pool.getConnection();
-            let rows = await conn.query('SELECT * FROM complete_products');
+
+            if(limit) {
+                rows = await conn.query(`SELECT * FROM complete_products ORDER BY price ${sort} LIMIT ${limit}`);
+            } else {
+                rows = await conn.query(`SELECT * FROM complete_products ORDER BY price ${sort}`);
+            }
+
             conn.release();
             res.json(rows);
 
@@ -17,6 +22,8 @@ module.exports = (express, pool, jwt, secret) => {
             return res.json({ 'code': 500, 'status': 'Error with query' })
         }
     })
+
+    // https://localhost:8081/products?sort=desc&limit=3
 
     return productRouter;
 }

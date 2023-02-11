@@ -20,8 +20,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   // Arguments for storeService so we don't get unnecessary data
   sort = 'desc';
   count = '12';
-
-  //
   productSubscription: Subscription | undefined;
 
 
@@ -32,15 +30,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.getProducts();
   }
 
-  ngOnDestroy(): void {
-    // Don't forget to prevent memory leaks!
-    if(this.productSubscription) {
-      this.productSubscription.unsubscribe();
-    }
-  }
-
   getProducts(): void {
-    this.productSubscription=  this.storeService.getAllProducts(this.count, this.sort)
+    this.productSubscription=  this.storeService.getAllProducts(this.count, this.sort, this.category)
         .subscribe((_products) => {
           this.products = _products;
         })
@@ -53,6 +44,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onShowCategory(newCategory: string): void {
     this.category = newCategory;
+    this.getProducts();
   }
 
   onAddToCart(product: Product): void {
@@ -63,5 +55,22 @@ export class HomeComponent implements OnInit, OnDestroy {
       quantity: 1,
       id: product.id
     })
+  }
+
+  onItemsCountChange(newCount: number): void {
+    this.count = newCount.toString();
+    this.getProducts();
+  }
+
+  onSortChange(newSort: string): void {
+    this.sort = newSort;
+    this.getProducts();
+  }
+
+  ngOnDestroy(): void {
+    // Don't forget to prevent memory leaks!
+    if(this.productSubscription) {
+      this.productSubscription.unsubscribe();
+    }
   }
 }
