@@ -15,3 +15,8 @@ reload if you change any of the source files.
 
 Run `node server.js` for a backend Express server. The server will likely listen on port `8081` if available, otherwise 
 check console of the server to see which port it's running on.
+
+# Setting up the project
+
+Add some pictures in `media` directory that is located in root folder and
+add the according products to database.
