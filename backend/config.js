@@ -8,5 +8,7 @@ module.exports = {
         database: 'webShop',
         debug: false
     },
-    secret: 'https://youtu.be/dQw4w9WgXcQ'
+    secret: 'https://youtu.be/dQw4w9WgXcQ',
+    mediaPath: 'media',
+    api_url: `http://localhost:8081`
 }

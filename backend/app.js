@@ -3,20 +3,17 @@ const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mysql = require('promise-mysql');
-const path = require('path');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 const helmet = require('helmet');
 
 const config = require('./config');
 
-const pool = mysql.createPool(config.pool);
+// Export the pool, so as not to pass it around as param
+module.exports = { pool: mysql.createPool(config.pool) };
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(express.static(__dirname + '/public'));
-app.use(express.static(__dirname + '/media'));
+app.use('/media', express.static('media'));
 
 app.use(helmet());
 app.use(morgan('dev'));
@@ -36,7 +33,7 @@ app.use((req, res, next) => {
 
 });
 
-const productRouter = require('./routes/products')(express, pool, jwt, config.secret);
+const productRouter = require('./routes/products.routes');
 app.use('/products', productRouter);
 
 module.exports = app;

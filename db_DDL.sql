@@ -19,6 +19,23 @@ CREATE TABLE category (
 ALTER TABLE product ADD CONSTRAINT fk_categoryId
 FOREIGN KEY (categoryId) REFERENCES category(id);
 
+CREATE TABLE user (
+                     id INT PRIMARY KEY AUTO_INCREMENT,
+                     username VARCHAR(64) NOT NULL,
+                     password CHAR(60) NOT NULL,
+                     email VARCHAR(256) NOT NULL,
+                     first_name VARCHAR(64) NOT NULL,
+                     last_name VARCHAR(64) NOT NULL,
+                     phone VARCHAR(20),
+                     street_address VARCHAR(95),
+                     city VARCHAR(45),
+                     zip_code VARCHAR(16),
+                     country VARCHAR(75),
+                     created_at DATETIME DEFAULT NOW(),
+                     updated_at DATETIME,
+                     role CHAR(3) DEFAULT 'usr'
+);
+
 # Some dummy data
 INSERT INTO category (name, description) VALUES
 ('Electronics', 'Electronic gadgets such as mobile phones, earphones or bluetooth speakers.'),

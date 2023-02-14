@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
 import {Cart, CartItem} from "../models/cart.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -6,10 +6,18 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 @Injectable({
   providedIn: 'root'
 })
-export class CartService {
+export class CartService implements OnInit {
   cart = new BehaviorSubject<Cart>({ items: []});
 
-  constructor(private _snackBar: MatSnackBar) { }
+  constructor(private _snackBar: MatSnackBar) {
+    // Try to find previous cart in storage
+    const savedCart = localStorage.getItem('cart');
+    if(savedCart) {
+      this.cart.next(JSON.parse(savedCart));
+    }
+  }
+  ngOnInit(): void {
+  }
 
   addToCart(item: CartItem): void {
     const items = [...this.cart.value.items];
@@ -21,6 +29,9 @@ export class CartService {
     } else {
       items.push(item);
     }
+
+    // Save to local storage as to not lose it upon refresh
+    localStorage.setItem('cart', JSON.stringify({ items }));
 
     // Emit the new items in cart to everyone
     this.cart.next({ items });
@@ -41,6 +52,9 @@ export class CartService {
     // Emit an empty shopping cart
     this.cart.next({ items: [] });
 
+    // Clear local storage
+    localStorage.removeItem('cart');
+
     // Alert the user
     this._snackBar.open('Cart is cleared.', 'OK', { duration: 3000 });
   }
@@ -49,7 +63,12 @@ export class CartService {
   removeFromCart(item: CartItem, update = true): Array<CartItem> {
     const filteredItems = this.cart.value.items.filter(_item => _item.id !== item.id);
     this.cart.next({ items: filteredItems });
+
+    // Don't forget to update local storage!
+    localStorage.setItem('cart', JSON.stringify({ items: filteredItems }));
+
     this._snackBar.open(`${item.name} removed from cart.`, 'OK', { duration: 3000 });
+
 
     if(update) {
       this.cart.next({ items: filteredItems });
@@ -79,9 +98,10 @@ export class CartService {
     // Remove if there is no quantity of item in cart
     if(itemForRemoval) {
       this.removeFromCart(itemForRemoval, false);
-    }
-    else {
+    } else {
       this.cart.next({ items: filteredItems });
+      // Update local storage
+      localStorage.setItem('cart', JSON.stringify({ items: filteredItems }));
       this._snackBar.open(`1 item removed from cart.`, 'OK',
           { duration: 3000 });
     }
