@@ -36,4 +36,7 @@ app.use((req, res, next) => {
 const productRouter = require('./routes/products.routes');
 app.use('/products', productRouter);
 
+const usersRouter = require('./routes/users.routes');
+app.use('/auth', usersRouter);
+
 module.exports = app;

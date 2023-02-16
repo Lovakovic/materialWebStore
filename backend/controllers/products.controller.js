@@ -1,6 +1,8 @@
 const config = require("../config");
 const { pool } = require('../app');
 
+// WARNING: There is ZERO SQLInjection protection here, use at your own risk
+
 // Modifies the image path property, so it points to the correct location
 const insertMediaPath = (rows) => {
     return rows.map(row => {
