@@ -139,5 +139,6 @@ const logout = (req, res) => {
 module.exports = {
   registerUser,
     attemptLogin,
-  isLoggedIn
+  isLoggedIn,
+  logout
 };
