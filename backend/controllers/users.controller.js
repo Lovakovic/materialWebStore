@@ -10,9 +10,7 @@ const jwt = require('jsonwebtoken');
 // const credentials = {
 //   username: 'username',
 //   password: 'password',
-//   email: 'email',
-//   first_name: 'first_name',
-//   last_name: 'last_name'
+//   email: 'email'
 // };
 
 // Login credentials
@@ -46,8 +44,8 @@ const registerUser = async (req, res) => {
     }
 
     let conn = await pool.getConnection();
-    conn.query(`INSERT INTO user (username, password, email, first_name, last_name) VALUES
-              (?, ?, ?, ?, ?)`, Object.values(credentials));
+    conn.query(`INSERT INTO user (username, password, email) VALUES
+                                                 (?, ?, ?)`, Object.values(credentials));
 
     conn.release();
 

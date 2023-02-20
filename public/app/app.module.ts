@@ -26,6 +26,11 @@ import {CartService} from "./services/cart.service";
 import {StoreService} from "./services/store.service";
 import {HttpClientModule} from "@angular/common/http";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MatRadioModule} from "@angular/material/radio";
+import { RegisterComponent } from './pages/register/register.component';
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -35,7 +40,8 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
     ProductsHeaderComponent,
     FiltersComponent,
     ProductBoxComponent,
-    CartComponent
+    CartComponent,
+    RegisterComponent
   ],
     imports: [
         BrowserModule,
@@ -54,7 +60,11 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
         MatBadgeModule,
         MatSnackBarModule,
         HttpClientModule,
-        MatButtonToggleModule
+        MatButtonToggleModule,
+        MatRadioModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatSelectModule
     ],
   providers: [CartService, StoreService],
   bootstrap: [AppComponent]

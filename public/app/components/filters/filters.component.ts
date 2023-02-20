@@ -11,6 +11,7 @@ export class FiltersComponent implements OnInit, OnDestroy {
   @Output() showCategory = new EventEmitter<string>();
   categorySubscription: Subscription | undefined;
   categories: Array<string> | undefined;
+  selectedCategory: string | undefined;
 
   constructor(private storeService: StoreService) {
   }

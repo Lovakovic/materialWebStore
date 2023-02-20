@@ -20,21 +20,29 @@ ALTER TABLE product ADD CONSTRAINT fk_categoryId
 FOREIGN KEY (categoryId) REFERENCES category(id);
 
 CREATE TABLE user (
-                     id INT PRIMARY KEY AUTO_INCREMENT,
-                     username VARCHAR(64) NOT NULL,
-                     password CHAR(60) NOT NULL,
-                     email VARCHAR(256) NOT NULL,
-                     first_name VARCHAR(64) NOT NULL,
-                     last_name VARCHAR(64) NOT NULL,
-                     phone VARCHAR(20),
-                     street_address VARCHAR(95),
-                     city VARCHAR(45),
-                     zip_code VARCHAR(16),
-                     country VARCHAR(75),
-                     created_at DATETIME DEFAULT NOW(),
-                     updated_at DATETIME,
-                     role CHAR(3) DEFAULT 'usr'
+     id INT PRIMARY KEY AUTO_INCREMENT,
+     username VARCHAR(32) NOT NULL,
+     password CHAR(60) NOT NULL,
+     email VARCHAR(256) NOT NULL,
+     created_at DATETIME DEFAULT NOW(),
+     updated_at DATETIME,
+     role CHAR(3) DEFAULT 'usr'
 );
+
+CREATE TABLE address (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    name VARCHAR(64) NOT NULL,
+    nickname VARCHAR(64),
+    street VARCHAR(100) NOT NULL,
+    city VARCHAR(45) NOT NULL,
+    zip_code VARCHAR(16),
+    country VARCHAR(75) NOT NULL,
+    phone VARCHAR(20) NOT NULL
+);
+
+ALTER TABLE address ADD CONSTRAINT address_user_id
+FOREIGN KEY (user_id) REFERENCES user(id);
 
 # Some dummy data
 INSERT INTO category (name, description) VALUES

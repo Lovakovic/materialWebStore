@@ -1,0 +1,46 @@
+<div class="login-container">
+    <div class="login-content">
+        <mat-toolbar class="login-toolbar" color="primary">REGISTER</mat-toolbar>
+        <mat-card>
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <hr>
+                <mat-form-field>
+                    <input matInput placeholder="Username *" formControlName="username">
+                    <mat-error *ngIf="username?.errors?.['required'] && username?.touched">
+                        Username is required.
+                    </mat-error>
+                    <mat-error *ngIf="username?.errors?.['minlength'] || username?.errors?.['minlength']
+                    && username?.touched">
+                        Username has to be between 6 and 30 characters long.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Email *" formControlName="email">
+                    <mat-error *ngIf="email?.errors?.['required'] && email?.touched">
+                        Email is required.
+                    </mat-error>
+                    <mat-error *ngIf="email?.errors?.['email'] && email?.touched">
+                        Invalid email format entered.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="password" placeholder="Password *" formControlName="password">
+                    <mat-error *ngIf="password?.errors?.['minlength'] || password?.errors?.['maxlength']
+                    || password?.errors?.['required'] && password?.touched">
+                        Password has to be between 8 and 48 characters long.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="password" placeholder="Repeat password *" formControlName="passwordRepeat">
+                    <mat-error *ngIf="passwordRepeat?.errors?.['required'] && passwordRepeat?.touched">
+                        Please repeat the password.
+                    </mat-error>
+                    <mat-error *ngIf="passwordRepeat?.errors?.['passwordMismatch'] && passwordRepeat?.touched">
+                        Passwords don't match.
+                    </mat-error>
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="submit" [disabled]="!registerForm.valid">Register</button>
+            </form>
+        </mat-card>
+    </div>
+</div>

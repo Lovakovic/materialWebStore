@@ -2,9 +2,9 @@
     <mat-expansion-panel-header>
         <mat-panel-title> CATEGORIES </mat-panel-title>
     </mat-expansion-panel-header>
-    <mat-button-toggle-group vertical>
-        <mat-button-toggle *ngFor="let category of categories" [value]="category"
-                           (click)="onShowCategory(category)"
-        >{{category}}</mat-button-toggle>
-    </mat-button-toggle-group>
+    <mat-radio-group class="flex flex-col">
+        <mat-radio-button *ngFor="let category of categories"
+                          [value]="category" (click)="onShowCategory(category)"
+        >{{category}}</mat-radio-button>
+    </mat-radio-group>
 </mat-expansion-panel>
