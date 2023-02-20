@@ -25,6 +25,7 @@ import { CartComponent } from './pages/cart/cart.component';
 import {CartService} from "./services/cart.service";
 import {StoreService} from "./services/store.service";
 import {HttpClientModule} from "@angular/common/http";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 @NgModule({
   declarations: [
@@ -36,24 +37,25 @@ import {HttpClientModule} from "@angular/common/http";
     ProductBoxComponent,
     CartComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatSidenavModule,
-    MatGridListModule,
-    MatMenuModule,
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
-    MatExpansionModule,
-    MatListModule,
-    MatToolbarModule,
-    MatTableModule,
-    MatBadgeModule,
-    MatSnackBarModule,
-    HttpClientModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatSidenavModule,
+        MatGridListModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatCardModule,
+        MatIconModule,
+        MatExpansionModule,
+        MatListModule,
+        MatToolbarModule,
+        MatTableModule,
+        MatBadgeModule,
+        MatSnackBarModule,
+        HttpClientModule,
+        MatButtonToggleModule
+    ],
   providers: [CartService, StoreService],
   bootstrap: [AppComponent]
 })
