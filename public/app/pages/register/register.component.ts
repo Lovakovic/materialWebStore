@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-register',
@@ -29,7 +30,7 @@ export class RegisterComponent implements OnInit{
   });
 
 
-  constructor() {
+  constructor(private auth: AuthService) {
   }
 
   ngOnInit(): void {
@@ -81,6 +82,14 @@ export class RegisterComponent implements OnInit{
   }
 
   onSubmit() {
-    console.log('Submitted')
+      // Simplify the object model and throw away unnecessary stuff
+      delete this.registerForm.value.passwordRepeat;
+      const credentials = {
+          username: this.registerForm.value.username,
+          email: this.registerForm.value.email,
+          password: this.registerForm.value.password
+      }
+
+      this.auth.register(credentials);
   }
 }

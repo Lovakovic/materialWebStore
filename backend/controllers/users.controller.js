@@ -40,20 +40,20 @@ const registerUser = async (req, res) => {
 
     if(emailTaken) {
       res.status(409);
-      return res.send('Email address taken.');
+      return res.json('Email address taken.');
     }
 
     let conn = await pool.getConnection();
     conn.query(`INSERT INTO user (username, password, email) VALUES
-                                                 (?, ?, ?)`, Object.values(credentials));
+                       (?, ?, ?)`, [credentials.username, credentials.password, credentials.email]);
 
     conn.release();
 
-    res.send('User registered.');
+    res.json('User registered.');
   } catch (e) {
     console.log(e);
     res.status(500);
-    res.send('Error with query.');
+    res.json('Error with query.');
   }
 };
 
@@ -64,7 +64,7 @@ const attemptLogin = async (req, res) => {
       const userExists = await checkIfEmailExists(credentials.email);
       if(!userExists) {
         res.status(404);
-        return res.send('User not found.');
+        return res.json('User not found.');
       }
 
       let conn = await pool.getConnection();
@@ -90,15 +90,15 @@ const attemptLogin = async (req, res) => {
           httpOnly: true
         }
         res.cookie('loginToken', token, cookieOptions);
-        return res.send();
+        return res.json();
       }
 
       res.status(401);
-      return res.send('Wrong password.');
+      return res.json('Wrong password.');
   } catch(e) {
     console.log(e);
     res.status(500);
-    return res.send('Error with query.');
+    return res.json('Error with query.');
   }
 };
 
@@ -131,7 +131,7 @@ const logout = (req, res) => {
     expires: new Date(Date.now()) + 2 * 1000,
     httpOnly: true
   });
-  res.send();
+  res.json();
 }
 
 module.exports = {
