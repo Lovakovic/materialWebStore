@@ -21,6 +21,9 @@
             <mat-error *ngIf="email?.errors?.['email'] && email?.touched">
                 Invalid email format entered.
             </mat-error>
+            <mat-error *ngIf="email?.errors?.['taken'] && email?.touched">
+                Email is already taken.
+            </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <input matInput type="password" placeholder="Password *" formControlName="password">

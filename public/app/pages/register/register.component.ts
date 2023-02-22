@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
+import {catchError, delay, map, Observable, of, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-register',
@@ -21,10 +22,13 @@ export class RegisterComponent implements OnInit{
     passwordRepeat: new FormControl('', [
         Validators.required,
     ]),
-    email: new FormControl('', [
-        Validators.required,
-        Validators.email
-    ])
+    email: new FormControl('', {
+        validators: [
+            Validators.required,
+            Validators.email
+        ],
+        asyncValidators: [this.uniqueEmailValidator()]
+    })
   }, {
       validators: this.passwordsMatchValidator('password', 'passwordRepeat')
   });
@@ -61,8 +65,17 @@ export class RegisterComponent implements OnInit{
       }
   }
 
-  emailUniqueValidator(control: AbstractControl) {
-      // Implement async validator to check witch backend if email is free
+  // Validator with debounce timer of 500ms
+  uniqueEmailValidator(): AsyncValidatorFn {
+      return (control: AbstractControl): Observable<ValidationErrors | null> => {
+       return of(control.value).pipe(
+           delay(500),
+           switchMap(email => this.auth.checkEmailAvailability(email).pipe(
+               map(exists => exists ? { taken: true } : null ),
+               catchError(() => of(null))
+           ))
+       );
+      }
   }
 
   get username() {
@@ -90,6 +103,7 @@ export class RegisterComponent implements OnInit{
           password: this.registerForm.value.password
       }
 
-      this.auth.register(credentials);
+      // Subscribe and redirect user upon successful registration
+      this.auth.register(credentials).subscribe(res => console.log(res));
   }
 }

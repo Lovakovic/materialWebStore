@@ -19,6 +19,7 @@ const jwt = require('jsonwebtoken');
 //   password: 'password'
 // }
 
+// This is only a helper function for registration or login functions, not an API endpoint
 const checkIfEmailExists = async (email) => {
   try {
     let conn = await pool.getConnection();
@@ -49,7 +50,7 @@ const registerUser = async (req, res) => {
 
     conn.release();
 
-    res.json('User registered.');
+    res.json('Successful registration');
   } catch (e) {
     console.log(e);
     res.status(500);
@@ -102,6 +103,17 @@ const attemptLogin = async (req, res) => {
   }
 };
 
+const isEmailTaken = async (req, res) => {
+  const email = req.body.email;
+  const emailTaken = await checkIfEmailExists(email);
+
+  if(emailTaken) {
+    return res.status(200).json(true);
+  }
+
+  return res.status(200).json(false);
+};
+
 const isLoggedIn = async (req, res, next) => {
   if(req.cookies.loginToken) {
     try {
@@ -136,7 +148,6 @@ const logout = (req, res) => {
 
 module.exports = {
   registerUser,
-    attemptLogin,
-  isLoggedIn,
-  logout
+  attemptLogin,
+  isEmailTaken
 };
