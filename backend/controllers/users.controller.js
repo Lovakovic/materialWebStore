@@ -50,7 +50,7 @@ const registerUser = async (req, res) => {
 
     conn.release();
 
-    res.json('Successful registration');
+    res.json('Success');
   } catch (e) {
     console.log(e);
     res.status(500);
@@ -88,10 +88,11 @@ const attemptLogin = async (req, res) => {
           expires: new Date(
               Date.now() + tokenExpiration * 1000
           ),
-          httpOnly: true
+          httpOnly: true,
+          sameSite: 'Strict'
         }
         res.cookie('loginToken', token, cookieOptions);
-        return res.json();
+        return res.json('Success');
       }
 
       res.status(401);

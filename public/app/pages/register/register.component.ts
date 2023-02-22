@@ -1,13 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
-import {catchError, delay, map, Observable, of, switchMap} from "rxjs";
+import {catchError, delay, map, Observable, of, Subscription, switchMap} from "rxjs";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html'
 })
-export class RegisterComponent implements OnInit{
+export class RegisterComponent implements OnInit, OnDestroy {
   registerForm = new FormGroup({
     username: new FormControl('', [
         Validators.required,
@@ -33,8 +34,9 @@ export class RegisterComponent implements OnInit{
       validators: this.passwordsMatchValidator('password', 'passwordRepeat')
   });
 
+  registerSubscription: Subscription | undefined;
 
-  constructor(private auth: AuthService) {
+  constructor(private auth: AuthService, private snackbar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -103,7 +105,17 @@ export class RegisterComponent implements OnInit{
           password: this.registerForm.value.password
       }
 
-      // Subscribe and redirect user upon successful registration
-      this.auth.register(credentials).subscribe(res => console.log(res));
+      // Redirect the user to login page upon successful registration
+      this.registerSubscription = this.auth.register(credentials).subscribe(res => {
+          if(res === 'Success') {
+              this.snackbar.open('Successfully registered!', 'OK');
+          } else {
+              this.snackbar.open('Something went wrong, please try again later.', 'OK');
+          }
+      });
   }
+
+    ngOnDestroy(): void {
+      this.registerSubscription?.unsubscribe();
+    }
 }

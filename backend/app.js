@@ -20,10 +20,14 @@ app.use(morgan('dev'));
 
 // Set the appropriate headers to enable CORS
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
     res.setHeader(
         "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type,Authorization ,Accept"
+    );
+    res.setHeader(
+        "Access-Control-Allow-Credentials",
+        "true"
     );
     res.setHeader(
         "Access-Control-Allow-Methods",

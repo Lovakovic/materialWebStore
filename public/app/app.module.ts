@@ -31,6 +31,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
+import { LoginComponent } from './pages/login/login.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import {MatSelectModule} from "@angular/material/select";
     FiltersComponent,
     ProductBoxComponent,
     CartComponent,
-    RegisterComponent
+    RegisterComponent,
+    LoginComponent
   ],
     imports: [
         BrowserModule,
