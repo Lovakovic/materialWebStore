@@ -8,4 +8,7 @@ router.post('/register', usersControllers.registerUser);
 router.post('/email', usersControllers.isEmailTaken);
 router.post('/login', usersControllers.attemptLogin);
 
+// Protect this route with JWT token
+router.get('/usr', usersControllers.isLoggedIn);
+
 module.exports = router;

@@ -113,7 +113,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       // Redirect the user to login page upon successful registration
       this.registerSubscription = this.auth.register(credentials).subscribe(res => {
           if(res === 'Success') {
-              this.snackbar.open('Registration successful, please log in.', 'OK');
+              this.snackbar.open('Registration successful, please log in.', '', { duration: 3000 });
               this.router.navigate(['login']);
           } else {
               this.snackbar.open('Something went wrong, please try again later.', 'OK');

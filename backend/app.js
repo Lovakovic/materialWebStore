@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const mysql = require('promise-mysql');
 const helmet = require('helmet');
@@ -12,6 +13,7 @@ module.exports = { pool: mysql.createPool(config.pool) };
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 app.use('/media', express.static('media'));
 

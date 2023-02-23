@@ -82,15 +82,15 @@ const attemptLogin = async (req, res) => {
           expiresIn: tokenExpiration
         });
 
-        console.log(token);
-
         const cookieOptions = {
           expires: new Date(
               Date.now() + tokenExpiration * 1000
           ),
           httpOnly: true,
-          sameSite: 'Strict'
+          sameSite: 'Strict',
+          secure: true
         }
+        console.log(`User logged in, id: ${id}`);
         res.cookie('loginToken', token, cookieOptions);
         return res.json('Success');
       }
@@ -115,27 +115,32 @@ const isEmailTaken = async (req, res) => {
   return res.status(200).json(false);
 };
 
-const isLoggedIn = async (req, res, next) => {
+const isLoggedIn = async (req, res) => {
   if(req.cookies.loginToken) {
     try {
       // Verify token
       const decoded = await promisify(jwt.verify)(req.cookies.loginToken, secret);
-      console.log(decoded);
 
       // Check if the user still exists
       let conn = await pool.getConnection();
-      let rows = await  conn.query('SELECT id FROM user WHERE id = ?', decoded.id);
+      let rows = await  conn.query('SELECT id, username, email FROM user WHERE id = ?', decoded.id);
       const userFound = rows.length === 1;
 
       if(!userFound) {
-        return next();
+        res.status(401);
+        return res.json('Unauthorized access!');
       }
 
-      req.userId = rows[0].id;
-      next();
-    } catch (e) {
+      const userData = { ...rows[0] };
 
+      console.log(`Sending user data (id: ${userData.id})`);
+      res.json(userData);
+    } catch (e) {
+      console.log(e);
     }
+  } else {
+    res.status(401);
+    return res.json('Unauthorized access!');
   }
 };
 
@@ -150,5 +155,6 @@ const logout = (req, res) => {
 module.exports = {
   registerUser,
   attemptLogin,
-  isEmailTaken
+  isEmailTaken,
+  isLoggedIn
 };
