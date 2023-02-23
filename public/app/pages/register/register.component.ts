@@ -3,6 +3,7 @@ import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErr
 import {AuthService} from "../../services/auth.service";
 import {catchError, delay, map, Observable, of, Subscription, switchMap} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-register',
@@ -36,7 +37,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   registerSubscription: Subscription | undefined;
 
-  constructor(private auth: AuthService, private snackbar: MatSnackBar) {
+  constructor(
+      private auth: AuthService,
+      private snackbar: MatSnackBar,
+      private router: Router
+  ) {
   }
 
   ngOnInit(): void {
@@ -108,11 +113,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
       // Redirect the user to login page upon successful registration
       this.registerSubscription = this.auth.register(credentials).subscribe(res => {
           if(res === 'Success') {
-              this.snackbar.open('Successfully registered!', 'OK');
+              this.snackbar.open('Registration successful, please log in.', 'OK');
+              this.router.navigate(['login']);
           } else {
               this.snackbar.open('Something went wrong, please try again later.', 'OK');
           }
       });
+  }
+
+  navigateToLogin() {
+      this.router.navigate(['login']);
   }
 
     ngOnDestroy(): void {

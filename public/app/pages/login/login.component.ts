@@ -56,6 +56,10 @@ export class LoginComponent implements OnDestroy {
         });
   }
 
+  navigateToRegister() {
+    this.router.navigate(['register']);
+  }
+
   ngOnDestroy(): void {
     this.loginSubscription?.unsubscribe();
   }

@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Cart, CartItem} from "../../models/cart.model";
 import {CartService} from "../../services/cart.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -28,7 +29,9 @@ export class HeaderComponent {
   }
 
 
-  constructor(private cartService: CartService) {
+  constructor(
+      private cartService: CartService,
+      private router: Router) {
   }
 
   getTotal(items: Array<CartItem>): number {
@@ -37,5 +40,9 @@ export class HeaderComponent {
 
   onClearCart(): void {
     this.cartService.clearCart();
+  }
+
+  navigateToLogin() {
+    this.router.navigate(['login']);
   }
 }
