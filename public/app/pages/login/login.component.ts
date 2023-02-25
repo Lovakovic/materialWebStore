@@ -2,9 +2,10 @@ import {Component, OnDestroy} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Subscription, switchMap} from "rxjs";
+import {Subscription, switchMap, tap} from "rxjs";
 import {Router} from "@angular/router";
 import {User} from "../../models/user.model";
+import {HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -42,12 +43,18 @@ export class LoginComponent implements OnDestroy {
           email: this.loginForm.value.email,
           password: this.loginForm.value.password
     };
+    let tokenExpires: Date;
 
     this.loginSubscription = this.auth.login(credentials)
-        .pipe(switchMap(() => this.auth.getProfile()))
+        .pipe(
+            tap((res: HttpResponse<any>) => {
+              tokenExpires = new Date(res.body);
+            }),
+            switchMap(() => this.auth.getProfile()))
         .subscribe({
           next: (user: User) => {
-            this.auth.saveUserToLocal(user);
+            console.log(`Your login expires in ${tokenExpires}`);
+            this.auth.saveUserToLocal(user, tokenExpires);
             this.snackBar.open('You are now logged in.', '', { duration: 2000 });
             this.router.navigate(['/']);
           },

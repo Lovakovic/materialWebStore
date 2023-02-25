@@ -23,11 +23,7 @@ export class AuthService {
   });
 
   constructor(private http: HttpClient) {
-    // First check if user is already saved locally
-    const localInfo = this.getUserFromLocal();
-    if(localInfo.id) {
-      this.user.next(localInfo);
-    }
+    this.checkLocalForUser();
   }
 
   register(credentials: Credentials) {
@@ -46,12 +42,40 @@ export class AuthService {
     return this.http.get<User>(`${API_URL}/usr`, { withCredentials: true });
   }
 
-  saveUserToLocal(user: User) {
+  saveUserToLocal(user: User, expires: Date) {
     this.user.next(user);
     localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('jwtExpiry', expires.toISOString());
+
+    setTimeout(() => {
+      this.validateToken(expires.toISOString());
+    }, expires.getTime() - new Date().getTime());
   }
 
-  getUserFromLocal() {
-    return JSON.parse(localStorage.getItem('user') || '{}');
+  getDataFromLocal() {
+    return {
+      user: JSON.parse(localStorage.getItem('user') || '{}'),
+      jwtExpiry: localStorage.getItem('jwtExpiry')
+    };
+  }
+
+  checkLocalForUser() {
+    // First check if user is already saved locally
+    const { user, jwtExpiry } = this.getDataFromLocal();
+    if(user.id && jwtExpiry && this.validateToken(jwtExpiry)) {
+      this.user.next(user);
+    }
+  }
+
+  validateToken(jwtExpiry: string): boolean {
+    // If JWT is invalid we remove user and its expiry date
+    if(new Date() > new Date(jwtExpiry)) {
+      localStorage.removeItem('user');
+      localStorage.removeItem('jwtExpiry');
+
+      return false;
+    }
+
+    return true;
   }
 }

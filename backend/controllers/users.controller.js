@@ -89,10 +89,11 @@ const attemptLogin = async (req, res) => {
           httpOnly: true,
           sameSite: 'Strict',
           secure: true
-        }
-        console.log(`User logged in, id: ${id}`);
+        };
+
+        console.log(`User logged in, id: ${id} with token ${token} that expires in ${tokenExpiration}`);
         res.cookie('loginToken', token, cookieOptions);
-        return res.json('Success');
+        return res.json(cookieOptions.expires);
       }
 
       res.status(401);
