@@ -42,7 +42,10 @@ app.use((req, res, next) => {
 const productRouter = require('./routes/products.routes');
 app.use('/products', productRouter);
 
-const usersRouter = require('./routes/users.routes');
-app.use('/auth', usersRouter);
+const authRouter = require('./routes/auth.routes');
+app.use('/auth', authRouter);
+
+const userRouter = require('./routes/user.routes');
+app.use('/user', userRouter);
 
 module.exports = app;

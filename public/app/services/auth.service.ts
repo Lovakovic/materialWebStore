@@ -7,23 +7,20 @@ import {User} from "../models/user.model";
 
 const API_URL = 'http://localhost:8081/auth';
 
+const noUser = {
+  id: -1,
+  username: '',
+  email: ''
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  loginHttpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-    withCredentials: true,
-    observe: 'response' as 'response'
-  }
-  user: BehaviorSubject<User> = new BehaviorSubject<User>({
-    id: -1,
-    username: '',
-    email: ''
-  });
+  user: BehaviorSubject<User> = new BehaviorSubject<User>(noUser);
 
   constructor(private http: HttpClient) {
-    this.checkLocalForUser();
+    this.checkForLocalAuth();
   }
 
   register(credentials: Credentials) {
@@ -35,14 +32,22 @@ export class AuthService {
   }
 
   login(credentials: Credentials) {
-    return this.http.post<HttpResponse<any>>(`${API_URL}/login`, credentials, this.loginHttpOptions);
+    let loginHttpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      withCredentials: true,
+      observe: 'response' as 'response'
+    }
+
+    return this.http.post<HttpResponse<any>>(`${API_URL}/login`, credentials, loginHttpOptions);
   }
 
-  getProfile() {
-    return this.http.get<User>(`${API_URL}/usr`, { withCredentials: true });
+  logout() {
+    localStorage.clear();
+    this.user.next(noUser);
+    return this.http.get(`${API_URL}/logout`, { withCredentials: true });
   }
 
-  saveUserToLocal(user: User, expires: Date) {
+  saveAuthToLocal(user: User, expires: Date) {
     this.user.next(user);
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('jwtExpiry', expires.toISOString());
@@ -52,21 +57,26 @@ export class AuthService {
     }, expires.getTime() - new Date().getTime());
   }
 
-  getDataFromLocal() {
+  getAuthFromLocal() {
     return {
       user: JSON.parse(localStorage.getItem('user') || '{}'),
       jwtExpiry: localStorage.getItem('jwtExpiry')
     };
   }
 
-  checkLocalForUser() {
+  checkForLocalAuth() {
     // First check if user is already saved locally
-    const { user, jwtExpiry } = this.getDataFromLocal();
+    const { user, jwtExpiry } = this.getAuthFromLocal();
     if(user.id && jwtExpiry && this.validateToken(jwtExpiry)) {
       this.user.next(user);
     }
   }
 
+  /**
+   * Checks whether token in local storage expired,
+   * returns true if expired, else false
+   * @param jwtExpiry ISO format string of expiry date
+   */
   validateToken(jwtExpiry: string): boolean {
     // If JWT is invalid we remove user and its expiry date
     if(new Date() > new Date(jwtExpiry)) {

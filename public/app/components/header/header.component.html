@@ -8,6 +8,7 @@
         >Log in</button>
         <button *ngIf="userInfo?.id !== -1"
                 class="truncate text-xs mr-3 mt-2"
+                (click)="navigaetToProfile()"
         >Hi {{userInfo?.username}}!
             <u class="text-base block">Your page.</u>
         </button>

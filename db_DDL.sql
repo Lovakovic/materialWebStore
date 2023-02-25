@@ -19,6 +19,11 @@ CREATE TABLE category (
 ALTER TABLE product ADD CONSTRAINT fk_categoryId
 FOREIGN KEY (categoryId) REFERENCES category(id);
 
+# Keep the 'complexity' inside of DB rather than code
+CREATE VIEW complete_products AS
+SELECT product.id AS id, title, price, category.name AS category, product.description AS description, image
+FROM product JOIN category ON product.categoryId = category.id;
+
 CREATE TABLE user (
      id INT PRIMARY KEY AUTO_INCREMENT,
      username VARCHAR(32) NOT NULL,
@@ -44,7 +49,7 @@ CREATE TABLE address (
 ALTER TABLE address ADD CONSTRAINT address_user_id
 FOREIGN KEY (user_id) REFERENCES user(id);
 
-# Some dummy data
+# Some dummy product data
 INSERT INTO category (name, description) VALUES
 ('Electronics', 'Electronic gadgets such as mobile phones, earphones or bluetooth speakers.'),
 ('Shoes', 'Footwear for men or women.'),
@@ -55,8 +60,3 @@ INSERT INTO product (title, price, categoryId, description, image) VALUES
 ('Dummy shoe', 130, 2, 'Hey, look at me! I am a dummy shoe with a picture of a phone.', '/media/s23_uncropped.png'),
 ('Dummy part', 1399, 3, 'Hey, look at me! I am a dummy computer part with a picture of a phone.',
  '/media/s23_uncropped.png');
-
-# Keep the 'complexity' inside of DB rather than code
-CREATE VIEW complete_products AS
-    SELECT product.id AS id, title, price, category.name AS category, product.description AS description, image
-    FROM product JOIN category ON product.categoryId = category.id;

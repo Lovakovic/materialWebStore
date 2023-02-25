@@ -6,6 +6,7 @@ import {Subscription, switchMap, tap} from "rxjs";
 import {Router} from "@angular/router";
 import {User} from "../../models/user.model";
 import {HttpResponse} from "@angular/common/http";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ export class LoginComponent implements OnDestroy {
 
   constructor(
       private auth: AuthService,
+      private userService: UserService,
       private snackBar: MatSnackBar,
       private router: Router
   ) {}
@@ -50,11 +52,11 @@ export class LoginComponent implements OnDestroy {
             tap((res: HttpResponse<any>) => {
               tokenExpires = new Date(res.body);
             }),
-            switchMap(() => this.auth.getProfile()))
+            switchMap(() => this.userService.getProfile()))
         .subscribe({
           next: (user: User) => {
-            console.log(`Your login expires in ${tokenExpires}`);
-            this.auth.saveUserToLocal(user, tokenExpires);
+            console.log(`Your login expires at ${tokenExpires.toString()}`);
+            this.auth.saveAuthToLocal(user, tokenExpires);
             this.snackBar.open('You are now logged in.', '', { duration: 2000 });
             this.router.navigate(['/']);
           },

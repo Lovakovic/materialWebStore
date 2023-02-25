@@ -4,12 +4,9 @@ import {HomeComponent} from "./pages/home/home.component";
 import {CartComponent} from "./pages/cart/cart.component";
 import {RegisterComponent} from "./pages/register/register.component";
 import {LoginComponent} from "./pages/login/login.component";
+import {ProfileComponent} from "./pages/profile/profile.component";
 
 const routes: Routes = [
-  {
-    path: 'home',
-    component: HomeComponent
-  },
   {
     path: 'cart',
     component: CartComponent
@@ -23,7 +20,15 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
-    path: '', redirectTo: 'home', pathMatch: "full"
+    path: 'profile',
+    component: ProfileComponent
+  },
+  {
+    path: 'home', redirectTo: '', pathMatch: "full"
+  },
+  {
+    path: '',
+    component: HomeComponent
   }
 ];
 
