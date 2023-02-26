@@ -4,11 +4,12 @@
         <div class="w-5/12 ml-6 mt-6">
             <h2 class="text-center">Your addresses</h2>
             <mat-accordion>
-                <mat-expansion-panel hideToggle>
+                <mat-expansion-panel hideToggle [expanded]="true">
                     <mat-expansion-panel-header>
                         <mat-panel-title class="text-base">New address</mat-panel-title>
                         <mat-icon>add</mat-icon>
                     </mat-expansion-panel-header>
+                    <app-new-address></app-new-address>
                 </mat-expansion-panel>
                 <app-address-box *ngFor="let address of addresses | addressSort" [address]="address"
                                  class="w-full"

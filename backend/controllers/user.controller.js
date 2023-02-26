@@ -44,12 +44,13 @@ const getAddresses = async (req, res) => {
             let conn = await pool.getConnection();
             if(limit) {
                 rows = await  conn.query(
-                    'SELECT id, name, nickname, street, city, zip_code, country, phone, main FROM address ' +
-                    'WHERE user_id = ? ORDER BY last_modified DESC LIMIT ?', [decoded.id, limit]);
+                    'SELECT id, name, addressNickname, companyName, street, city, zipCode, country, phone, ' +
+                    'deliveryInstructions, main FROM address WHERE userId = ? ORDER BY lastModified DESC LIMIT ?',
+                    [decoded.id, limit]);
             } else {
                 rows = await  conn.query(
-                    'SELECT id, name, nickname, street, city, zip_code, country, phone, main FROM address ' +
-                    'WHERE user_id = ? ORDER BY last_modified DESC', decoded.id);
+                    'SELECT id, name, addressNickname, companyName, street, city, zipCode, country, phone, ' +
+                    'deliveryInstructions, main FROM address WHERE userId = ? ORDER BY lastModified DESC', decoded.id);
             }
 
             // Convert MYSQL-s representation of true/false to avoid any bugs

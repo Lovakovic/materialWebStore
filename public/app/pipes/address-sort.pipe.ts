@@ -21,11 +21,11 @@ export class AddressSortPipe implements PipeTransform {
       }
 
       // Then sort by nickname asc
-      if(a.nickname && b.nickname) {
-        return a.nickname.localeCompare(b.nickname);
-      } else if(a.nickname && !b.nickname) {
+      if(a.addressNickname && b.addressNickname) {
+        return a.addressNickname.localeCompare(b.addressNickname);
+      } else if(a.addressNickname && !b.addressNickname) {
         return -1;
-      } else if(!a.nickname && b.nickname) {
+      } else if(!a.addressNickname && b.addressNickname) {
         return 1;
       }
 

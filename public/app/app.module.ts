@@ -37,6 +37,7 @@ import { AddressBoxComponent } from './pages/profile/components/address-box/addr
 import { ProfileHeaderComponent } from './pages/profile/components/profile-header/profile-header.component';
 import { AddressSortPipe } from './pipes/address-sort.pipe';
 import { NewAddressComponent } from './components/new-address/new-address.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { NewAddressComponent } from './components/new-address/new-address.compon
         MatRadioModule,
         ReactiveFormsModule,
         MatInputModule,
-        MatSelectModule
+        MatSelectModule,
+        MatTooltipModule
     ],
   providers: [CartService, StoreService],
   bootstrap: [AppComponent]

@@ -21,9 +21,9 @@ const getAllProducts = async (req, res) => {
         const sort = (req.query.sort || 'desc');
 
         if(limit) {
-            rows = await conn.query(`SELECT * FROM complete_products ORDER BY price ${sort} LIMIT ?`, [limit]);
+            rows = await conn.query(`SELECT * FROM completeProducts ORDER BY price ${sort} LIMIT ?`, [limit]);
         } else {
-            rows = await conn.query(`SELECT * FROM complete_products ORDER BY price ${sort}`);
+            rows = await conn.query(`SELECT * FROM completeProducts ORDER BY price ${sort}`);
         }
 
         conn.release();
@@ -46,10 +46,10 @@ const getProductsByCategory = async (req, res) => {
         let conn = await pool.getConnection();
 
         if(limit) {
-            rows = await conn.query(`SELECT * FROM complete_products WHERE category = '${req.params.category}' 
+            rows = await conn.query(`SELECT * FROM completeProducts WHERE category = '${req.params.category}' 
                                 ORDER BY price ${sort} LIMIT ${limit}`);
         } else {
-            rows = await conn.query(`SELECT * FROM complete_products WHERE category = '${req.params.category}' 
+            rows = await conn.query(`SELECT * FROM completeProducts WHERE category = '${req.params.category}' 
                                 ORDER BY price ${sort}`);
         }
 

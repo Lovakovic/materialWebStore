@@ -15,6 +15,6 @@ export class AddressBoxComponent {
   @Input() address: Address | undefined;
 
   onDelete() {
-    console.log(`${this.address?.nickname ? this.address.nickname : this.address?.name} deleted.`)
+    console.log(`${this.address?.addressNickname ? this.address.addressNickname : this.address?.name} deleted.`)
   }
 }

@@ -1,16 +1,21 @@
 <mat-expansion-panel hideToggle [expanded]="address?.main">
     <mat-expansion-panel-header>
         <mat-panel-title class="flex justify-between text-base">
-            {{address?.nickname ? address?.nickname : address?.name}}
-            <span *ngIf="address?.main" class="text-sm">(default)</span>
+            {{address?.addressNickname ? address?.addressNickname : address?.name}}
+            <a mat-button *ngIf="address?.main" color="accent" disabled>(default)</a>
         </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-list role="list">
         <mat-list-item><b>{{address?.name}}</b></mat-list-item>
+        <mat-list-item *ngIf="address?.companyName">{{address?.companyName}}</mat-list-item>
         <mat-list-item>{{address?.street}}</mat-list-item>
-        <mat-list-item>{{address?.city}}, {{address?.zip_code}}</mat-list-item>
+        <mat-list-item>{{address?.city}}, {{address?.zipCode}}</mat-list-item>
         <mat-list-item>{{address?.country}}</mat-list-item>
         <mat-list-item>{{address?.phone}}</mat-list-item>
+        <mat-list-item *ngIf="address?.deliveryInstructions"
+                       matTooltip="{{address?.deliveryInstructions}}">
+            <u>Instructions</u>
+        </mat-list-item>
     </mat-list>
     <button mat-stroked-button color="warn" class="w-full mt-4"
             (click)="onDelete()"
