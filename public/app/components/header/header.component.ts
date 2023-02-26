@@ -4,6 +4,7 @@ import {CartService} from "../../services/cart.service";
 import {Router} from "@angular/router";
 import {User} from "../../models/user.model";
 import {AuthService} from "../../services/auth.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-header',
@@ -34,7 +35,8 @@ export class HeaderComponent implements OnInit{
   constructor(
       private cartService: CartService,
       private router: Router,
-      private auth: AuthService
+      private auth: AuthService,
+      private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -51,11 +53,18 @@ export class HeaderComponent implements OnInit{
     this.cartService.clearCart();
   }
 
-  navigateToLogin() {
+  onNavigateToLogin() {
     this.router.navigate(['login']);
   }
 
-  navigaetToProfile() {
+  onNavigateToProfile() {
     this.router.navigate(['profile']);
+  }
+
+  onLogout(): void {
+    this.auth.logout().subscribe(() => {
+      this.snackBar.open(`You've been logged out.`, '', { duration: 1500 });
+      this.router.navigate(['']);
+    });
   }
 }

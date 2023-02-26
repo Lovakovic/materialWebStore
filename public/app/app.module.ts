@@ -33,6 +33,10 @@ import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import { LoginComponent } from './pages/login/login.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { AddressBoxComponent } from './pages/profile/components/address-box/address-box.component';
+import { ProfileHeaderComponent } from './pages/profile/components/profile-header/profile-header.component';
+import { AddressSortPipe } from './pipes/address-sort.pipe';
+import { NewAddressComponent } from './components/new-address/new-address.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +49,11 @@ import { ProfileComponent } from './pages/profile/profile.component';
     CartComponent,
     RegisterComponent,
     LoginComponent,
-    ProfileComponent
+    ProfileComponent,
+    AddressBoxComponent,
+    ProfileHeaderComponent,
+    AddressSortPipe,
+    NewAddressComponent
   ],
     imports: [
         BrowserModule,

@@ -34,6 +34,13 @@ CREATE TABLE user (
      role CHAR(3) DEFAULT 'usr'
 );
 
+# Create a trigger so we don't have to worry about updating anywhere else
+CREATE TRIGGER user_modified BEFORE UPDATE ON user
+FOR EACH ROW
+BEGIN
+    SET NEW.updated_at = NOW();
+END;
+
 CREATE TABLE address (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -43,11 +50,20 @@ CREATE TABLE address (
     city VARCHAR(45) NOT NULL,
     zip_code VARCHAR(16),
     country VARCHAR(75) NOT NULL,
-    phone VARCHAR(20) NOT NULL
+    phone VARCHAR(20) NOT NULL,
+    last_modified DATETIME DEFAULT NOW(),
+    main BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 ALTER TABLE address ADD CONSTRAINT address_user_id
 FOREIGN KEY (user_id) REFERENCES user(id);
+
+# Create a trigger so we don't have to worry about updating anywhere else
+CREATE TRIGGER address_modified BEFORE UPDATE ON address
+FOR EACH ROW
+BEGIN
+   SET NEW.last_modified = NOW();
+END;
 
 # Some dummy product data
 INSERT INTO category (name, description) VALUES

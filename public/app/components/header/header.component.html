@@ -4,22 +4,28 @@
         <button *ngIf="userInfo?.id === -1"
                 mat-raised-button color="primary"
                 class="mr-9 mb-2.5"
-                (click)="navigateToLogin()"
+                (click)="onNavigateToLogin()"
         >Log in</button>
         <button *ngIf="userInfo?.id !== -1"
                 class="truncate text-xs mr-3 mt-2"
-                (click)="navigaetToProfile()"
+                [matMenuTriggerFor]="userMenu"
+                (click)="onNavigateToProfile()"
         >Hi {{userInfo?.username}}!
             <u class="text-base block">Your page.</u>
         </button>
-        <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-menu #userMenu="matMenu">
+            <div class="p-3">
+                <button mat-stroked-button (click)="onLogout()">Log out</button>
+            </div>
+        </mat-menu>
+        <button mat-icon-button [matMenuTriggerFor]="cartMenu">
             <mat-icon
                     [matBadge]="itemsQuantity"
                     [matBadgeHidden]="!itemsQuantity"
                     matBadgeColor="warn"
             >shopping_cart</mat-icon>
         </button>
-        <mat-menu #menu="matMenu">
+        <mat-menu #cartMenu="matMenu">
             <div class="p-3 divide-y divide-solid">
                 <div class="pd3 flex justify-between">
                     <span class="mr-16">{{itemsQuantity}} Item/s</span>

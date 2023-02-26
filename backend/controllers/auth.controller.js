@@ -3,22 +3,6 @@ const { secret, tokenExpiration } = require('../config');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// WARNING: There is ZERO SQLInjection protection here, use at your own risk
-
-// Register credentials:
-// const credentials = {
-//   username: 'username',
-//   password: 'password',
-//   email: 'email'
-// };
-
-// Login credentials
-// const credentials = {
-//   email: 'email',
-//   password: 'password'
-// }
-
-// This is only a helper function for registration or login functions, not an API endpoint
 const checkIfEmailExists = async (email) => {
   try {
     let conn = await pool.getConnection();

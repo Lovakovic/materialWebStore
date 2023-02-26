@@ -15,13 +15,13 @@ const insertMediaPath = (rows) => {
 const getAllProducts = async (req, res) => {
     try {
         let rows;
-        const sort = (req.query.sort || 'desc');
-        const limit = req.query.limit;
+        const limit = Number.parseInt(req.query.limit);
 
         let conn = await pool.getConnection();
+        const sort = (req.query.sort || 'desc');
 
         if(limit) {
-            rows = await conn.query(`SELECT * FROM complete_products ORDER BY price ${sort} LIMIT ${limit}`);
+            rows = await conn.query(`SELECT * FROM complete_products ORDER BY price ${sort} LIMIT ?`, [limit]);
         } else {
             rows = await conn.query(`SELECT * FROM complete_products ORDER BY price ${sort}`);
         }

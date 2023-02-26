@@ -1,26 +1,27 @@
-import {Component, Input} from '@angular/core';
-import {User} from "../../models/user.model";
-import {AuthService} from "../../services/auth.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {Router} from "@angular/router";
+import { Component, OnInit} from '@angular/core';
+import {Subscription} from "rxjs";
+import {Address} from "../../models/address.model";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html'
 })
-export class ProfileComponent {
-  @Input() user: User | undefined;
+export class ProfileComponent implements OnInit {
+  addressesSubscription: Subscription | undefined;
+
+  addresses: Array<Address> | undefined;
 
   constructor(
-      private auth: AuthService,
-      private snackBar: MatSnackBar,
-      private router: Router
-  ) {
+      private userService: UserService
+  ) { }
+
+  ngOnInit(): void {
+    this.getAddresses();
   }
-  logout() {
-    this.auth.logout().subscribe(() => {
-        this.snackBar.open(`You've been logged out.`, '', { duration: 1500 });
-        this.router.navigate(['']);
-    });
+
+  getAddresses(): void {
+    this.addressesSubscription = this.userService.getAddresses()
+        .subscribe(_addresses => this.addresses = _addresses);
   }
 }

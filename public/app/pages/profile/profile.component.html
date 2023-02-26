@@ -1,5 +1,22 @@
-<div>
-    Press the button to log out:
-    <button mat-stroked-button (click)="logout()"
-    >Log out</button>
-</div>
+<mat-drawer-container class="min-h-full">
+    <app-profile-header></app-profile-header>
+    <div class="max-w-7xl m-auto flex justify-between">
+        <div class="w-5/12 ml-6 mt-6">
+            <h2 class="text-center">Your addresses</h2>
+            <mat-accordion>
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="text-base">New address</mat-panel-title>
+                        <mat-icon>add</mat-icon>
+                    </mat-expansion-panel-header>
+                </mat-expansion-panel>
+                <app-address-box *ngFor="let address of addresses | addressSort" [address]="address"
+                                 class="w-full"
+                ></app-address-box>
+            </mat-accordion>
+        </div>
+        <div class="w-5/12 mr-6 mt-6">
+            <h2 class="text-center">Your orders</h2>
+        </div>
+    </div>
+</mat-drawer-container>

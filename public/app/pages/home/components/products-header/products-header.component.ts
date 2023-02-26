@@ -13,6 +13,8 @@ export class ProductsHeaderComponent {
   sort = 'desc';
   itemsShowCount = 12;
 
+  constructor() {}
+
   onSortUpdated(newSort: string): void {
     this.sort = newSort;
     this.sortChange.emit(newSort);
