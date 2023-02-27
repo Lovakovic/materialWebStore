@@ -1,1 +1,33 @@
-<form [formGroup]="newAddressForm"></form>
+<form [formGroup]="newAddressForm">
+    <mat-form-field appearance="outline">
+        <input matInput type="text" placeholder="Address nickname" formControlName="addressNickname">
+    </mat-form-field>
+    <div formGroupName="address">
+        <mat-form-field appearance="outline">
+            <input matInput type="text" placeholder="Full name *" formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <input matInput type="text" placeholder="Company name" formControlName="company">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <input matInput type="text" placeholder="Street address *" formControlName="street">
+        </mat-form-field>
+        <div class="flex justify-between">
+            <mat-form-field appearance="outline" style="width: 60%">
+                <input matInput type="text" placeholder="City *" formControlName="city">
+            </mat-form-field>
+            <mat-form-field appearance="outline" style="width: 30%">
+                <input matInput type="text" placeholder="Zip code" formControlName="zipCode">
+            </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline">
+            <input matInput type="text" placeholder="Country *" formControlName="country">
+        </mat-form-field>
+    </div>
+    <mat-form-field appearance="outline">
+        <input matInput type="text" placeholder="Phone *" formControlName="phone">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <textarea matInput placeholder="Delivery instructions" formControlName="deliveryInstructions"></textarea>
+    </mat-form-field>
+</form>
