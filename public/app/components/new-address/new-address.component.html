@@ -1,4 +1,4 @@
-<form [formGroup]="newAddressForm">
+<form [formGroup]="newAddressForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline">
         <input matInput type="text" placeholder="Address nickname" formControlName="addressNickname">
     </mat-form-field>
@@ -30,4 +30,5 @@
     <mat-form-field appearance="outline">
         <textarea matInput placeholder="Delivery instructions" formControlName="deliveryInstructions"></textarea>
     </mat-form-field>
+    <button mat-raised-button color="primary" class="w-full" [disabled]="!newAddressForm.valid">Add address</button>
 </form>
