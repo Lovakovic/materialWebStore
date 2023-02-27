@@ -121,11 +121,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       });
   }
 
-  navigateToLogin() {
-      this.router.navigate(['login']);
+  ngOnDestroy(): void {
+    this.registerSubscription?.unsubscribe();
   }
-
-    ngOnDestroy(): void {
-      this.registerSubscription?.unsubscribe();
-    }
 }
