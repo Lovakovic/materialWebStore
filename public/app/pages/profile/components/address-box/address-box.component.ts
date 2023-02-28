@@ -1,5 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Address} from "../../../../models/address.model";
+import {UserService} from "../../../../services/user.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-address-box',
@@ -14,7 +16,17 @@ import {Address} from "../../../../models/address.model";
 export class AddressBoxComponent {
   @Input() address: Address | undefined;
 
+  constructor(
+      private _userService: UserService,
+      private _snackBar: MatSnackBar
+  ) {}
+
   onDelete() {
-    console.log(`${this.address?.addressNickname ? this.address.addressNickname : this.address?.name} deleted.`)
+    this._userService.deleteAddress(this.address?.id || -1)
+        .subscribe(res => {
+          if(res === 'Success') {
+            this._snackBar.open('Address deleted.', '', { duration: 1500 });
+          }
+        });
   }
 }

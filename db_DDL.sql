@@ -60,11 +60,11 @@ CREATE TABLE address (
 ALTER TABLE address ADD CONSTRAINT fkAddress_userId
 FOREIGN KEY (userId) REFERENCES user(id);
 
-# Create a trigger so we don't have to worry about updating anywhere else
+# Update the addressModified field automatically
 CREATE TRIGGER addressModified BEFORE UPDATE ON address
 FOR EACH ROW
 BEGIN
-   SET NEW.lastModified = NOW();
+    SET NEW.lastModified = NOW();
 END;
 
 # Some dummy product data

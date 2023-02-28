@@ -1,5 +1,5 @@
 export interface Address {
-    id: number;
+    id?: number;
     name: string;
     addressNickname?: string;
     companyName?: string;
@@ -9,6 +9,6 @@ export interface Address {
     country: string;
     phone: string;
     deliveryInstructions?: string;
-    main: boolean;
+    main?: boolean;
     lastModified?: string;
 }

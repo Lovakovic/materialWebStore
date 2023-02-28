@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {UserService} from "../../services/user.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-new-address',
@@ -12,30 +14,120 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class NewAddressComponent {
   newAddressForm = new FormGroup({
-    addressNickname: new FormControl(''),
+    addressNickname: new FormControl('', [
+        Validators.maxLength(63)
+    ]),
     address: new FormGroup({
       name: new FormControl('', [
-          Validators.required
+          Validators.required,
+          Validators.maxLength(63)
       ]),
-      company: new FormControl(''),
+      company: new FormControl('', Validators.maxLength(127)),
       street: new FormControl('', [
-          Validators.required
+          Validators.required,
+          Validators.maxLength(99)
       ]),
       city: new FormControl('', [
-          Validators.required
+          Validators.required,
+          Validators.maxLength(44)
       ]),
-      zipCode: new FormControl(''),
+      zipCode: new FormControl('', Validators.maxLength(15)),
       country: new FormControl('', [
-          Validators.required
+          Validators.required,
+          Validators.maxLength(74)
       ]),
     }),
     phone: new FormControl('', [
-        Validators.required
+        Validators.required,
+        Validators.maxLength(19)
     ]),
-    deliveryInstructions: new FormControl('')
+    deliveryInstructions: new FormControl('', Validators.maxLength(500)),
+    main: new FormControl(false)
   });
 
-  onSubmit() {
-    console.log(this.newAddressForm.value);
+
+    constructor(
+        private _userService: UserService,
+        private _snackBar: MatSnackBar
+    ) {}
+
+    get addressNickname() {
+      return this.newAddressForm.get('addressNickname');
+  }
+
+  get name() {
+      return this.newAddressForm.get('address.name');
+  }
+
+  get company() {
+      return this.newAddressForm.get('address.company');
+  }
+
+  get street() {
+      return this.newAddressForm.get('address.street');
+  }
+
+  get city() {
+      return this.newAddressForm.get('address.city');
+  }
+
+  get zipCode() {
+      return this.newAddressForm.get('address.zipCode');
+  }
+
+  get country() {
+      return this.newAddressForm.get('address.country');
+  }
+
+  get phone() {
+      return this.newAddressForm.get('phone');
+  }
+
+  get deliveryInstructions() {
+      return this.newAddressForm.get('deliveryInstructions');
+  }
+
+  getErrorMessage(controlName: string): string | void {
+      const control = this.newAddressForm.get(controlName);
+
+      if(control?.errors?.['required']) {
+          return `This field is required`;
+      }
+      if(control?.errors?.['maxlength']) {
+          return `Maximum length is ${control?.errors?.['maxlength'].requiredLength} characters.`
+      }
+  }
+
+  onSubmit(): void {
+      // Flatten the object
+      const {
+          addressNickname,
+          deliveryInstructions,
+          phone,
+          address: { city, company, country, name, street, zipCode } = {},
+          main
+      } = this.newAddressForm.value;
+
+      // Remove fields that the user didn't enter, standardize values returned
+      // form newAddressForm, so it fits the Address model
+      const flatAddress = {
+          name: name || '',
+          addressNickname: addressNickname || undefined,
+          company: company || undefined,
+          street: street || '',
+          city: city || '',
+          zipCode: zipCode || undefined,
+          country: country || '',
+          phone: phone || '',
+          deliveryInstructions: deliveryInstructions || undefined,
+          main: main || undefined
+      }
+
+      this._userService.postAddress(flatAddress)
+          .subscribe(res => {
+              if(res === 'Success') {
+                  this._snackBar.open('Address added.', '', { duration: 1500 });
+              }
+          });
   }
 }

@@ -47,6 +47,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   }
 
+    get email() {
+        return this.registerForm.get('email');
+    }
+
+    get password() {
+        return this.registerForm.get('password');
+    }
+
+    get passwordRepeat() {
+        return this.registerForm.get('passwordRepeat');
+    }
+
   passwordsMatchValidator(passwordKey: string, passwordConfirmKey: string) {
       return (formGroup: AbstractControl): ValidationErrors | null => {
           const password = formGroup.get(passwordKey);
@@ -71,8 +83,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
           }
       }
   }
+    // Validator with debounce timer of 500ms
 
-  // Validator with debounce timer of 500ms
   uniqueEmailValidator(): AsyncValidatorFn {
       return (control: AbstractControl): Observable<ValidationErrors | null> => {
        return of(control.value).pipe(
@@ -87,18 +99,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   get username() {
       return this.registerForm.get('username');
-  }
-
-  get email() {
-      return this.registerForm.get('email');
-  }
-
-  get password() {
-      return this.registerForm.get('password');
-  }
-
-  get passwordRepeat() {
-      return this.registerForm.get('passwordRepeat');
   }
 
   onSubmit() {

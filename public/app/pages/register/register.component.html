@@ -9,7 +9,8 @@
                 Username is required.
             </mat-error>
             <mat-error *ngIf="username?.errors?.['minlength'] || username?.errors?.['maxlength']
-        && username?.touched">
+                        && username?.touched"
+            >
                 Username has to be between 6 and 30 characters long.
             </mat-error>
         </mat-form-field>

@@ -21,4 +21,12 @@ export class UserService {
     return this.http.get<Array<Address>>(`${API_URL}/address?sort=${sort}&limit=${limit}`,
         { withCredentials: true });
   }
+
+  postAddress(address: Address) {
+    return this.http.post(`${API_URL}/address`, address, { withCredentials: true });
+  }
+
+  deleteAddress(id: number) {
+    return this.http.delete(`${API_URL}/address/${id}`, { withCredentials: true })
+  }
 }

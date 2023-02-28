@@ -38,6 +38,7 @@ import { ProfileHeaderComponent } from './pages/profile/components/profile-heade
 import { AddressSortPipe } from './pipes/address-sort.pipe';
 import { NewAddressComponent } from './components/new-address/new-address.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
         ReactiveFormsModule,
         MatInputModule,
         MatSelectModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatCheckboxModule
     ],
   providers: [CartService, StoreService],
   bootstrap: [AppComponent]
