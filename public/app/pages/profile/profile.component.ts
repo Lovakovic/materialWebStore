@@ -1,20 +1,24 @@
-import { Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from "rxjs";
 import {Address} from "../../models/address.model";
 import {AddressService} from "../../services/address.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html'
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
 
   addresses: Array<Address> = [];
-  addressSubscription: Subscription | undefined;
+  addressSubscription?: Subscription;
+  primaryAddressIdSubscription?: Subscription;
+  primaryAddressId?: number;
 
   constructor(
       private _addressService: AddressService,
+      private _authService: AuthService,
       private _snackBar: MatSnackBar
   ) { }
 
@@ -27,6 +31,9 @@ export class ProfileComponent implements OnInit {
         .subscribe(_addresses => {
           this.addresses = _addresses
         });
+    this.primaryAddressIdSubscription = this._authService.user.subscribe(user => {
+        this.primaryAddressId = user.primaryAddressId;
+    });
   }
 
   onAddAddress(addressData: {address: Address, primary: boolean}): void {
@@ -48,4 +55,13 @@ export class ProfileComponent implements OnInit {
           }
         });
   }
+
+    ngOnDestroy(): void {
+      if(this.addressSubscription) {
+          this.addressSubscription.unsubscribe();
+      }
+      if(this.primaryAddressIdSubscription) {
+          this.primaryAddressIdSubscription.unsubscribe();
+      }
+    }
 }

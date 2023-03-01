@@ -12,7 +12,7 @@
                     <app-new-address (addAddress)="onAddAddress($event)" ></app-new-address>
                 </mat-expansion-panel>
                 <app-address-box *ngFor="let address of addresses | findPrimaryAddress | async"
-                                 [address]="address"
+                                 [address]="address" [primaryAddressId]="primaryAddressId"
                                  (deleteAddress)="onDeleteAddress($event)"
                                  class="w-full"
                 ></app-address-box>

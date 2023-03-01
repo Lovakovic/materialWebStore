@@ -2,7 +2,7 @@
     <mat-expansion-panel-header>
         <mat-panel-title class="flex justify-between text-base">
             {{address?.addressNickname ? address?.addressNickname : address?.name}}
-            <a mat-button *ngIf="primary" color="accent" disabled>(default)</a>
+            <a mat-button *ngIf="primaryAddressId === address?.id" color="accent" disabled>(default)</a>
         </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-list role="list">

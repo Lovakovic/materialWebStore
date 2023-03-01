@@ -62,7 +62,6 @@ export class AuthService {
    */
   saveAuthToLocal(user: User, expires: Date) {
     this._user.next(user);
-    localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('jwtExpiry', expires.toISOString());
 
     setTimeout(() => {
@@ -70,18 +69,13 @@ export class AuthService {
     }, expires.getTime() - new Date().getTime());
   }
 
-  /**
-   * Checks if user's login is saved in local storage
-   */
   checkForLocalAuth() {
     // First check if user is already saved locally
-    const { user, jwtExpiry } = {
-      user: JSON.parse(localStorage.getItem('user') || '{}'),
-      jwtExpiry: localStorage.getItem('jwtExpiry')
-    };
+    const jwtExpiry = localStorage.getItem('jwtExpiry');
 
-    if(user.id && jwtExpiry && this.validateTokenExpiry(jwtExpiry)) {
-      this._user.next(user);
+    // If token is still valid, just refresh profile info
+    if(jwtExpiry && this.validateTokenExpiry(jwtExpiry)) {
+      this.getProfile().subscribe(user => this._user.next(user));
     }
   }
 
@@ -93,7 +87,6 @@ export class AuthService {
   validateTokenExpiry(jwtExpiry: string): boolean {
     // If JWT is invalid we remove user and its expiry date
     if(new Date() > new Date(jwtExpiry)) {
-      localStorage.removeItem('user');
       localStorage.removeItem('jwtExpiry');
 
       return false;
