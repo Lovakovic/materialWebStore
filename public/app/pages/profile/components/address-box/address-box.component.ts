@@ -13,6 +13,7 @@ import {Address} from "../../../../models/address.model";
 })
 export class AddressBoxComponent {
   @Input() address?: Address;
+  @Input() primary: boolean = false;
 
   @Output() deleteAddress = new EventEmitter();
 

@@ -38,6 +38,7 @@ import { ProfileHeaderComponent } from './pages/profile/components/profile-heade
 import { NewAddressComponent } from './components/new-address/new-address.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { FindPrimaryAddressPipe } from './pipes/find-primary-address.pipe';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     ProfileComponent,
     AddressBoxComponent,
     ProfileHeaderComponent,
-    NewAddressComponent
+    NewAddressComponent,
+    FindPrimaryAddressPipe
   ],
     imports: [
         BrowserModule,

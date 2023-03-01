@@ -10,7 +10,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 })
 export class ProfileComponent implements OnInit {
 
-  addresses: Array<Address> | undefined;
+  addresses: Array<Address> = [];
   addressSubscription: Subscription | undefined;
 
   constructor(
