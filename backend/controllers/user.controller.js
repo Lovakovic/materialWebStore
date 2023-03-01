@@ -102,7 +102,7 @@ const postAddress = async (req, res) => {
 
             conn.release();
 
-            return res.json('Success');
+            return res.status(200).send();
         } catch (e) {
             console.log(e);
             res.status(500);
@@ -126,7 +126,7 @@ const deleteAddress = async (req, res) => {
             conn.release();
 
             console.log(`Deleted address with id ${req.params.id}`);
-            res.json('Success');
+            return res.status(200).json();
         } catch (e) {
             console.log(e);
             res.status(401);

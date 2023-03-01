@@ -6,7 +6,7 @@ import {Subscription, switchMap, tap} from "rxjs";
 import {Router} from "@angular/router";
 import {User} from "../../models/user.model";
 import {HttpResponse} from "@angular/common/http";
-import {UserService} from "../../services/user.service";
+import {AddressService} from "../../services/address.service";
 
 @Component({
   selector: 'app-login',
@@ -27,7 +27,7 @@ export class LoginComponent implements OnDestroy {
 
   constructor(
       private auth: AuthService,
-      private userService: UserService,
+      private userService: AddressService,
       private snackBar: MatSnackBar,
       private router: Router
   ) {}

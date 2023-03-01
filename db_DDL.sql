@@ -108,9 +108,3 @@ INSERT INTO address (userId, name, addressNickname, companyName, street, city, z
  '95 927 7112', 'Last doors at the end of the hall of the first floor. Just leave the packet at the doorstep.');
 INSERT INTO address (userId, name, street, city, zipCode, country, phone) VALUE
     (1, 'Tony Filipovic', 'Ulica Ive Sanadera 1', 'Rijeka', '51000', 'Croatia', '92 274 1927');
-
-select * from user;
-select * from address;
-update user set primaryAddressId = 5 where id = 1;
-
-delete from address where id = 5;

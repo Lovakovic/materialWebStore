@@ -1,7 +1,5 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Address} from "../../../../models/address.model";
-import {UserService} from "../../../../services/user.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-address-box',
@@ -14,19 +12,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   `]
 })
 export class AddressBoxComponent {
-  @Input() address: Address | undefined;
+  @Input() address?: Address;
 
-  constructor(
-      private _userService: UserService,
-      private _snackBar: MatSnackBar
-  ) {}
+  @Output() deleteAddress = new EventEmitter();
 
-  onDelete() {
-    this._userService.deleteAddress(this.address?.id || -1)
-        .subscribe(res => {
-          if(res === 'Success') {
-            this._snackBar.open('Address deleted.', '', { duration: 1500 });
-          }
-        });
+  onDeleteAddress(): void {
+      this.deleteAddress.emit(this.address);
   }
 }

@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {UserService} from "../../services/user.service";
+import {AddressService} from "../../services/address.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -13,6 +13,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   `]
 })
 export class NewAddressComponent {
+    @Output() addAddress = new EventEmitter();
+
   newAddressForm = new FormGroup({
     addressNickname: new FormControl('', [
         Validators.maxLength(63)
@@ -47,7 +49,7 @@ export class NewAddressComponent {
 
 
     constructor(
-        private _userService: UserService,
+        private _userService: AddressService,
         private _snackBar: MatSnackBar
     ) {}
 
@@ -122,11 +124,6 @@ export class NewAddressComponent {
           deliveryInstructions: deliveryInstructions || undefined
       }
 
-      this._userService.postAddress(flatAddress, primary || false)
-          .subscribe(res => {
-              if(res === 'Success') {
-                  this._snackBar.open('Address added.', '', { duration: 1500 });
-              }
-          });
+      this.addAddress.emit({ address: flatAddress, primary});
   }
 }

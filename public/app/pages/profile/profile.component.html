@@ -9,9 +9,11 @@
                         <mat-panel-title class="text-base">New address</mat-panel-title>
                         <mat-icon>add</mat-icon>
                     </mat-expansion-panel-header>
-                    <app-new-address></app-new-address>
+                    <app-new-address (addAddress)="onAddAddress($event)" ></app-new-address>
                 </mat-expansion-panel>
-                <app-address-box *ngFor="let address of addresses" [address]="address"
+                <app-address-box *ngFor="let address of addresses"
+                                 [address]="address"
+                                 (deleteAddress)="onDeleteAddress($event)"
                                  class="w-full"
                 ></app-address-box>
             </mat-accordion>

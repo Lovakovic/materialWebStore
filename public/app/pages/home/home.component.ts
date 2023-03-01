@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   productSubscription: Subscription | undefined;
 
 
-  constructor(private cartService: CartService, private storeService: StoreService) {
+  constructor(private _cartService: CartService, private _storeService: StoreService) {
   }
 
   ngOnInit(): void {
@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   getProducts(): void {
-    this.productSubscription =  this.storeService.getAllProducts(this.count, this.sort, this.category)
+    this.productSubscription =  this._storeService.getAllProducts(this.count, this.sort, this.category)
         .subscribe((_products) => {
           this.products = _products;
         })
@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onAddToCart(product: Product): void {
-    this.cartService.addToCart({
+    this._cartService.addToCart({
       product: product.image,
       name: product.title,
       price: product.price,
