@@ -3,37 +3,6 @@ const { secret } = require('../config');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 
-const getProfile = async (req, res) => {
-    if(req.cookies.loginToken) {
-        try {
-            // Verify token
-            const decoded = await promisify(jwt.verify)(req.cookies.loginToken, secret);
-
-            // Check if the user still exists
-            let conn = await pool.getConnection();
-            let rows = await  conn.query('SELECT id, username, email FROM user WHERE id = ?', decoded.id);
-            const userFound = rows.length === 1;
-
-            if(!userFound) {
-                res.status(401);
-                return res.json('Missing user.');
-            }
-
-            const userData = { ...rows[0] };
-
-            console.log(`Sending user data (id: ${userData.id})`);
-            res.json(userData);
-        } catch (e) {
-            console.log(e);
-            res.status(401);
-            return res.json('Bad token.');
-        }
-    } else {
-        res.status(401);
-        return res.json('Missing token.');
-    }
-};
-
 const getAddresses = async (req, res) => {
     if(req.cookies.loginToken) {
         try {
@@ -45,17 +14,19 @@ const getAddresses = async (req, res) => {
             if(limit) {
                 rows = await  conn.query(
                     'SELECT id, name, addressNickname, companyName, street, city, zipCode, country, phone, ' +
-                    'deliveryInstructions, main FROM address WHERE userId = ? ORDER BY lastModified DESC LIMIT ?',
+                    'deliveryInstructions FROM address WHERE userId = ? ORDER BY lastModified DESC LIMIT ?',
                     [decoded.id, limit]);
             } else {
                 rows = await  conn.query(
                     'SELECT id, name, addressNickname, companyName, street, city, zipCode, country, phone, ' +
-                    'deliveryInstructions, main FROM address WHERE userId = ? ORDER BY lastModified DESC', decoded.id);
+                    'deliveryInstructions FROM address WHERE userId = ? ORDER BY lastModified DESC', decoded.id);
             }
+
+            conn.release();
 
             // Convert MYSQL-s representation of true/false to avoid any bugs
             rows.forEach(row => {
-                row.main = row.main === 1;
+                row.main = row.primary === 1;
             });
 
             return res.json(rows);
@@ -75,7 +46,7 @@ const postAddress = async (req, res) => {
         try {
             console.log(req.body);
             const decoded = await promisify(jwt.verify)(req.cookies.loginToken, secret);
-            const address = req.body;
+            const address = req.body.address;
 
             let conn = await pool.getConnection();
 
@@ -101,10 +72,6 @@ const postAddress = async (req, res) => {
                 fields += `, deliveryInstructions`;
                 placeholders += `, ?`;
             }
-            if(address.main) {
-                fields += `, main`;
-                placeholders += `, ?`;
-            }
             query =  query + fields + `) VALUE (?, ?, ?, ?, ?, ?` + placeholders + `)`;
 
             // Add values, filter out the undefined
@@ -118,17 +85,28 @@ const postAddress = async (req, res) => {
                 address['addressNickname'],
                 address['company'],
                 address['zipCode'],
-                address['deliveryInstructions'],
-                address['main']
+                address['deliveryInstructions']
             ].filter(Boolean);
 
             conn.query(query, values);
             console.log(`Added address ${JSON.stringify(address)}`)
+
+            // Modify the user table and set the new primary address id
+            if(req.body.newPrimary) {
+                const addressId = await conn.query('SELECT LAST_INSERT_ID() AS addressId');
+                await conn.query('UPDATE user SET primaryAddressId = ? WHERE id = ?',
+                    [addressId[0].addressId, decoded.id]);
+
+                console.log(`Updated ${decoded.id}'s primary address to ${addressId}`);
+            }
+
+            conn.release();
+
             return res.json('Success');
         } catch (e) {
             console.log(e);
-            res.status(401);
-            return res.json('Invalid user.');
+            res.status(500);
+            return res.json('Internal error');
         }
     } else {
         res.status(401);
@@ -145,6 +123,7 @@ const deleteAddress = async (req, res) => {
             // Check if the user still exists
             let conn = await pool.getConnection();
             conn.query('DELETE FROM address WHERE id = ?', req.params.id);
+            conn.release();
 
             console.log(`Deleted address with id ${req.params.id}`);
             res.json('Success');
@@ -160,7 +139,6 @@ const deleteAddress = async (req, res) => {
 }
 
 module.exports = {
-    getProfile,
     getAddresses,
     postAddress,
     deleteAddress

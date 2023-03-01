@@ -26,45 +26,45 @@ export class HeaderComponent implements OnInit{
   set cart(cart: Cart) {
     this._cart = cart;
 
-    // Also sum the quantity so we can display the proper number in icon
+    // Also sum the quantity, so we can display the proper number in icon
     this.itemsQuantity = cart.items
         .map(item => item.quantity)
         .reduce((prev, current) => prev + current , 0);
   }
 
   constructor(
-      private cartService: CartService,
-      private router: Router,
-      private auth: AuthService,
-      private snackBar: MatSnackBar
+      private _cartService: CartService,
+      private _router: Router,
+      private _auth: AuthService,
+      private _snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
-    this.auth.user.subscribe(data => {
+    this._auth.user.subscribe(data => {
       this.userInfo = data;
     });
   }
 
   getTotal(items: Array<CartItem>): number {
-    return this.cartService.getTotal(items);
+    return this._cartService.getTotal(items);
   }
 
   onClearCart(): void {
-    this.cartService.clearCart();
+    this._cartService.clearCart();
   }
 
   onNavigateToLogin() {
-    this.router.navigate(['login']);
+    this._router.navigate(['login']);
   }
 
   onNavigateToProfile() {
-    this.router.navigate(['profile']);
+    this._router.navigate(['profile']);
   }
 
   onLogout(): void {
-    this.auth.logout().subscribe(() => {
-      this.snackBar.open(`You've been logged out.`, '', { duration: 1500 });
-      this.router.navigate(['']);
+    this._auth.logout().subscribe(() => {
+      this._snackBar.open(`You've been logged out.`, '', { duration: 1500 });
+      this._router.navigate(['']);
     });
   }
 }

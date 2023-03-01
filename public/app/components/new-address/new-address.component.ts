@@ -42,7 +42,7 @@ export class NewAddressComponent {
         Validators.maxLength(19)
     ]),
     deliveryInstructions: new FormControl('', Validators.maxLength(500)),
-    main: new FormControl(false)
+    primary: new FormControl(false)
   });
 
 
@@ -105,7 +105,7 @@ export class NewAddressComponent {
           deliveryInstructions,
           phone,
           address: { city, company, country, name, street, zipCode } = {},
-          main
+          primary
       } = this.newAddressForm.value;
 
       // Remove fields that the user didn't enter, standardize values returned
@@ -119,11 +119,10 @@ export class NewAddressComponent {
           zipCode: zipCode || undefined,
           country: country || '',
           phone: phone || '',
-          deliveryInstructions: deliveryInstructions || undefined,
-          main: main || undefined
+          deliveryInstructions: deliveryInstructions || undefined
       }
 
-      this._userService.postAddress(flatAddress)
+      this._userService.postAddress(flatAddress, primary || false)
           .subscribe(res => {
               if(res === 'Success') {
                   this._snackBar.open('Address added.', '', { duration: 1500 });

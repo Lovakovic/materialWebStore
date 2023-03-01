@@ -54,7 +54,7 @@ export class CartService implements OnInit {
     localStorage.removeItem('cart');
 
     // Alert the user
-    this._snackBar.open('Cart is cleared.', 'OK', { duration: 3000 });
+    this._snackBar.open('Cart is cleared.', '', { duration: 1500 });
   }
 
   // Removes item type from cart

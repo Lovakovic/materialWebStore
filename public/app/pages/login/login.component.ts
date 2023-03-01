@@ -52,7 +52,7 @@ export class LoginComponent implements OnDestroy {
             tap((res: HttpResponse<any>) => {
               tokenExpires = new Date(res.body);
             }),
-            switchMap(() => this.userService.getProfile()))
+            switchMap(() => this.auth.getProfile()))
         .subscribe({
           next: (user: User) => {
             console.log(`Your login expires at ${tokenExpires.toString()}`);

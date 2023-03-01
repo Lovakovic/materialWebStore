@@ -35,7 +35,6 @@ import { LoginComponent } from './pages/login/login.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { AddressBoxComponent } from './pages/profile/components/address-box/address-box.component';
 import { ProfileHeaderComponent } from './pages/profile/components/profile-header/profile-header.component';
-import { AddressSortPipe } from './pipes/address-sort.pipe';
 import { NewAddressComponent } from './components/new-address/new-address.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -54,7 +53,6 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     ProfileComponent,
     AddressBoxComponent,
     ProfileHeaderComponent,
-    AddressSortPipe,
     NewAddressComponent
   ],
     imports: [

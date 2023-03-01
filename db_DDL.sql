@@ -1,6 +1,9 @@
 CREATE DATABASE webShop;
 USE webShop;
 
+CREATE DATABASE webShopTest;
+use webShopTest;
+
 CREATE TABLE product(
 	id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
@@ -29,6 +32,7 @@ CREATE TABLE user (
      username VARCHAR(32) NOT NULL,
      password CHAR(60) NOT NULL,
      email VARCHAR(256) NOT NULL,
+     primaryAddressId INT,
      createdAt DATETIME DEFAULT NOW(),
      updatedAt DATETIME,
      role CHAR(3) DEFAULT 'usr'
@@ -53,18 +57,32 @@ CREATE TABLE address (
     country VARCHAR(75) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     deliveryInstructions TEXT,
-    main BOOLEAN NOT NULL DEFAULT FALSE,
     lastModified DATETIME DEFAULT NOW()
 );
 
 ALTER TABLE address ADD CONSTRAINT fkAddress_userId
 FOREIGN KEY (userId) REFERENCES user(id);
 
+ALTER TABLE user ADD CONSTRAINT fkUser_primaryAddressId
+FOREIGN KEY (primaryAddressId) REFERENCES address(id);
+
 # Update the addressModified field automatically
 CREATE TRIGGER addressModified BEFORE UPDATE ON address
 FOR EACH ROW
 BEGIN
     SET NEW.lastModified = NOW();
+END;
+
+# Remove primary address foreign key from user to enable deletion of address
+CREATE TRIGGER deletePrimaryAddressId BEFORE DELETE ON address
+    FOR EACH ROW
+BEGIN
+    DECLARE v_isPrimary BOOLEAN DEFAULT FALSE;
+    SELECT OLD.id = primaryAddressId INTO v_isPrimary FROM user WHERE user.id = OLD.userId;
+
+    IF v_isPrimary THEN
+        UPDATE user SET primaryAddressId = NULL WHERE id = OLD.userId;
+    END IF;
 END;
 
 # Some dummy product data
@@ -85,8 +103,14 @@ INSERT INTO product (title, price, categoryId, description, image) VALUES
 INSERT INTO address (userId, name, addressNickname, street, city, zipCode, country, phone) VALUE
 (1, 'Ivo Markovic', 'Budapest apartment', 'Harosz Matyak street 4', 'Budapest', '16500', 'Hungary', '92 837 1847');
 INSERT INTO address (userId, name, addressNickname, companyName, street, city, zipCode, country, phone,
-                     deliveryInstructions, main) VALUE
+                     deliveryInstructions) VALUE
 (1, 'Danijel Franko', 'Danko\'s place (full)', 'KingICT', 'Ulica Hrvatskih Uhljeba 15', 'Zagreb', '10000', 'Croatia',
- '95 927 7112', 'Last doors at the end of the hall of the first floor. Just leave the packet at the doorstep.', true);
+ '95 927 7112', 'Last doors at the end of the hall of the first floor. Just leave the packet at the doorstep.');
 INSERT INTO address (userId, name, street, city, zipCode, country, phone) VALUE
     (1, 'Tony Filipovic', 'Ulica Ive Sanadera 1', 'Rijeka', '51000', 'Croatia', '92 274 1927');
+
+select * from user;
+select * from address;
+update user set primaryAddressId = 5 where id = 1;
+
+delete from address where id = 5;

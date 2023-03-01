@@ -11,7 +11,7 @@
                     </mat-expansion-panel-header>
                     <app-new-address></app-new-address>
                 </mat-expansion-panel>
-                <app-address-box *ngFor="let address of addresses | addressSort" [address]="address"
+                <app-address-box *ngFor="let address of addresses" [address]="address"
                                  class="w-full"
                 ></app-address-box>
             </mat-accordion>

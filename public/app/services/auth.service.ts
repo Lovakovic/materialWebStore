@@ -17,18 +17,18 @@ const noUser = {
   providedIn: 'root'
 })
 export class AuthService {
-  user: BehaviorSubject<User> = new BehaviorSubject<User>(noUser);
+  private _user: BehaviorSubject<User> = new BehaviorSubject<User>(noUser);
 
   constructor(private http: HttpClient) {
     this.checkForLocalAuth();
   }
 
-  register(credentials: Credentials) {
-    return this.http.post(`${API_URL}/register`, credentials);
+  get user() {
+    return this._user.asObservable();
   }
 
-  checkEmailAvailability(email: string) {
-    return this.http.post<HttpResponse<{ taken: boolean }>>(`${API_URL}/email`, { email });
+  register(credentials: Credentials) {
+    return this.http.post(`${API_URL}/register`, credentials);
   }
 
   login(credentials: Credentials) {
@@ -38,37 +38,50 @@ export class AuthService {
       observe: 'response' as 'response'
     }
 
-    return this.http.post<HttpResponse<any>>(`${API_URL}/login`, credentials, loginHttpOptions);
+    return this.http.post<HttpResponse<number>>(`${API_URL}/login`, credentials, loginHttpOptions);
   }
 
   logout() {
     localStorage.clear();
-    this.user.next(noUser);
+    this._user.next(noUser);
     return this.http.get(`${API_URL}/logout`, { withCredentials: true });
   }
 
+  checkEmailAvailability(email: string) {
+    return this.http.post<HttpResponse<{ taken: boolean }>>(`${API_URL}/email`, { email });
+  }
+
+  getProfile() {
+    return this.http.get<User>(`${API_URL}/me`, { withCredentials: true });
+  }
+
+  /**
+   *
+   * @param user
+   * @param expires
+   */
   saveAuthToLocal(user: User, expires: Date) {
-    this.user.next(user);
+    this._user.next(user);
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('jwtExpiry', expires.toISOString());
 
     setTimeout(() => {
-      this.validateToken(expires.toISOString());
+      this.validateTokenExpiry(expires.toISOString());
     }, expires.getTime() - new Date().getTime());
   }
 
-  getAuthFromLocal() {
-    return {
+  /**
+   * Checks if user's login is saved in local storage
+   */
+  checkForLocalAuth() {
+    // First check if user is already saved locally
+    const { user, jwtExpiry } = {
       user: JSON.parse(localStorage.getItem('user') || '{}'),
       jwtExpiry: localStorage.getItem('jwtExpiry')
     };
-  }
 
-  checkForLocalAuth() {
-    // First check if user is already saved locally
-    const { user, jwtExpiry } = this.getAuthFromLocal();
-    if(user.id && jwtExpiry && this.validateToken(jwtExpiry)) {
-      this.user.next(user);
+    if(user.id && jwtExpiry && this.validateTokenExpiry(jwtExpiry)) {
+      this._user.next(user);
     }
   }
 
@@ -77,7 +90,7 @@ export class AuthService {
    * returns true if expired, else false
    * @param jwtExpiry ISO format string of expiry date
    */
-  validateToken(jwtExpiry: string): boolean {
+  validateTokenExpiry(jwtExpiry: string): boolean {
     // If JWT is invalid we remove user and its expiry date
     if(new Date() > new Date(jwtExpiry)) {
       localStorage.removeItem('user');
