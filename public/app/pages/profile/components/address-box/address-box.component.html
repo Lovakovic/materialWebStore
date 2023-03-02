@@ -1,5 +1,5 @@
 <mat-expansion-panel hideToggle *ngIf="address"
-                     [expanded]="address.id === primaryAddressId">
+                     [expanded]="expanded">
     <mat-expansion-panel-header>
         <mat-panel-title class="flex justify-between text-base">
             {{address.addressNickname ? address.addressNickname : address.name}}

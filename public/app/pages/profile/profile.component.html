@@ -4,18 +4,19 @@
         <div class="w-5/12 ml-6 mt-6">
             <h2 class="text-center">Your addresses</h2>
             <mat-accordion>
-                <mat-expansion-panel hideToggle [expanded]="true">
+                <app-address-box *ngFor="let address of addresses | findPrimaryAddress | async; let i = index"
+                                 [expanded]="i === 0"
+                                 [address]="address" [primaryAddressId]="primaryAddressId"
+                                 (deleteAddress)="onDeleteAddress($event)"
+                                 class="w-full"
+                ></app-address-box>
+                <mat-expansion-panel hideToggle>
                     <mat-expansion-panel-header>
                         <mat-panel-title class="text-base">New address</mat-panel-title>
                         <mat-icon>add</mat-icon>
                     </mat-expansion-panel-header>
                     <app-new-address (addAddress)="onAddAddress($event)" ></app-new-address>
                 </mat-expansion-panel>
-                <app-address-box *ngFor="let address of addresses | findPrimaryAddress | async"
-                                 [address]="address" [primaryAddressId]="primaryAddressId"
-                                 (deleteAddress)="onDeleteAddress($event)"
-                                 class="w-full"
-                ></app-address-box>
             </mat-accordion>
         </div>
         <div class="w-5/12 mr-6 mt-6">

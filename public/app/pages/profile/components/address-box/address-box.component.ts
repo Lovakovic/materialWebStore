@@ -17,6 +17,7 @@ export class AddressBoxComponent {
   // For some reason I was getting the error whe trying to do a comparison of address.id and primaryAddressId
   // inline, but strangely enough, storing this here and comparing afterwards works
   @Input() primaryAddressId?: number;
+  @Input() expanded?: boolean;
 
   @Output() deleteAddress = new EventEmitter();
 
