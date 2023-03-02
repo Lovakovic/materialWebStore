@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
 import {Cart, CartItem} from "../models/cart.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -6,7 +6,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 @Injectable({
   providedIn: 'root'
 })
-export class CartService implements OnInit {
+export class CartService {
   cart = new BehaviorSubject<Cart>({ items: []});
 
   constructor(private _snackBar: MatSnackBar) {
@@ -15,8 +15,6 @@ export class CartService implements OnInit {
     if(savedCart) {
       this.cart.next(JSON.parse(savedCart));
     }
-  }
-  ngOnInit(): void {
   }
 
   addToCart(item: CartItem): void {

@@ -16,7 +16,7 @@ export class HeaderComponent implements OnInit{
 
   // For displaying proper number on cart icon
   itemsQuantity = 0;
-  user?: User;
+  private _user: User = { id: -1, username: '', email: ''};
 
   @Input()
   get cart(): Cart {
@@ -32,6 +32,15 @@ export class HeaderComponent implements OnInit{
         .reduce((prev, current) => prev + current , 0);
   }
 
+  @Input()
+  get user(): User {
+    return this._user;
+  }
+
+  set user(user: User) {
+    this._user = user;
+  }
+
   constructor(
       private _cartService: CartService,
       private _router: Router,
@@ -39,11 +48,7 @@ export class HeaderComponent implements OnInit{
       private _snackBar: MatSnackBar
   ) { }
 
-  ngOnInit(): void {
-    this._auth.user.subscribe(data => {
-      this.user = data;
-    });
-  }
+  ngOnInit(): void {}
 
   getTotal(items: Array<CartItem>): number {
     return this._cartService.getTotal(items);
