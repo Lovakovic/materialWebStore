@@ -45,7 +45,7 @@ app.use('/products', productRouter);
 const authRouter = require('./routes/auth.routes');
 app.use('/auth', authRouter);
 
-const userRouter = require('./routes/user.routes');
-app.use('/user', userRouter);
+const addressRouter = require('./routes/address.routes');
+app.use('/address', addressRouter);
 
 module.exports = app;

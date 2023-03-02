@@ -58,6 +58,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
           if(res.status === 200) {
             this._snackBar.open('Address deleted.', '', { duration: 1500 });
             this.getAddresses();
+          } else {
+            this._snackBar.open('Something went wrong.', '', { duration: 1500 });
           }
         });
   }
