@@ -16,7 +16,7 @@ export class HeaderComponent implements OnInit{
 
   // For displaying proper number on cart icon
   itemsQuantity = 0;
-  userInfo?: User;
+  user?: User;
 
   @Input()
   get cart(): Cart {
@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit{
 
   ngOnInit(): void {
     this._auth.user.subscribe(data => {
-      this.userInfo = data;
+      this.user = data;
     });
   }
 

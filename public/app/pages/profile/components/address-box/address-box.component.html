@@ -1,19 +1,20 @@
-<mat-expansion-panel hideToggle [expanded]="address?.id === primaryAddressId">
+<mat-expansion-panel hideToggle *ngIf="address"
+                     [expanded]="address.id === primaryAddressId">
     <mat-expansion-panel-header>
         <mat-panel-title class="flex justify-between text-base">
-            {{address?.addressNickname ? address?.addressNickname : address?.name}}
-            <a mat-button *ngIf="primaryAddressId === address?.id" color="accent" disabled>(default)</a>
+            {{address.addressNickname ? address.addressNickname : address.name}}
+            <a mat-button *ngIf="primaryAddressId === address.id" color="accent" disabled>(default)</a>
         </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-list role="list">
-        <mat-list-item><b>{{address?.name}}</b></mat-list-item>
-        <mat-list-item *ngIf="address?.companyName">{{address?.companyName}}</mat-list-item>
-        <mat-list-item>{{address?.street}}</mat-list-item>
-        <mat-list-item>{{address?.city}}, {{address?.zipCode}}</mat-list-item>
-        <mat-list-item>{{address?.country}}</mat-list-item>
-        <mat-list-item>{{address?.phone}}</mat-list-item>
-        <mat-list-item *ngIf="address?.deliveryInstructions"
-                       matTooltip="{{address?.deliveryInstructions}}">
+        <mat-list-item><b>{{address.name}}</b></mat-list-item>
+        <mat-list-item *ngIf="address.companyName">{{address.companyName}}</mat-list-item>
+        <mat-list-item>{{address.street}}</mat-list-item>
+        <mat-list-item>{{address.city}}{{address.zipCode ? ', ' + address.zipCode : ''}}</mat-list-item>
+        <mat-list-item>{{address.country}}</mat-list-item>
+        <mat-list-item>{{address.phone}}</mat-list-item>
+        <mat-list-item *ngIf="address.deliveryInstructions"
+                       matTooltip="{{address.deliveryInstructions}}">
             <u>Instructions</u>
         </mat-list-item>
     </mat-list>
