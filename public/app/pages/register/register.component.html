@@ -4,7 +4,7 @@
           class="flex flex-col">
         <hr>
         <mat-form-field appearance="outline">
-            <input matInput placeholder="Username *" formControlName="username">
+            <input matInput placeholder="Username *" formControlName="username" trim>
             <mat-error *ngIf="username?.errors?.['required'] && username?.touched">
                 Username is required.
             </mat-error>
@@ -15,7 +15,7 @@
             </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <input matInput placeholder="Email *" formControlName="email">
+            <input matInput placeholder="Email *" formControlName="email" trim>
             <mat-error *ngIf="email?.errors?.['required'] && email?.touched">
                 Email is required.
             </mat-error>

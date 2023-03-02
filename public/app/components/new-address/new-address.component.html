@@ -1,45 +1,59 @@
 <form [formGroup]="newAddressForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline">
-        <input matInput type="text" placeholder="Address nickname" formControlName="addressNickname">
+        <input matInput type="text" trim
+               placeholder="Address nickname"
+               formControlName="addressNickname">
         <mat-error *ngIf="addressNickname?.touched">
             {{getErrorMessage('addressNickname')}}
         </mat-error>
     </mat-form-field>
     <div formGroupName="address">
         <mat-form-field appearance="outline">
-            <input matInput type="text" placeholder="Full name *" formControlName="name">
+            <input matInput type="text" trim
+                   placeholder="Full name *"
+                   formControlName="name">
             <mat-error *ngIf="name?.touched">
                 {{getErrorMessage('address.name')}}
             </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <input matInput type="text" placeholder="Company name" formControlName="company">
+            <input matInput type="text" trim
+                   placeholder="Company name"
+                   formControlName="company">
             <mat-error *ngIf="company?.touched">
                 {{getErrorMessage('address.company')}}
             </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <input matInput type="text" placeholder="Street address *" formControlName="street">
+            <input matInput type="text" trim
+                   placeholder="Street address *"
+                   formControlName="street">
             <mat-error *ngIf="street?.touched">
                 {{getErrorMessage('address.street')}}
             </mat-error>
         </mat-form-field>
         <div class="flex justify-between">
             <mat-form-field appearance="outline" style="width: 60%">
-                <input matInput type="text" placeholder="City *" formControlName="city">
+                <input matInput type="text" trim
+                       placeholder="City *"
+                       formControlName="city">
                 <mat-error *ngIf="city?.touched">
                     {{getErrorMessage('address.city')}}
                 </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline" style="width: 30%">
-                <input matInput type="text" placeholder="Zip code" formControlName="zipCode">
+                <input matInput type="text" trim
+                       placeholder="Zip code"
+                       formControlName="zipCode">
                 <mat-error *ngIf="zipCode?.touched">
                     {{getErrorMessage('address.zipCode')}}
                 </mat-error>
             </mat-form-field>
         </div>
         <mat-form-field appearance="outline">
-            <input matInput type="text" placeholder="Country *" formControlName="country">
+            <input matInput type="text" trim
+                   placeholder="Country *"
+                   formControlName="country">
             <mat-error *ngIf="country?.touched">
                 {{getErrorMessage('address.country')}}
             </mat-error>
@@ -49,7 +63,9 @@
                     matTooltip="Phone number with country code included."
                     matTooltipPosition="right"
     >
-        <input matInput type="text" placeholder="Phone *" formControlName="phone">
+        <input matInput type="text" trim
+               placeholder="Phone *"
+               formControlName="phone">
         <mat-error *ngIf="phone?.touched">
             {{getErrorMessage('phone')}}
         </mat-error>
@@ -58,7 +74,10 @@
                     matTooltip="500 characters maximum."
                     matTooltipPosition="right"
     >
-        <textarea matInput placeholder="Delivery instructions" formControlName="deliveryInstructions"></textarea>
+        <textarea matInput trim
+                  placeholder="Delivery instructions"
+                  formControlName="deliveryInstructions">
+        </textarea>
         <mat-error *ngIf="deliveryInstructions?.touched">
             {{getErrorMessage('deliveryInstructions')}}
         </mat-error>
