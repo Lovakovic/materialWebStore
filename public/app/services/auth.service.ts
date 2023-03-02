@@ -94,4 +94,8 @@ export class AuthService {
 
     return true;
   }
+
+  refreshUser(): void {
+    this.getProfile().subscribe(user => this._user.next(user));
+  }
 }

@@ -13,8 +13,9 @@ import {Address} from "../../../../models/address.model";
 })
 export class AddressBoxComponent {
   @Input() address?: Address;
-  // For some reason I was getting the error whe trying to do a comparison and pass a boolean
-  // here instead of the whole id so that's why there's primaryAddressId in every address component
+
+  // For some reason I was getting the error whe trying to do a comparison of address.id and primaryAddressId
+  // inline, but strangely enough, storing this here and comparing afterwards works
   @Input() primaryAddressId?: number;
 
   @Output() deleteAddress = new EventEmitter();

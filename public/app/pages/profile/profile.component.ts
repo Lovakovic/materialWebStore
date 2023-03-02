@@ -41,6 +41,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
           .subscribe(res => {
               if(res.status === 200) {
                   this._snackBar.open('Address added.', '', { duration: 1500 });
+
+                  // Highlight new primary address (primaryAddressId stored in user info)
+                  if(addressData.primary) {
+                      this._authService.refreshUser();
+                  }
+
                   this.getAddresses();
               }
           });
