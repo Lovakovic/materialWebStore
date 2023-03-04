@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
     // Subscribe for showing newly added items in cart
     this._cartService.cart.subscribe(_cart => {
       this.cart = _cart;
-    })
+    });
     this._auth.user.subscribe(user => {
       this.user = user;
     });
