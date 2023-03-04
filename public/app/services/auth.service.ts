@@ -7,17 +7,11 @@ import {User} from "../models/user.model";
 
 const API_URL = 'http://localhost:8081/auth';
 
-const noUser = {
-  id: -1,
-  username: '',
-  email: ''
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private _user: BehaviorSubject<User> = new BehaviorSubject<User>(noUser);
+  private _user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
   constructor(private http: HttpClient) {
     this.checkForLocalAuth();
@@ -43,7 +37,7 @@ export class AuthService {
 
   logout() {
     localStorage.clear();
-    this._user.next(noUser);
+    this._user.next(undefined);
     return this.http.get(`${API_URL}/logout`, { withCredentials: true });
   }
 

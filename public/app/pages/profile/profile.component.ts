@@ -32,7 +32,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.addresses = _addresses
         });
     this.primaryAddressIdSubscription = this._authService.user.subscribe(user => {
-        this.primaryAddressId = user.primaryAddressId;
+        this.primaryAddressId = user?.primaryAddressId;
     });
   }
 

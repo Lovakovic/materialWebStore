@@ -1,12 +1,12 @@
 <mat-toolbar class="border-x justify-between">
     <a routerLink="home">Home</a>
     <div>
-        <button *ngIf="user.id === -1"
+        <button *ngIf="!user"
                 mat-raised-button color="primary"
                 class="mr-9 mb-2.5"
                 (click)="onNavigateToLogin()"
         >Log in</button>
-        <button *ngIf="user.id !== -1"
+        <button *ngIf="user"
                 class="truncate text-xs mr-3 mt-2"
                 [matMenuTriggerFor]="userMenu"
                 (click)="onNavigateToProfile()"

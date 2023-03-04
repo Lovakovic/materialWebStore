@@ -5,7 +5,7 @@ module.exports = {
         host: 'localhost',
         user: 'dev',
         password: 'devpass',
-        database: 'webShopTest', // webShop
+        database: 'webShop',
         debug: false
     },
     secret: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',

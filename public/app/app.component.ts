@@ -14,7 +14,7 @@ import {AuthService} from "./services/auth.service";
 })
 export class AppComponent implements OnInit {
   cart: Cart = { items: [] };
-  user: User = { id: -1, username: '', email: ''};
+  user?: User;
 
   constructor(
       private _cartService: CartService,
