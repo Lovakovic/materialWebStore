@@ -41,7 +41,6 @@ const getAddresses = async (req, res) => {
 const postAddress = async (req, res) => {
     if (req.cookies.loginToken) {
         try {
-            console.log(req.body);
             const decoded = await promisify(jwt.verify)(req.cookies.loginToken, secret);
             const address = req.body.address;
 
@@ -86,7 +85,6 @@ const postAddress = async (req, res) => {
             ].filter(Boolean);
 
             conn.query(query, values);
-            console.log(`Added address ${JSON.stringify(address)}`)
 
             // Modify the user table and set the new primary address id
             if(req.body.newPrimary) {
