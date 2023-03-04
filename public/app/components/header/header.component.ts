@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Cart, Product} from "../../models/cart.model";
+import {Cart, CartItem} from "../../models/cart.model";
 import {CartService} from "../../services/cart.service";
 import {Router} from "@angular/router";
 import {User} from "../../models/user.model";
@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit{
     this._auth.user.subscribe(user => this._user = user);
   }
 
-  getTotal(items: Array<Product>): number {
+  getTotal(items: Array<CartItem>): number {
     return this._cartService.getTotal(items);
   }
 

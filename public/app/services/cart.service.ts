@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
-import {Cart, Product} from "../models/cart.model";
+import {Cart, CartItem} from "../models/cart.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Injectable({
@@ -17,7 +17,7 @@ export class CartService {
     }
   }
 
-  addToCart(item: Product): void {
+  addToCart(item: CartItem): void {
     const items = [...this.cart.value.items];
 
     const itemInCart = items.find(_item => _item.id === item.id);
@@ -38,7 +38,7 @@ export class CartService {
     this._snackBar.open('1 item added to cart.', 'OK', { duration: 3000});
   }
 
-  getTotal(items: Array<Product>): number {
+  getTotal(items: Array<CartItem>): number {
     return items
         .map(item => item.price * item.quantity)
         .reduce((prev, current) => prev + current, 0);
@@ -56,7 +56,7 @@ export class CartService {
   }
 
   // Removes item type from cart
-  removeFromCart(item: Product, update = true): Array<Product> {
+  removeFromCart(item: CartItem, update = true): Array<CartItem> {
     const filteredItems = this.cart.value.items.filter(_item => _item.id !== item.id);
     this.cart.next({ items: filteredItems });
 
@@ -75,8 +75,8 @@ export class CartService {
   }
 
   // Decrements item amount
-  removeQuantity(item: Product): void {
-    let itemForRemoval: Product | undefined;
+  removeQuantity(item: CartItem): void {
+    let itemForRemoval: CartItem | undefined;
 
     let filteredItems = this.cart.value.items.map((_item) => {
       if(_item.id === item.id) {
