@@ -31,9 +31,9 @@ const getAllProducts = async (req, res) => {
         rows = insertMediaPath(rows);
         res.json(rows);
 
-    } catch(e) {
-        console.log(e);
-        return res.json({ 'code': 500, 'status': 'Error with query' });
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json('Internal server error.');
     }
 };
 
@@ -58,9 +58,9 @@ const getProductsByCategory = async (req, res) => {
         rows = insertMediaPath(rows);
         res.json(rows);
 
-    } catch (e) {
-        console.log(e);
-        return res.json({ 'code': 500, 'status': 'Error with query' });
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json('Internal server error.');
     }
 };
 
@@ -76,9 +76,9 @@ const getCategories = async (req, res) => {
 
         res.json(rows);
 
-    } catch(e) {
-        console.log(e);
-        return res.json({ 'code': 500, 'status': 'Error with query' });
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json('Internal server error.');
     }
 };
 
