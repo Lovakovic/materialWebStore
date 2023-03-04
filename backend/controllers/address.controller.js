@@ -21,19 +21,16 @@ const getAddresses = async (req, res) => {
                     'SELECT id, name, addressNickname, companyName, street, city, zipCode, country, phone, ' +
                     'deliveryInstructions FROM address WHERE userId = ? ORDER BY lastModified DESC', decoded.id);
             }
-
             conn.release();
 
-            // Convert MYSQL-s representation of true/false to avoid any bugs
-            rows.forEach(row => {
-                row.main = row.primary === 1;
-            });
-
             return res.json(rows);
-        } catch (e) {
-            console.log(e);
-            res.status(401);
-            return res.json('Bad token.');
+        } catch(err) {
+            console.log(err);
+            if(err.name === 'JsonWebTokenError') {
+                return res.status(401).json('Bad token.');
+            } else {
+                return res.status(500).json('Internal server error.');
+            }
         }
     } else {
         res.status(401);
@@ -103,10 +100,13 @@ const postAddress = async (req, res) => {
             conn.release();
 
             return res.status(200).send();
-        } catch (e) {
-            console.log(e);
-            res.status(500);
-            return res.json('Internal error');
+        } catch(err) {
+            console.log(err);
+            if(err.name === 'JsonWebTokenError') {
+                return res.status(401).json('Bad token.');
+            } else {
+                return res.status(500).json('Internal server error.');
+            }
         }
     } else {
         res.status(401);
@@ -127,10 +127,13 @@ const deleteAddress = async (req, res) => {
 
             console.log(`Deleted address with id ${req.params.id}`);
             return res.status(200).json();
-        } catch (e) {
-            console.log(e);
-            res.status(401);
-            return res.json('Bad token.');
+        } catch(err) {
+            console.log(err);
+            if(err.name === 'JsonWebTokenError') {
+                return res.status(401).json('Bad token.');
+            } else {
+                return res.status(500).json('Internal server error.');
+            }
         }
     } else {
         res.status(401);
