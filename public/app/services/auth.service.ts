@@ -4,6 +4,7 @@ import {Credentials} from "../models/credentials.model";
 import {BehaviorSubject} from "rxjs";
 import {response} from "express";
 import {User} from "../models/user.model";
+import {CartService} from "./cart.service";
 
 const API_URL = 'http://localhost:8081/auth';
 
@@ -13,7 +14,10 @@ const API_URL = 'http://localhost:8081/auth';
 export class AuthService {
   private _user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
-  constructor(private http: HttpClient) {
+  constructor(
+      private _http: HttpClient,
+      private _cartService: CartService
+  ) {
     this.checkForLocalAuth();
   }
 
@@ -22,7 +26,7 @@ export class AuthService {
   }
 
   register(credentials: Credentials) {
-    return this.http.post(`${API_URL}/register`, credentials);
+    return this._http.post(`${API_URL}/register`, credentials);
   }
 
   login(credentials: Credentials) {
@@ -32,21 +36,22 @@ export class AuthService {
       observe: 'response' as 'response'
     }
 
-    return this.http.post<HttpResponse<number>>(`${API_URL}/login`, credentials, loginHttpOptions);
+    return this._http.post<HttpResponse<number>>(`${API_URL}/login`, credentials, loginHttpOptions);
   }
 
   logout() {
     localStorage.clear();
+    this._cartService.clearCart();
     this._user.next(undefined);
-    return this.http.get(`${API_URL}/logout`, { withCredentials: true });
+    return this._http.get(`${API_URL}/logout`, { withCredentials: true });
   }
 
   checkEmailAvailability(email: string) {
-    return this.http.post<HttpResponse<{ taken: boolean }>>(`${API_URL}/email`, { email });
+    return this._http.post<HttpResponse<{ taken: boolean }>>(`${API_URL}/email`, { email });
   }
 
   getProfile() {
-    return this.http.get<User>(`${API_URL}/me`, { withCredentials: true });
+    return this._http.get<User>(`${API_URL}/me`, { withCredentials: true });
   }
 
   /**
