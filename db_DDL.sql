@@ -98,7 +98,8 @@ CREATE VIEW cart AS
 SELECT product.name AS name, cartItem.quantity AS quantity, product.price AS price,
        image, userId, productId, addedAt
 FROM user JOIN cartItem ON user.id = cartItem.userId
-          JOIN product ON cartItem.productId = product.id;
+          JOIN product ON cartItem.productId = product.id
+ORDER BY addedAt DESC;
 
 
 # Some dummy product data
