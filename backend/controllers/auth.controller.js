@@ -2,7 +2,6 @@ const { pool } = require('../app');
 const { secret, tokenExpiration } = require('../config');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {promisify} = require("util");
 
 const checkIfEmailExists = async (email) => {
   try {
@@ -34,11 +33,10 @@ const registerUser = async (req, res) => {
 
     conn.release();
 
-    res.json('Success');
+    return res.json('Success');
   } catch (e) {
     console.log(e);
-    res.status(500);
-    res.json('Error with query.');
+    return res.status(500).json('Internal server error.');
   }
 };
 
@@ -80,48 +78,38 @@ const attemptLogin = async (req, res) => {
         return res.json(cookieOptions.expires);
       }
 
-      res.status(401);
-      return res.json('Wrong password.');
+      return res.status(401).json('Wrong password.');
   } catch(e) {
     console.log(e);
-    res.status(500);
-    return res.json('Error with query.');
+    return res.status(500).json('Internal server error.');
   }
 };
 
 const getProfile = async (req, res) => {
-  if(req.cookies.loginToken) {
     try {
-      // Verify token
-      const decoded = await promisify(jwt.verify)(req.cookies.loginToken, secret);
+      const userId = req.userId;
 
       // Check if the user still exists
       let conn = await pool.getConnection();
       let rows = await  conn.query('SELECT id, username, email, primaryAddressId FROM user WHERE id = ?',
-          decoded.id);
+          userId);
 
       conn.release();
 
       const userFound = rows.length === 1;
 
       if(!userFound) {
-        res.status(401);
-        return res.json('Missing user.');
+        return res.status(401).json('Missing user.');
       }
 
       const userData = { ...rows[0] };
 
       console.log(`Sending user data (id: ${userData.id})`);
-      res.json(userData);
+      return res.json(userData);
     } catch (e) {
       console.log(e);
-      res.status(401);
-      return res.json('Bad token.');
+      return res.status(500).json('Internal server error.');
     }
-  } else {
-    res.status(401);
-    return res.json('Missing token.');
-  }
 };
 
 const isEmailTaken = async (req, res) => {
@@ -142,7 +130,7 @@ const logout = (req, res) => {
     sameSite: 'Strict',
     secure: true
   });
-  res.json('Success');
+  return res.json('Success');
 }
 
 module.exports = {
