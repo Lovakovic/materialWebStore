@@ -21,8 +21,11 @@ const postCart = async (req, res) => {
         const cartItems = req.body.cart;
 
         let conn = await pool.getConnection();
-        let query = `INSERT INTO cartItem (userId, productId, quantity) VALUES `;
-        query += cartItems.map(() => `(?, ?, ?)`.join(', '));
+        let query;
+        for(let cartItem of cartItems) {
+            query = 'CALL addToCart(?, ?, ?)';
+            conn.query(query, [item.userId, item.id, item.quantity])
+        }
 
         conn.query(query, cartItems);
 
