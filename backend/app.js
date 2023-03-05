@@ -48,4 +48,7 @@ app.use('/auth', authRouter);
 const addressRouter = require('./routes/address.routes');
 app.use('/address', addressRouter);
 
+const cartRouter = require('./routes/cart.routes');
+app.use('/cart', cartRouter);
+
 module.exports = app;
