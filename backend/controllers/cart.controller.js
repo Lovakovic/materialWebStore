@@ -1,4 +1,5 @@
 const { pool } = require('../app');
+const insertMediaPath = require('../utils/insertMediaPath');
 
 const getCart = async (req, res) => {
     try {
@@ -8,6 +9,8 @@ const getCart = async (req, res) => {
         let rows = await conn.query('SELECT productId, name, quantity, price, image FROM cart ' +
             'WHERE userId = ?', [userId]);
         conn.release();
+
+        rows = insertMediaPath(rows);
 
         return res.json(rows);
     } catch(err) {
