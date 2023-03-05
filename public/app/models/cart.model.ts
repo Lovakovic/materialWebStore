@@ -3,9 +3,9 @@ export interface Cart {
 }
 
 export interface CartItem {
-    product: string;
+    productId: number;
     name: string;
     price: number;
     quantity: number;
-    id: number;
+    image: string;
 }

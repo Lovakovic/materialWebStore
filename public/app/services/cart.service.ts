@@ -20,7 +20,7 @@ export class CartService {
   addToCart(item: CartItem): void {
     const items = [...this.cart.value.items];
 
-    const itemInCart = items.find(_item => _item.id === item.id);
+    const itemInCart = items.find(_item => _item.productId === item.productId);
 
     if(itemInCart) {
       itemInCart.quantity += 1;
@@ -57,7 +57,7 @@ export class CartService {
 
   // Removes item type from cart
   removeFromCart(item: CartItem, update = true): Array<CartItem> {
-    const filteredItems = this.cart.value.items.filter(_item => _item.id !== item.id);
+    const filteredItems = this.cart.value.items.filter(_item => _item.productId !== item.productId);
     this.cart.next({ items: filteredItems });
 
     // Don't forget to update local storage!
@@ -79,7 +79,7 @@ export class CartService {
     let itemForRemoval: CartItem | undefined;
 
     let filteredItems = this.cart.value.items.map((_item) => {
-      if(_item.id === item.id) {
+      if(_item.productId === item.productId) {
         _item.quantity--;
 
         // Check if item has to be removed from cart altogether
