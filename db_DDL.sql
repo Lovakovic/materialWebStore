@@ -101,6 +101,21 @@ FROM user JOIN cartItem ON user.id = cartItem.userId
           JOIN product ON cartItem.productId = product.id
 ORDER BY addedAt DESC;
 
+DELIMITER //
+CREATE PROCEDURE addToCart(IN i_userId INT, IN i_productId INT, IN i_quantity INT)
+BEGIN
+    DECLARE v_prevQuantity INT DEFAULT 0;
+    SELECT quantity INTO v_prevQuantity FROM cartItem WHERE userId = i_userId AND productId = i_productId;
+
+    SELECT v_prevQuantity;
+    IF v_prevQuantity != 0 THEN
+        UPDATE cartItem SET quantity = quantity + i_quantity WHERE userId = i_userId AND productId = i_productId;
+    ELSE
+        INSERT INTO cartItem (userId, productId, quantity) VALUES (i_userId, i_productId, i_quantity);
+    END IF;
+END //
+DELIMITER ;
+
 
 # Some dummy product data
 INSERT INTO category (name, description) VALUES
