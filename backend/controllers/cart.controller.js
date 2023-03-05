@@ -18,16 +18,15 @@ const getCart = async (req, res) => {
 
 const postCart = async (req, res) => {
     try {
-        const cartItems = req.body.cart;
+        const cartItems = req.body.items;
+        const userId = req.userId;
 
         let conn = await pool.getConnection();
         let query;
         for(let cartItem of cartItems) {
             query = 'CALL addToCart(?, ?, ?)';
-            conn.query(query, [item.userId, item.id, item.quantity])
+            await conn.query(query, [userId, cartItem.productId, cartItem.quantity])
         }
-
-        conn.query(query, cartItems);
 
         return res.status(200).send();
     } catch(err) {
