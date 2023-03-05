@@ -1,16 +1,7 @@
-const config = require("../config");
+const insertMediaPath = require('../utils/insertMediaPath');
 const { pool } = require('../app');
 
 // WARNING: There is ZERO SQLInjection protection here, use at your own risk
-
-// Modifies the image path property, so it points to the correct location
-const insertMediaPath = (rows) => {
-    return rows.map(row => {
-        return {
-            ...row,
-            image: `${config.api_url}/${config.mediaPath}/${row.image}`}
-    });
-}
 
 const getAllProducts = async (req, res) => {
     try {
