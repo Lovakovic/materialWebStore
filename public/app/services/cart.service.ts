@@ -35,7 +35,7 @@ export class CartService {
     this.cart.next({ items });
 
     // Alert the user
-    this._snackBar.open('1 item added to cart.', 'OK', { duration: 3000});
+    this._snackBar.open('1 item added to cart.', '', { duration: 3000});
   }
 
   getTotal(items: Array<CartItem>): number {
@@ -52,7 +52,7 @@ export class CartService {
     localStorage.removeItem('cart');
 
     // Alert the user
-    this._snackBar.open('Cart is cleared.', '', { duration: 1500 });
+    this._snackBar.open('Cart is cleared.', '', { duration: 3000 });
   }
 
   // Removes item type from cart
@@ -63,12 +63,12 @@ export class CartService {
     // Don't forget to update local storage!
     localStorage.setItem('cart', JSON.stringify({ items: filteredItems }));
 
-    this._snackBar.open(`${item.name} removed from cart.`, 'OK', { duration: 3000 });
+    this._snackBar.open(`${item.name} removed from cart.`, '', { duration: 3000 });
 
 
     if(update) {
       this.cart.next({ items: filteredItems });
-      this._snackBar.open(`1 item removed from cart.`, 'OK',
+      this._snackBar.open(`1 item removed from cart.`, '',
           { duration: 3000 });
     }
     return filteredItems;
@@ -98,7 +98,7 @@ export class CartService {
       this.cart.next({ items: filteredItems });
       // Update local storage
       localStorage.setItem('cart', JSON.stringify({ items: filteredItems }));
-      this._snackBar.open(`1 item removed from cart.`, 'OK',
+      this._snackBar.open(`1 item removed from cart.`, '',
           { duration: 3000 });
     }
   }

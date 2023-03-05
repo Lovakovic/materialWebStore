@@ -40,7 +40,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this._addressService.postAddress(addressData.address, addressData.primary)
           .subscribe(res => {
               if(res.status === 200) {
-                  this._snackBar.open('Address added.', '', { duration: 1500 });
+                  this._snackBar.open('Address added.', '', { duration: 3000 });
 
                   // Highlight new primary address (primaryAddressId stored in user info)
                   if(addressData.primary) {
@@ -56,10 +56,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this._addressService.deleteAddress(address.id || -1)
         .subscribe(res => {
           if(res.status === 200) {
-            this._snackBar.open('Address deleted.', '', { duration: 1500 });
+            this._snackBar.open('Address deleted.', '', { duration: 3000 });
             this.getAddresses();
           } else {
-            this._snackBar.open('Something went wrong.', '', { duration: 1500 });
+            this._snackBar.open('Something went wrong.', '', { duration: 3000 });
           }
         });
   }

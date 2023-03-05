@@ -57,12 +57,12 @@ export class LoginComponent implements OnDestroy {
           next: (user: User) => {
             console.log(`Your login expires at ${tokenExpires.toString()}`);
             this.auth.saveAuthToLocal(user, tokenExpires);
-            this.snackBar.open('You are now logged in.', '', { duration: 2000 });
+            this.snackBar.open('You are now logged in.', '', { duration: 3000 });
             this.router.navigate(['/']);
           },
           error: () => {
             this.loginForm.patchValue({ password: '' });
-            this.snackBar.open('Invalid email / password combination.', '', { duration: 2000 })
+            this.snackBar.open('Invalid email / password combination.', '', { duration: 3000 })
           }
       });
   }

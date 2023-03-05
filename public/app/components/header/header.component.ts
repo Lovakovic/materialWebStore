@@ -70,7 +70,7 @@ export class HeaderComponent implements OnInit{
 
   onLogout(): void {
     this._auth.logout().subscribe(() => {
-      this._snackBar.open(`You've been logged out.`, '', { duration: 1500 });
+      this._snackBar.open(`You've been logged out.`, '', { duration: 3000 });
       this._router.navigate(['']);
     });
   }
