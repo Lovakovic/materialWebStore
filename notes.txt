@@ -91,6 +91,8 @@ Good practices to implement:
 	- elements that are rendered with *ngFor directive (cannot be null) 
 		should have their @Input() marked with `!` instead of `?`
     - crate different environments for storing variables such as API_URL
+    - implement subscription handler class for automatic unsubscribing like
+        described in this video: https://youtu.be/TkcLN95R0VA?t=466
 
 Todo from project requirements:
 + validate registration and login info
