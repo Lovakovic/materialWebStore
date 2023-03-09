@@ -1,6 +1,8 @@
 Next:
 -> save user's cart to database
 	- connect the API to the existing frontend
+	- merge functions for storing cart locally and for communication with server
+-> crate different environments for storing variables such as API_URL
 
 Implement new functionality:
 -> user login functionality
@@ -88,6 +90,7 @@ Implement new functionality:
 Good practices to implement:
 	- elements that are rendered with *ngFor directive (cannot be null) 
 		should have their @Input() marked with `!` instead of `?`
+    - crate different environments for storing variables such as API_URL
 
 Todo from project requirements:
 + validate registration and login info
