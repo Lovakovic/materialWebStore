@@ -107,7 +107,6 @@ BEGIN
     DECLARE v_prevQuantity INT DEFAULT 0;
     SELECT quantity INTO v_prevQuantity FROM cartItem WHERE userId = i_userId AND productId = i_productId;
 
-    SELECT v_prevQuantity;
     IF v_prevQuantity != 0 THEN
         UPDATE cartItem SET quantity = quantity + i_quantity WHERE userId = i_userId AND productId = i_productId;
     ELSE
