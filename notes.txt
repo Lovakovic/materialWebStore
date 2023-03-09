@@ -1,0 +1,128 @@
+Next:
+-> save user's cart to database
+	- connect the API to the existing frontend
+
+Implement new functionality:
+-> user login functionality
+	+ add table in DB for storing user information
+	+ implement API for handling user data (INSERT)
+	+ implement JWT authentication on backend
+	+ create registration page
+	    + create auth service
+	        + create method for registering a new user
+	        + create method for checking if email is unique
+        + adapt the API as needed
+            + create an API for checking if email is taken
+        + create registration page in Angular
+            + define parameters and validate form
+            + redirect user to login page after successful registration
+                + notify the user via snackbar that the registration was successful
+        + implement async email validator that uses user service to check if
+          entered email is free
+    + login page
+        + expose the login API
+        + create login page in Angular
+        + create method for logging in in auth service
+        + verify that the jwt token is saved in a cookie
+        + create a log in button in navigation bar
+            + hide the button if user is logged in
+	+ implement JWT authentication on frontend
+	    + delete the local storage data after the cookie and jwt expire
+	    	- delete user's cart from local storage
+	- implement JWT authentication for user specific data requests on backend
+	    + for user's account data
+	    + for user's addresses
+	    - for user's orders
+	    - for user's cart
+
+-> create user's profile page
+    - addresses
+        + create the component for displaying a single address and bundle them in a list
+            + add the button to delete an address
+        + create protected API for user's addresses
+            + get for all addresses
+            + delete an address
+            + post for adding a new address
+        + create a component for adding a new address
+            + displayed as a button above the main address, expands upon click
+            + create a form for entering a new address
+                + make it reusable, so it can also be used on checkout page
+                + validate according to DB table parameters
+		+ implement storing of addresses locally in Angular
+            + make address component emit delete signal instead of keeping the logic
+                inside of component
+            + implement component refresh upon deleting or adding an address
+		+ highlight primary address
+			+ highlight the new primary address if checkbox is checked upon entry
+			+ automatically expand the primary address card
+		- add the `Make primary address` button on every address box
+			- create API endpoint for patching primary address
+    - orders
+		- create view my orders component
+			- create order entity in DB
+			- each user can view his own orders and info about them
+
+    - before actually making an order user has to fill in all the info about himself
+
+-> save user's cart to database
+	+ delete user's cart from local storage upon logout
+	+ create table in DB
+		+ create view for complete cart
+	+ create API for managing cart
+		+ get cart
+			+ returns cart rows with same userId
+		+ post cart
+			+ inserts rows to cartItem
+		- delete cart
+			- deletes cartItem rows with same userId
+	- connect the API to the existing frontend
+
+-> product rating
+
+-> jwt authentication
+
+-> ability to search products by name
+
+-> separate the app into (lazily loaded) modules
+
+Good practices to implement:
+	- elements that are rendered with *ngFor directive (cannot be null) 
+		should have their @Input() marked with `!` instead of `?`
+
+Todo from project requirements:
++ validate registration and login info
+- implement admin page for web-shop
+	- can manipulate all tables in database
++ create at least one custom Angular pipe (that makes sense)
+    + find-primary-address pipe for highlighting primary address
+- implement enviromnets and environment variables for development
+
+Advanced
+-> user experience
+	- create a small drop down menu on `Your page` navbar button that opens upon hover
+	- change the layout of profile page on mobile aspect ratios so that orders and addresses are
+		displayed one above the other
+	- enable users to change their user account data (name, password...) or close the account
+	- display password strength and validate password more strictly when registering user
+	- add hints to forms (described on form field page in angular material)
+	- add a country picker drop down menu for choosing a country when adding an address
+	- add service interceptor that displays loading bar on top of the heading when http request is loading
+
+-> code
+	- modify frontend HTTP response checks to respond to status codes, not error messages
+
+-> security
+	- implement SQLInjection protection on backend queries
+	- implement data validation on backend
+
+
+Bugs to squash:
++ make the entire category button clickable in filter by category section
++ fix the styling bug of home page
++ trim the leading and trailing whitespace in forms
++ if address is marked as primary and then deleted the card doesn't disappear
+- if new address is added, deleting it right after (without first refreshing the page) doesn't
+	trigger component refresh
+- hide the name of the address if it overflows the container
+- allow the user to unselect the product filter (to show all products again)
+- fix SQL injection vulnerability in products.controller.js when injecting sort parameter into query
