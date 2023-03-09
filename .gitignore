@@ -40,7 +40,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-/notes.txt
 /media/
 /.notes.txt.swp
 /dummy/
