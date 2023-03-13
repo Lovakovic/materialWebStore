@@ -27,7 +27,7 @@ const postCart = async (req, res) => {
         let conn = await pool.getConnection();
         let query;
         for(let cartItem of cartItems) {
-            query = 'CALL addToCart(?, ?, ?)';
+            query = 'CALL updateCart(?, ?, ?)';
             await conn.query(query, [userId, cartItem.productId, cartItem.quantity])
         }
 
@@ -40,10 +40,18 @@ const postCart = async (req, res) => {
 
 const deleteCart = async (req, res) => {
     try {
+        const productId = req.params.productId;
         const userId = req.userId;
 
         let conn = await pool.getConnection();
-        await conn.query('DELETE FROM cartItem WHERE userId = ?', [userId]);
+        if(productId) {
+            console.log(`Tried to delete product ${productId}`)
+            await conn.query('DELETE FROM cartItem WHERE userId = ? AND productId = ?',
+                [userId, productId]);
+        } else {
+            console.log(`Tried to delete cart`);
+            await conn.query('DELETE FROM cartItem WHERE userId = ?', [userId]);
+        }
 
         return res.status(200).send();
     } catch(err) {
