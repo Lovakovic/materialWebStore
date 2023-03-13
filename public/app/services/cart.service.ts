@@ -3,8 +3,7 @@ import {BehaviorSubject} from "rxjs";
 import {Cart, CartItem} from "../models/cart.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {HttpClient} from "@angular/common/http";
-
-const API_URL = `http://localhost:8081/cart`;
+import {environment} from "../../environment/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -25,17 +24,17 @@ export class CartService {
 
   // Server communication
   getCart() {
-    return this.http.get<Array<CartItem>>(`${API_URL}`, { withCredentials: true })
+    return this.http.get<Array<CartItem>>(`${environment.baseUrl}/cart`, { withCredentials: true })
   }
 
   // Can be used to insert or update item quantity (doesn't work for removing item type from cart)
   postCart(cart: Cart) {
-    return this.http.post(`${API_URL}`, cart, { withCredentials: true });
+    return this.http.post(`${environment.baseUrl}/cart`, cart, { withCredentials: true });
   }
 
   // Can delete entire cart or delete product type from cart
   deleteCart(productId: number | undefined = undefined) {
-    const url = API_URL + (productId ? `/` + productId?.toString() : ``);
+    const url = `${environment.baseUrl}/cart` + (productId ? `/` + productId?.toString() : ``);
     return this.http.delete(url, { withCredentials: true });
   }
 

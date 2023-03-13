@@ -114,6 +114,7 @@ Advanced
 
 -> code
 	- modify frontend HTTP response checks to respond to status codes, not error messages
+	- refactor cart service
 
 -> security
 	- implement SQLInjection protection on backend queries

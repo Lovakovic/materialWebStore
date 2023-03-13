@@ -5,8 +5,7 @@ import {BehaviorSubject} from "rxjs";
 import {response} from "express";
 import {User} from "../models/user.model";
 import {CartService} from "./cart.service";
-
-const API_URL = 'http://localhost:8081/auth';
+import {environment} from "../../environment/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +14,8 @@ export class AuthService {
   private _user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
   constructor(
-      private _http: HttpClient,
-      private _cartService: CartService
+      private http: HttpClient,
+      private cartService: CartService
   ) {
     this.checkForLocalAuth();
   }
@@ -26,7 +25,7 @@ export class AuthService {
   }
 
   register(credentials: Credentials) {
-    return this._http.post(`${API_URL}/register`, credentials);
+    return this.http.post(`${environment.baseUrl}/auth/register`, credentials);
   }
 
   login(credentials: Credentials) {
@@ -36,22 +35,22 @@ export class AuthService {
       observe: 'response' as 'response'
     }
 
-    return this._http.post<HttpResponse<number>>(`${API_URL}/login`, credentials, loginHttpOptions);
+    return this.http.post<HttpResponse<number>>(`${environment.baseUrl}/auth/login`, credentials, loginHttpOptions);
   }
 
   logout() {
     localStorage.clear();
-    this._cartService.clearCart();
+    this.cartService.clearCart();
     this._user.next(undefined);
-    return this._http.get(`${API_URL}/logout`, { withCredentials: true });
+    return this.http.get(`${environment.baseUrl}/auth/logout`, { withCredentials: true });
   }
 
   checkEmailAvailability(email: string) {
-    return this._http.post<HttpResponse<{ taken: boolean }>>(`${API_URL}/email`, { email });
+    return this.http.post<HttpResponse<{ taken: boolean }>>(`${environment.baseUrl}/auth/email`, { email });
   }
 
   getProfile() {
-    return this._http.get<User>(`${API_URL}/me`, { withCredentials: true });
+    return this.http.get<User>(`${environment.baseUrl}/auth/me`, { withCredentials: true });
   }
 
   /**
