@@ -1,7 +1,4 @@
 Next:
--> save user's cart to database
-	- connect the API to the existing frontend
-	- merge functions for storing cart locally and for communication with server
 -> crate different environments for storing variables such as API_URL
 
 Implement new functionality:
@@ -75,9 +72,11 @@ Implement new functionality:
 			+ returns cart rows with same userId
 		+ post cart
 			+ inserts rows to cartItem
-		- delete cart
-			- deletes cartItem rows with same userId
-	- connect the API to the existing frontend
+		+ delete cart
+			+ deletes cartItem rows with same userId
+			+ deletes cartItem rows with specified productId
+	+ connect the API to the existing frontend
+	    + merge functions for server communication into existing event handlers
 
 -> product rating
 
@@ -100,7 +99,7 @@ Todo from project requirements:
 	- can manipulate all tables in database
 + create at least one custom Angular pipe (that makes sense)
     + find-primary-address pipe for highlighting primary address
-- implement enviromnets and environment variables for development
+- implement environments and environment variables for development
 
 Advanced
 -> user experience
@@ -111,7 +110,7 @@ Advanced
 	- display password strength and validate password more strictly when registering user
 	- add hints to forms (described on form field page in angular material)
 	- add a country picker drop down menu for choosing a country when adding an address
-	- add service interceptor that displays loading bar on top of the heading when http request is loading
+	- add http interceptor that displays loading bar on top of the heading when http request is loading
 
 -> code
 	- modify frontend HTTP response checks to respond to status codes, not error messages
