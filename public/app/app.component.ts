@@ -17,16 +17,16 @@ export class AppComponent implements OnInit {
   user?: User;
 
   constructor(
-      private _cartService: CartService,
-      private _auth: AuthService) {
+      private cartService: CartService,
+      private authService: AuthService) {
   }
 
   ngOnInit(): void {
     // Subscribe for showing newly added items in cart
-    this._cartService.cart.subscribe(_cart => {
+    this.cartService.cart.subscribe(_cart => {
       this.cart = _cart;
     });
-    this._auth.user.subscribe(user => {
+    this.authService.user.subscribe(user => {
       this.user = user;
     });
   }
