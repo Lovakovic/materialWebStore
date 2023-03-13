@@ -38,8 +38,24 @@ const postCart = async (req, res) => {
     }
 }
 
+const deleteCart = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        let conn = await pool.getConnection();
+        await conn.query('DELETE FROM cartItem WHERE userId = ?', [userId]);
+
+        return res.status(200).send();
+    } catch(err) {
+        console.log(err);
+        return res.status(500).send();
+    }
+}
+
+
 module.exports = {
     getCart,
-    postCart
+    postCart,
+    deleteCart
 };
 

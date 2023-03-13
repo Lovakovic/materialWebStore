@@ -6,5 +6,6 @@ const router = express.Router();
 // Protected with JWT
 router.get('', verifyJwt, cartController.getCart);
 router.post('', verifyJwt, cartController.postCart);
+router.delete('', verifyJwt, cartController.deleteCart);
 
 module.exports = router;
