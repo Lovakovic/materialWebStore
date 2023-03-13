@@ -1,5 +1,5 @@
 Next:
--> crate different environments for storing variables such as API_URL
+    -> implement ordering functionality
 
 Implement new functionality:
 -> user login functionality
@@ -32,7 +32,7 @@ Implement new functionality:
 	    + for user's account data
 	    + for user's addresses
 	    - for user's orders
-	    - for user's cart
+	    + for user's cart
 
 -> create user's profile page
     - addresses
@@ -56,12 +56,9 @@ Implement new functionality:
 			+ automatically expand the primary address card
 		- add the `Make primary address` button on every address box
 			- create API endpoint for patching primary address
-    - orders
+    - orders (after implementing order functionality points below)
 		- create view my orders component
-			- create order entity in DB
 			- each user can view his own orders and info about them
-
-    - before actually making an order user has to fill in all the info about himself
 
 -> save user's cart to database
 	+ delete user's cart from local storage upon logout
@@ -78,6 +75,15 @@ Implement new functionality:
 	+ connect the API to the existing frontend
 	    + merge functions for server communication into existing event handlers
 
+-> ordering functionality
+    - create order model in DB
+        - create a trigger before delete on address that checks if address has been used for orders
+            in case it has, save that address to a temporary table that gets deleted every few months
+            - create a cron job that deletes addresses from temporary table
+    - create order controller on backend
+    - create order page
+    - in case of address not being provided beforehand, user cant order before entering address info
+
 -> product rating
 
 -> jwt authentication
@@ -89,7 +95,6 @@ Implement new functionality:
 Good practices to implement:
 	- elements that are rendered with *ngFor directive (cannot be null) 
 		should have their @Input() marked with `!` instead of `?`
-    - crate different environments for storing variables such as API_URL
     - implement subscription handler class for automatic unsubscribing like
         described in this video: https://youtu.be/TkcLN95R0VA?t=466
 
@@ -99,7 +104,7 @@ Todo from project requirements:
 	- can manipulate all tables in database
 + create at least one custom Angular pipe (that makes sense)
     + find-primary-address pipe for highlighting primary address
-- implement environments and environment variables for development
++ implement environments and environment variables for development
 
 Advanced
 -> user experience
