@@ -21,18 +21,10 @@ const getCart = async (req, res) => {
 
 const deleteCart = async (req, res) => {
     try {
-        const productId = req.params.productId;
         const userId = req.userId;
 
         let conn = await pool.getConnection();
-        if(productId) {
-            console.log(`Tried to delete product ${productId}`)
-            await conn.query('DELETE FROM cartItem WHERE userId = ? AND productId = ?',
-                [userId, productId]);
-        } else {
-            console.log(`Tried to delete cart`);
-            await conn.query('DELETE FROM cartItem WHERE userId = ?', [userId]);
-        }
+        await conn.query('DELETE FROM cartItem WHERE userId = ?', [userId]);
 
         return res.status(200).send();
     } catch(err) {
