@@ -16,18 +16,27 @@ export class CartService {
       private snackBar: MatSnackBar
   ) {}
 
-  // Server communication
+  //
+  // (RAW) Server communication functions
+  //
   getCart() {
     return this.http.get<Array<CartItem>>(`${environment.baseUrl}/cart`, { withCredentials: true })
   }
 
-  // Can delete entire cart or delete product type from cart
-  deleteCart(productId: number | undefined = undefined) {
-    const url = `${environment.baseUrl}/cart` + (productId ? `/` + productId?.toString() : ``);
-    return this.http.delete(url, { withCredentials: true });
+  deleteCart() {
+    return this.http.delete(`${environment.baseUrl}/cart`, { withCredentials: true });
   }
 
+  patchCart(cartItem: CartItem | { productId: number, quantity: number }) {
+    return this.http.patch(`${environment.baseUrl}/cart`, cartItem, { withCredentials: true })
+  }
+
+
+  //
   // Wrapped requests
+  //
+
+  // Updates the local cart with data from server
   fetchCart() {
     this.getCart().subscribe(items => {
       if(!!items.length) {
@@ -36,8 +45,13 @@ export class CartService {
     });
   }
 
+
+  //
   // Event handlers
-  addToCart(item: CartItem): void {
+  //
+
+  // Increments existing or inserts new cartItem
+  addToCart(item: CartItem, increment = false): void {
     const items = [...this.cart.value.items];
     const itemInCart = items.find(_item => _item.productId === item.productId);
 
@@ -47,13 +61,22 @@ export class CartService {
       items.push(item);
     }
 
-    this.cart.next({ items });
-    this.snackBar.open('1 item added to cart.', '', { duration: 3000});
+    // API expects total calculated quantity of item
+    if(increment && itemInCart) {
+      this.patchCart(itemInCart).subscribe(() => {
+        this.cart.next({ items });
+        this.snackBar.open('1 item added to cart.', '', { duration: 3000});
+      })
+    } else {
+      this.patchCart(item).subscribe(() => {
+        this.cart.next({ items });
+        this.snackBar.open('1 item added to cart.', '', { duration: 3000});
+      })
+    }
   }
 
   getTotal(items: Array<CartItem>): number {
-    return items
-        .map(item => item.price * item.quantity)
+    return items.map(item => item.price * item.quantity)
         .reduce((prev, current) => prev + current, 0);
   }
 
@@ -64,21 +87,24 @@ export class CartService {
     });
   }
 
+  clearLocalCart(): void {
+    this.cart.next({ items: [] });
+  }
+
   // Removes item type from cart
   removeFromCart(item: CartItem, update = true): Array<CartItem> {
     const filteredItems = this.cart.value.items.filter(_item => _item.productId !== item.productId);
 
-    this.deleteCart(item.productId).subscribe(() => {
+    this.patchCart({ productId: item.productId, quantity: 0 }).subscribe(() => {
       this.cart.next({ items: filteredItems });
       this.snackBar.open(`${item.name} removed from cart.`, '', { duration: 3000 });
-    });
 
-    // Alert the user via snackbar
-    if(update) {
-      this.cart.next({ items: filteredItems });
-      this.snackBar.open(`1 item removed from cart.`, '',
-          { duration: 3000 });
-    }
+      // Alert the user via snackbar
+      if(update) {
+        this.snackBar.open(`1 item removed from cart.`, '', { duration: 3000 });
+      }
+    })
+
     return filteredItems;
   }
 
@@ -103,9 +129,11 @@ export class CartService {
     if(itemForRemoval) {
       this.removeFromCart(itemForRemoval, false);
     } else {
-      this.cart.next({ items: filteredItems });
-      this.snackBar.open(`1 item removed from cart.`, '',
-          { duration: 3000 });
+      this.patchCart(item).subscribe(() => {
+        this.cart.next({ items: filteredItems });
+        this.snackBar.open(`1 item removed from cart.`, '',
+            { duration: 3000 });
+      })
     }
   }
 }

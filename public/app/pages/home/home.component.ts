@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       price: product.price,
       quantity: 1,
       productId: product.id
-    })
+    }, true)
   }
 
   onItemsCountChange(newCount: number): void {

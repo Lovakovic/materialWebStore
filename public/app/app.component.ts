@@ -27,11 +27,10 @@ export class AppComponent implements OnInit {
     });
     this.authService.user.subscribe(user => {
       this.user = user;
+      
+      if(!!this.user) {
+        this.cartService.fetchCart();
+      }
     });
-
-    // Use a wrapper to try and retrieve cart from server
-    if(!!this.user) {
-      this.cartService.fetchCart();
-    }
   }
 }
