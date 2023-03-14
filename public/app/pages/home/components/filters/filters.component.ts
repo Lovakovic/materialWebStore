@@ -17,7 +17,7 @@ export class FiltersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.categorySubscription = this.storeService.getAllCategories()
+    this.categorySubscription = this.storeService.getCategories()
         .subscribe(res => {
           this.categories = res;
         });

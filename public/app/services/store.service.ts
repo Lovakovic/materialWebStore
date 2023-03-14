@@ -9,18 +9,18 @@ import {environment} from "../../environment/environment";
 })
 export class StoreService {
 
-  constructor(private _http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  getAllProducts(limit = '12', sort = 'desc', category?: string): Observable<Array<Product>> {
-    return this._http.get<Array<Product>>(
+  getProducts(limit = '12', sort = 'desc', category?: string): Observable<Array<Product>> {
+    return this.http.get<Array<Product>>(
         `${environment.baseUrl}/products${
           category ? '/category/' + category : ''
         }?sort=${sort}&limit=${limit}`,
     );
   }
 
-  getAllCategories(): Observable<Array<string>> {
-    return this._http.get<Array<string>>(
+  getCategories(): Observable<Array<string>> {
+    return this.http.get<Array<string>>(
         `${environment.baseUrl}/products/categories`
     );
   }
