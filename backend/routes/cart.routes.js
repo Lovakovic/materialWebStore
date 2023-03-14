@@ -5,6 +5,7 @@ const router = express.Router();
 
 // Protected with JWT
 router.get('', verifyJwt, cartController.getCart);
-router.delete('/:productId?', verifyJwt, cartController.deleteCart);
+router.delete('', verifyJwt, cartController.deleteCart);
+router.patch('', verifyJwt, cartController.patchCart)
 
 module.exports = router;

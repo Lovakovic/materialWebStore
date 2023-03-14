@@ -33,9 +33,25 @@ const deleteCart = async (req, res) => {
     }
 }
 
+const patchCart = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const { productId, quantity } = req.body;
+
+        let conn = await pool.getConnection();
+        await conn.query('CALL updateCart(?, ?, ?)', [userId, productId, quantity]);
+
+        return res.status(200).send();
+    } catch(err) {
+        console.log(err);
+        return res.status(500).send();
+    }
+}
+
 
 module.exports = {
     getCart,
-    deleteCart
+    deleteCart,
+    patchCart
 };
 
