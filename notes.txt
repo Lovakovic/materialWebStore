@@ -64,16 +64,24 @@ Implement new functionality:
 	+ delete user's cart from local storage upon logout
 	+ create table in DB
 		+ create view for complete cart
-	+ create API for managing cart
-		+ get cart
-			+ returns cart rows with same userId
-		+ post cart
-			+ inserts rows to cartItem
-		+ delete cart
-			+ deletes cartItem rows with same userId
-			+ deletes cartItem rows with specified productId
-	+ connect the API to the existing frontend
-	    + merge functions for server communication into existing event handlers
+	- create API for managing cart
+	    - general, for retrieving and storing all cart items
+	        - get cart
+                - returns cart rows with same userId
+            - delete cart
+                - deletes cartItem rows with same userId
+                - deletes cartItem rows with specified productId
+        - for manipulating cart
+            - managing item quantity (every action except clear cart)
+                - DB procedure `updateCart` that takes in `i_userId`, `i_productId`, `i_quantity`
+                    - `i_quantity` is the total quantity of item (not just the new quantity)
+                    - checks if `quantity` is 0, if yes DELETE row with product_id
+                    - checks if item is already in `cartItem`, INSERT if not, UPDATE quantity if it is
+            - deleting entire cart
+                - DELETE statement for clearing entire `cartItem` rows with same `userId`
+
+	- connect the API to the existing frontend
+	    - merge functions for server communication into existing event handlers
 
 -> ordering functionality
     - create order model in DB
@@ -88,12 +96,17 @@ Implement new functionality:
                     as `address` can be deleted
             - returns order id
     - create order controller on backend
+        - sync carts
+            - expects an entire cart from frontend
+            - UPDATE `cartItem` rows for each item in cart so it is in sync with user's (forntend) cart
         - create order
         - update order
             - can only be changed before its status is set to shipped
         - cancel order
-    - create order page
-    - in case of address not being provided beforehand, user cant order before entering address info
+    - order on frontend
+        - send entire cart to backend to sync before committing to order
+        - create order page
+        - in case of address not being provided beforehand, user cant order before entering address info
 
 -> product rating
 
