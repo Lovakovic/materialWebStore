@@ -77,10 +77,21 @@ Implement new functionality:
 
 -> ordering functionality
     - create order model in DB
-        - create a trigger before delete on address that checks if address has been used for orders
-            in case it has, save that address to a temporary table that gets deleted every few months
-            - create a cron job that deletes addresses from temporary table
+        - create table `order` for storing info about orders
+        - create table `orderItem` for storing archived info about item's past price
+        - create table `archivedAddress` for storing info about addresses that have been used for orders
+        - create function `createOrder`
+            - takes in `userId` and `addressId`, selects user's `cartItem`s into `orderItems` and deletes `cartItem`s
+            - copies the entire address with given `addressId` into `archivedAddress`
+            - lastly, inserts the new row into `order table` that reflects order info
+                - IMPORTANT - `order` table has fk that references `archivedAddress` id, not `address` id,
+                    as `address` can be deleted
+            - returns order id
     - create order controller on backend
+        - create order
+        - update order
+            - can only be changed before its status is set to shipped
+        - cancel order
     - create order page
     - in case of address not being provided beforehand, user cant order before entering address info
 
@@ -116,6 +127,7 @@ Advanced
 	- add hints to forms (described on form field page in angular material)
 	- add a country picker drop down menu for choosing a country when adding an address
 	- add http interceptor that displays loading bar on top of the heading when http request is loading
+	- in case user is not logged in, resort to local storage for saving and restoring cart
 
 -> code
 	- modify frontend HTTP response checks to respond to status codes, not error messages
@@ -136,3 +148,4 @@ Bugs to squash:
 - hide the name of the address if it overflows the container
 - allow the user to unselect the product filter (to show all products again)
 - fix SQL injection vulnerability in products.controller.js when injecting sort parameter into query
+- don't try to fetch user's cart if user is not logged in (produces 401 HTTP)
