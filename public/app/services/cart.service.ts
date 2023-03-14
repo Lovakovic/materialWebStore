@@ -21,11 +21,6 @@ export class CartService {
     return this.http.get<Array<CartItem>>(`${environment.baseUrl}/cart`, { withCredentials: true })
   }
 
-  // Can be used to insert or update item quantity (doesn't work for removing item type from cart)
-  postCart(cart: Cart) {
-    return this.http.post(`${environment.baseUrl}/cart`, cart, { withCredentials: true });
-  }
-
   // Can delete entire cart or delete product type from cart
   deleteCart(productId: number | undefined = undefined) {
     const url = `${environment.baseUrl}/cart` + (productId ? `/` + productId?.toString() : ``);
@@ -52,10 +47,8 @@ export class CartService {
       items.push(item);
     }
 
-    this.postCart({ items }).subscribe(() => {
-      this.cart.next({ items });
-      this.snackBar.open('1 item added to cart.', '', { duration: 3000});
-    });
+    this.cart.next({ items });
+    this.snackBar.open('1 item added to cart.', '', { duration: 3000});
   }
 
   getTotal(items: Array<CartItem>): number {
@@ -110,12 +103,9 @@ export class CartService {
     if(itemForRemoval) {
       this.removeFromCart(itemForRemoval, false);
     } else {
-      // Decrement item amount
-      this.postCart({ items: filteredItems }).subscribe(() => {
-        this.cart.next({ items: filteredItems });
-        this.snackBar.open(`1 item removed from cart.`, '',
-            { duration: 3000 });
-      })
+      this.cart.next({ items: filteredItems });
+      this.snackBar.open(`1 item removed from cart.`, '',
+          { duration: 3000 });
     }
   }
 }

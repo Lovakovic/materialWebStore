@@ -1,9 +1,9 @@
 Next:
     -> save user's cart to database
         - create API for managing cart
-                - general, for retrieving and storing all cart items
-                    - get cart
-                        - returns cart rows with same userId
+                + general, for retrieving and storing all cart items
+                    + get cart
+                        + returns cart rows with same userId
                     - delete cart
                         - deletes cartItem rows with same userId
                         - deletes cartItem rows with specified productId
