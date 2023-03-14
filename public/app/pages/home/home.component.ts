@@ -23,7 +23,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   productSubscription: Subscription | undefined;
 
 
-  constructor(private cartService: CartService, private storeService: StoreService) {
+  constructor(
+      private cartService: CartService,
+      private storeService: StoreService) {
   }
 
   ngOnInit(): void {
