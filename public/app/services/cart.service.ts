@@ -14,13 +14,7 @@ export class CartService {
   constructor(
       private http: HttpClient,
       private snackBar: MatSnackBar
-  ) {
-    this.getCart().subscribe(items => {
-      if(!!items.length) {
-        this.cart.next({items})
-      }
-    });
-  }
+  ) {}
 
   // Server communication
   getCart() {
@@ -36,6 +30,15 @@ export class CartService {
   deleteCart(productId: number | undefined = undefined) {
     const url = `${environment.baseUrl}/cart` + (productId ? `/` + productId?.toString() : ``);
     return this.http.delete(url, { withCredentials: true });
+  }
+
+  // Wrapped requests
+  fetchCart() {
+    this.getCart().subscribe(items => {
+      if(!!items.length) {
+        this.cart.next({items})
+      }
+    });
   }
 
   // Event handlers

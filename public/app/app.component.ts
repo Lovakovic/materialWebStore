@@ -22,12 +22,16 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Subscribe for showing newly added items in cart
     this.cartService.cart.subscribe(_cart => {
       this.cart = _cart;
     });
     this.authService.user.subscribe(user => {
       this.user = user;
     });
+
+    // Use a wrapper to try and retrieve cart from server
+    if(!!this.user) {
+      this.cartService.fetchCart();
+    }
   }
 }
