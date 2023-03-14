@@ -42,36 +42,36 @@ export class HeaderComponent implements OnInit{
   }
 
   constructor(
-      private _cartService: CartService,
-      private _router: Router,
-      private _auth: AuthService,
-      private _snackBar: MatSnackBar
+      private cartService: CartService,
+      private router: Router,
+      private authService: AuthService,
+      private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
-    this._auth.user.subscribe(user => this._user = user);
+    this.authService.user.subscribe(user => this._user = user);
   }
 
   getTotal(items: Array<CartItem>): number {
-    return this._cartService.getTotal(items);
+    return this.cartService.getTotal(items);
   }
 
   onClearCart(): void {
-    this._cartService.clearCart();
+    this.cartService.clearCart();
   }
 
   onNavigateToLogin() {
-    this._router.navigate(['login']);
+    this.router.navigate(['login']);
   }
 
   onNavigateToProfile() {
-    this._router.navigate(['profile']);
+    this.router.navigate(['profile']);
   }
 
   onLogout(): void {
-    this._auth.logout().subscribe(() => {
-      this._snackBar.open(`You've been logged out.`, '', { duration: 3000 });
-      this._router.navigate(['']);
+    this.authService.logout().subscribe(() => {
+      this.snackBar.open(`You've been logged out.`, '', { duration: 3000 });
+      this.router.navigate(['']);
     });
   }
 }
