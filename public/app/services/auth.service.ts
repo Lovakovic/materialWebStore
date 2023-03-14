@@ -4,7 +4,6 @@ import {Credentials} from "../models/credentials.model";
 import {BehaviorSubject} from "rxjs";
 import {response} from "express";
 import {User} from "../models/user.model";
-import {CartService} from "./cart.service";
 import {environment} from "../../environment/environment";
 
 @Injectable({
@@ -14,8 +13,7 @@ export class AuthService {
   private _user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
   constructor(
-      private http: HttpClient,
-      private cartService: CartService
+      private http: HttpClient
   ) {
     this.checkForLocalAuth();
   }
@@ -40,7 +38,6 @@ export class AuthService {
 
   logout() {
     localStorage.clear();
-    this.cartService.clearCart();
     this._user.next(undefined);
     return this.http.get(`${environment.baseUrl}/auth/logout`, { withCredentials: true });
   }
