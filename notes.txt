@@ -1,5 +1,5 @@
 Next:
-    -> save user's cart to database
+    - implement async pipes for handling subscriptions and refactor your code in accordance to principles
 
 
 Implement new functionality:
