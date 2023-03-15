@@ -9,20 +9,20 @@ import {environment} from "../../environment/environment";
 })
 export class AddressService {
 
-  constructor(private _http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   getAddresses(): Observable<Array<Address>> {
-    return this._http.get<Array<Address>>(`${environment.baseUrl}/address`,
+    return this.http.get<Array<Address>>(`${environment.baseUrl}/address`,
         { withCredentials: true });
   }
 
   postAddress(address: Address, newPrimary: boolean) {
-    return this._http.post<HttpResponse<string>>(`${environment.baseUrl}/address`, { address, newPrimary },
+    return this.http.post<HttpResponse<string>>(`${environment.baseUrl}/address`, { address, newPrimary },
         { withCredentials: true, observe: 'response'});
   }
 
   deleteAddress(id: number) {
-    return this._http.delete<HttpResponse<string>>(`${environment.baseUrl}/address/${id}`,
+    return this.http.delete<HttpResponse<string>>(`${environment.baseUrl}/address/${id}`,
         { withCredentials: true, observe:'response' })
   }
 }
