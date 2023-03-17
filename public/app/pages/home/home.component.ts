@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {CartService} from "../../services/cart.service";
 import {Product} from "../../models/product.model";
-import {BehaviorSubject, Observable, switchMap} from "rxjs";
+import {BehaviorSubject, Observable, Subscription, switchMap} from "rxjs";
 import {StoreService} from "../../services/store.service";
 
 const ROWS_HEIGHT: { [id: number]: number } = { 1: 400, 3: 335, 4: 250 };
@@ -10,7 +10,7 @@ const ROWS_HEIGHT: { [id: number]: number } = { 1: 400, 3: 335, 4: 250 };
   selector: 'app-home',
   templateUrl: './home.component.html'
 })
-export class HomeComponent {
+export class HomeComponent implements OnDestroy {
   queryParamsSubject = new BehaviorSubject<{ sort: string, count: string, category?: string}>(
       { sort: 'desc', count: '12'});
 
@@ -18,6 +18,8 @@ export class HomeComponent {
   products$: Observable<Product[]> = this.queryParams$.pipe(
       switchMap(params => this.storeService.getProducts(params.count, params.sort, params.category))
   );
+
+  private subscription = new Subscription();
 
   // Display params
   cols = 3;
@@ -27,8 +29,8 @@ export class HomeComponent {
 
   constructor(
       private cartService: CartService,
-      private storeService: StoreService) {
-  }
+      private storeService: StoreService
+  ) {}
 
   onColumnsCountChange(colsNumber: number): void {
     this.cols = colsNumber;
@@ -39,14 +41,9 @@ export class HomeComponent {
     this.queryParamsSubject.next({ ...this.queryParamsSubject.value, category: newCategory });
   }
 
-  onAddToCart(product: Product): void {
-    this.cartService.addToCart({
-      image: product.image,
-      name: product.name,
-      price: product.price,
-      quantity: 1,
-      productId: product.id
-    }, true)
+  onAddToCart({id, image, name, price}: Product): void {
+    this.subscription.add(
+        this.cartService.addToCart({productId: id, image, name, price, quantity: 1}, true).subscribe());
   }
 
   onItemsCountChange(newCount: number): void {
@@ -55,5 +52,9 @@ export class HomeComponent {
 
   onSortChange(newSort: string): void {
     this.queryParamsSubject.next({ ...this.queryParamsSubject.value, sort: newSort });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

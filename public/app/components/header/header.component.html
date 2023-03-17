@@ -1,7 +1,7 @@
 <mat-toolbar class="border-x justify-between">
     <a routerLink="home">Home</a>
     <div>
-        <ng-container *ngIf="user; else loginButton">
+        <ng-container *ngIf="(this.authService.user$ | async) as user; else loginButton">
             <button class="truncate text-xs mr-3 mt-2"
                     [matMenuTriggerFor]="userMenu"
                     (click)="onNavigateToProfile()"
@@ -10,8 +10,7 @@
             </button>
         </ng-container>
         <ng-template #loginButton>
-            <button *ngIf="!user"
-                    mat-raised-button color="primary"
+            <button mat-raised-button color="primary"
                     class="mr-9 mb-2.5"
                     (click)="onNavigateToLogin()"
             >Log in</button>
@@ -21,44 +20,45 @@
                 <button mat-stroked-button (click)="onLogout()">Log out</button>
             </div>
         </mat-menu>
-        <button mat-icon-button [matMenuTriggerFor]="cartMenu">
-            <mat-icon
-                    [matBadge]="itemsQuantity"
-                    [matBadgeHidden]="!itemsQuantity"
-                    matBadgeColor="warn"
-            >shopping_cart</mat-icon>
-        </button>
-        <mat-menu #cartMenu="matMenu">
-            <div class="p-3 divide-y divide-solid">
-                <div class="pd3 flex justify-between">
-                    <span class="mr-16">{{itemsQuantity}} Item/s</span>
-                    <a routerLink="cart">View Cart</a>
-                </div>
-                <div *ngIf="cart.items.length" class="py-3">
-                    <div
-                            *ngFor="let item of cart.items"
-                            class="flex justify-between font-light mb-2">
-                        {{item.name}} * {{item.quantity}}
-                        <span class="font-bold">{{ item.price | currency: 'EUR' }}</span>
+        <ng-container *ngIf="cartService.cart$ | async as cart">
+            <button mat-icon-button [matMenuTriggerFor]="cartMenu">
+                <mat-icon
+                        [matBadge]="getItemQuantity(cart)"
+                        [matBadgeHidden]="getItemQuantity(cart) === 0"
+                        matBadgeColor="warn"
+                >shopping_cart</mat-icon>
+            </button>
+            <mat-menu #cartMenu="matMenu">
+                <div class="p-3 divide-y divide-solid">
+                    <div class="pd3 flex justify-between">
+                        <span class="mr-16">{{getItemQuantity(cart)}} Item/s</span>
+                        <a routerLink="cart">View Cart</a>
+                    </div>
+                    <div *ngIf="cart.items.length" class="py-3">
+                        <div *ngFor="let item of cart.items"
+                             class="flex justify-between font-light mb-2">
+                            {{item.name}} * {{item.quantity}}
+                            <span class="font-bold">{{ item.price | currency: 'EUR' }}</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between py-3 font-light">
+                        Total:
+                        <span class="font-bold">{{ getTotal(cart) | currency: 'EUR'}}</span>
+                    </div>
+                    <div class="pt-3 flex justify-between">
+                        <button
+                                (click)="onClearCart()"
+                                class="bg-rose-600 text-white rounded-full w-9 h-9">
+                            <mat-icon>remove_shopping_cart</mat-icon>
+                        </button>
+                        <button
+                                routerLink="cart"
+                                class="bg-green-600 text-white rounded-full w-9 h-9">
+                            <mat-icon>shopping_cart</mat-icon>
+                        </button>
                     </div>
                 </div>
-                <div class="flex justify-between py-3 font-light">
-                    Total:
-                    <span class="font-bold">{{ getTotal(cart.items) | currency: 'EUR'}}</span>
-                </div>
-                <div class="pt-3 flex justify-between">
-                    <button
-                            (click)="onClearCart()"
-                            class="bg-rose-600 text-white rounded-full w-9 h-9">
-                        <mat-icon>remove_shopping_cart</mat-icon>
-                    </button>
-                    <button
-                            routerLink="cart"
-                            class="bg-green-600 text-white rounded-full w-9 h-9">
-                        <mat-icon>shopping_cart</mat-icon>
-                    </button>
-                </div>
-            </div>
-        </mat-menu>
+            </mat-menu>
+        </ng-container>
     </div>
 </mat-toolbar>

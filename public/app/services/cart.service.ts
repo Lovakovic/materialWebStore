@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, catchError, map, Observable, switchMap, take, tap, throwError} from "rxjs";
 import {Cart, CartItem} from "../models/cart.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {HttpClient} from "@angular/common/http";
@@ -9,94 +9,99 @@ import {environment} from "../../environment/environment";
   providedIn: 'root'
 })
 export class CartService {
-  cart = new BehaviorSubject<Cart>({ items: []});
+  private cartSubject = new BehaviorSubject<Cart>({ items: [] });
+  cart$: Observable<Cart> = this.cartSubject.asObservable();
 
   constructor(
       private http: HttpClient,
       private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
-  //
-  // (RAW) Server communication functions
-  //
-  getCart() {
-    return this.http.get<Array<CartItem>>(`${environment.baseUrl}/cart`, { withCredentials: true })
+  init(): void {
+    this.getCart().subscribe(cart => this.updateLocalCart(cart));
+  }
+
+  getCart(): Observable<Cart> {
+    return this.http.get<Cart>(`${environment.baseUrl}/cart`, { withCredentials: true });
   }
 
   deleteCart() {
     return this.http.delete(`${environment.baseUrl}/cart`, { withCredentials: true });
   }
 
-  patchCart(cartItem: CartItem | { productId: number, quantity: number }) {
-    return this.http.patch(`${environment.baseUrl}/cart`, cartItem, { withCredentials: true })
+  patchCart(cartItem: CartItem | { productId: number, quantity: number }): Observable<void> {
+    return this.http.patch<void>(`${environment.baseUrl}/cart`, cartItem, { withCredentials: true });
   }
 
-
-  //
-  // Wrapped requests
-  //
-
-  // Updates the local cart with data from server
-  fetchCart() {
-    this.getCart().subscribe(items => {
-      if(!!items.length) {
-        this.cart.next({items})
-      }
-    });
+  updateLocalCart(cart: Cart): void {
+    this.cartSubject.next(cart);
   }
-
-
-  //
-  // Event handlers
-  //
 
   // Increments existing or inserts new cartItem
-  addToCart(item: CartItem, increment = false): void {
-    const items = [...this.cart.value.items];
-    const itemInCart = items.find(_item => _item.productId === item.productId);
+  addToCart(item: CartItem, increment = false): Observable<Cart> {
+    return this.cart$.pipe(
+        take(1),
+        switchMap(cart => {
+          const updatedItems = this.updateCartItems(cart.items, item, increment);
 
-    if(itemInCart) {
-      itemInCart.quantity += 1;
-    } else {
-      items.push(item);
-    }
+          // API expects total calculated quantity of item
+          const itemToUpdate = increment && cart.items.find(_item => _item.productId === item.productId) || item;
+          const patchObservable = this.patchCart(itemToUpdate);
 
-    // API expects total calculated quantity of item
-    if(increment && itemInCart) {
-      this.patchCart(itemInCart).subscribe(() => {
-        this.cart.next({ items });
-        this.snackBar.open('1 item added to cart.', '', { duration: 3000});
-      })
-    } else {
-      this.patchCart(item).subscribe(() => {
-        this.cart.next({ items });
-        this.snackBar.open('1 item added to cart.', '', { duration: 3000});
-      })
-    }
+          return patchObservable.pipe(
+              map(() => ({...cart, updatedItems})),
+              catchError(err => {
+                // Handle errors from patchCart() here
+                return throwError(err);
+              })
+          );
+        }),
+        tap(updatedCart => {
+          this.updateLocalCart(updatedCart);
+          this.snackBar.open('1 item added to cart.', '', { duration: 3000 });
+        })
+    );
   }
 
-  getTotal(items: Array<CartItem>): number {
-    return items.map(item => item.price * item.quantity)
-        .reduce((prev, current) => prev + current, 0);
+  // Helper for `addToCart()`
+  updateCartItems(items: CartItem[], updatedItem: CartItem, increment: boolean): CartItem[] {
+    const itemIndex = items.findIndex(item => item.productId === updatedItem.productId);
+
+    if(itemIndex !== -1 ) {
+      if(increment) {
+        items[itemIndex].quantity += 1;
+      } else {
+        items[itemIndex].quantity = updatedItem.quantity;
+      }
+    } else {
+      items.push(updatedItem);
+    }
+
+    return items;
   }
 
   clearCart(): void {
     this.deleteCart().subscribe(() => {
-      this.cart.next({ items: [] });
+      this.updateLocalCart({ items: [] });
       this.snackBar.open('Cart is cleared.', '', { duration: 3000 });
     });
   }
 
-  clearLocalCart(): void {
-    this.cart.next({ items: [] });
+  getItemQuantity(cart: Cart): number {
+    return cart.items.reduce((total, item) => total + item.quantity, 0);
+  }
+
+  getTotal(cart: Cart): number {
+    return cart.items.map(item => item.price * item.quantity)
+        .reduce((prev, current) => prev + current, 0);
   }
 
   // Removes item type from cart
   removeFromCart(item: CartItem, update = true): Array<CartItem> {
-    const filteredItems = this.cart.value.items.filter(_item => _item.productId !== item.productId);
+    const filteredItems = this.cartSubject.value.items.filter(_item => _item.productId !== item.productId);
 
     this.patchCart({ productId: item.productId, quantity: 0 }).subscribe(() => {
-      this.cart.next({ items: filteredItems });
+      this.updateLocalCart({ items: filteredItems });
       this.snackBar.open(`${item.name} removed from cart.`, '', { duration: 3000 });
 
       // Alert the user via snackbar
@@ -112,7 +117,7 @@ export class CartService {
   removeQuantity(item: CartItem): void {
     let itemForRemoval: CartItem | undefined;
 
-    let filteredItems = this.cart.value.items.map((_item) => {
+    let filteredItems = this.cartSubject.value.items.map((_item) => {
       if(_item.productId === item.productId) {
         _item.quantity--;
 
@@ -130,7 +135,7 @@ export class CartService {
       this.removeFromCart(itemForRemoval, false);
     } else {
       this.patchCart(item).subscribe(() => {
-        this.cart.next({ items: filteredItems });
+        this.updateLocalCart({ items: filteredItems });
         this.snackBar.open(`1 item removed from cart.`, '',
             { duration: 3000 });
       })
