@@ -12,7 +12,7 @@ const getCart = async (req, res) => {
 
         rows = insertMediaPath(rows);
 
-        return res.json(rows);
+        return res.json({ items: rows});
     } catch (err) {
         console.log(err);
         return res.status(500).send();
