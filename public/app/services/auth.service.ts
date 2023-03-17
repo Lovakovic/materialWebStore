@@ -22,7 +22,8 @@ export class AuthService {
   }
 
   register(credentials: Credentials): Observable<boolean> {
-    return this.http.post<HttpResponse<string>>(`${environment.baseUrl}/auth/register`, credentials)
+    return this.http.post<HttpResponse<string>>(`${environment.baseUrl}/auth/register`, credentials,
+        {observe: 'response'})
         .pipe(map(res => res.status === 200));
   }
 
