@@ -7,7 +7,7 @@ import {Product} from "../../../../models/product.model";
 })
 export class ProductBoxComponent {
   @Input() fullWidthMode = false;
-  @Input() product: Product | undefined;
+  @Input() product!: Product;
 
   @Output() addToCart = new EventEmitter();
 

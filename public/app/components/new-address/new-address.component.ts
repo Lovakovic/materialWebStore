@@ -1,7 +1,5 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AddressService} from "../../services/address.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-new-address',
@@ -47,13 +45,7 @@ export class NewAddressComponent {
     primary: new FormControl(false)
   });
 
-
-    constructor(
-        private _userService: AddressService,
-        private _snackBar: MatSnackBar
-    ) {}
-
-    get addressNickname() {
+  get addressNickname() {
       return this.newAddressForm.get('addressNickname');
   }
 

@@ -1,8 +1,6 @@
 Next:
-    -> save user's cart to database
 
-
-Implement new functionality:
+Basic functionality:
 -> user login functionality
 	+ add table in DB for storing user information
 	+ implement API for handling user data (INSERT)
@@ -114,38 +112,51 @@ Implement new functionality:
 -> separate the app into (lazily loaded) modules
 
 Good practices to implement:
-	- elements that are rendered with *ngFor directive (cannot be null) 
-		should have their @Input() marked with `!` instead of `?`
     - implement subscription handler class for automatic unsubscribing like
         described in this video: https://youtu.be/TkcLN95R0VA?t=466
 
 Todo from project requirements:
-+ validate registration and login info
-- implement admin page for web-shop
-	- can manipulate all tables in database
-+ create at least one custom Angular pipe (that makes sense)
-    + find-primary-address pipe for highlighting primary address
-+ implement environments and environment variables for development
+    + validate registration and login info
+    - implement admin page for web-shop
+        - can manipulate all tables in database
+    + create at least one custom Angular pipe (that makes sense)
+        + find-primary-address pipe for highlighting primary address
+    + implement environments and environment variables for development
 
-Advanced
--> user experience
-	- create a small drop down menu on `Your page` navbar button that opens upon hover
-	- change the layout of profile page on mobile aspect ratios so that orders and addresses are
-		displayed one above the other
-	- enable users to change their user account data (name, password...) or close the account
-	- display password strength and validate password more strictly when registering user
-	- add hints to forms (described on form field page in angular material)
-	- add a country picker drop down menu for choosing a country when adding an address
-	- add http interceptor that displays loading bar on top of the heading when http request is loading
-	- in case user is not logged in, resort to local storage for saving and restoring cart
+Advanced concepts or functionality
+    -> user experience
+        - create a small drop down menu on `Your page` navbar button that opens upon hover
+        - change the layout of profile page on mobile aspect ratios so that orders and addresses are
+            displayed one above the other
+        - enable users to change their user account data (name, password...) or close the account
+        - display password strength and validate password more strictly when registering user
+        - add hints to forms (described on form field page in angular material)
+        - add a country picker drop down menu for choosing a country when adding an address
+        - add http interceptor that displays loading bar on top of the heading when http request is loading
+        - in case user is not logged in, resort to local storage for saving and restoring cart
 
--> code
-	- modify frontend HTTP response checks to respond to status codes, not error messages
-	- refactor cart service
+    -> code
+        - modify frontend HTTP response checks to respond to status codes, not error messages
+        - refactor cart service
+        + implement async pipes for handling subscriptions and refactor your code in accordance to principles
+            -> pages refactored/checked:
+                + app
+                + header
+                + new-address
+                + cart
+                + home
+                    + filters
+                    + product-box
+                    + products-header
+                + login
+                + profile
+                    + address-box
+                    + profile-header
+                + register
 
--> security
-	- implement SQLInjection protection on backend queries
-	- implement data validation on backend
+    -> security
+        - implement SQLInjection protection on backend queries
+        - implement data validation on backend
 
 
 Bugs to squash:
@@ -153,9 +164,10 @@ Bugs to squash:
 + fix the styling bug of home page
 + trim the leading and trailing whitespace in forms
 + if address is marked as primary and then deleted the card doesn't disappear
-- if new address is added, deleting it right after (without first refreshing the page) doesn't
++ if new address is added, deleting it right after (without first refreshing the page) doesn't
 	trigger component refresh
-- hide the name of the address if it overflows the container
+- clear the `new-address` form's inputs upon submit
++ hide the name of the address if it overflows the container
 - allow the user to unselect the product filter (to show all products again)
 - fix SQL injection vulnerability in products.controller.js when injecting sort parameter into query
 - don't try to fetch user's cart if user is not logged in (produces 401 HTTP)

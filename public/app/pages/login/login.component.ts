@@ -1,18 +1,15 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Subscription, switchMap, tap} from "rxjs";
 import {Router} from "@angular/router";
-import {User} from "../../models/user.model";
-import {HttpResponse} from "@angular/common/http";
 import {AddressService} from "../../services/address.service";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent {
   loginForm = new FormGroup({
     email: new FormControl('', [
       Validators.required,
@@ -23,10 +20,8 @@ export class LoginComponent implements OnDestroy {
     ])
   });
 
-  loginSubscription: Subscription | undefined;
-
   constructor(
-      private auth: AuthService,
+      private authService: AuthService,
       private userService: AddressService,
       private snackBar: MatSnackBar,
       private router: Router
@@ -45,33 +40,20 @@ export class LoginComponent implements OnDestroy {
           email: this.loginForm.value.email,
           password: this.loginForm.value.password
     };
-    let tokenExpires: Date;
 
-    this.loginSubscription = this.auth.login(credentials)
-        .pipe(
-            tap((res: HttpResponse<any>) => {
-              tokenExpires = new Date(res.body);
-            }),
-            switchMap(() => this.auth.getProfile()))
-        .subscribe({
-          next: (user: User) => {
-            console.log(`Your login expires at ${tokenExpires.toString()}`);
-            this.auth.saveAuthToLocal(user, tokenExpires);
+    this.authService.login(credentials).subscribe(success => {
+        if(success) {
             this.snackBar.open('You are now logged in.', '', { duration: 3000 });
             this.router.navigate(['/']);
-          },
-          error: () => {
+        } else {
             this.loginForm.patchValue({ password: '' });
-            this.snackBar.open('Invalid email / password combination.', '', { duration: 3000 })
-          }
-      });
+            this.snackBar.open('Invalid email / password combination.', '', { duration: 3000 });
+            this.loginForm.patchValue({ password: '' });
+        }
+    });
   }
 
   navigateToRegister() {
     this.router.navigate(['register']);
-  }
-
-  ngOnDestroy(): void {
-    this.loginSubscription?.unsubscribe();
   }
 }

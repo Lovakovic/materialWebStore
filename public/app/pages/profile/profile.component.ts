@@ -1,75 +1,27 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
+import {Component, OnInit} from '@angular/core';
 import {Address} from "../../models/address.model";
 import {AddressService} from "../../services/address.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html'
 })
-export class ProfileComponent implements OnInit, OnDestroy {
+export class ProfileComponent implements OnInit {
+    constructor(
+        public addressService: AddressService,
+        public authService: AuthService
+    ) { }
 
-  addresses: Array<Address> = [];
-  addressSubscription?: Subscription;
-  primaryAddressIdSubscription?: Subscription;
-  primaryAddressId?: number;
+    ngOnInit(): void {
+        this.addressService.fetchAddresses();
+    }
 
-  constructor(
-      private _addressService: AddressService,
-      private _authService: AuthService,
-      private _snackBar: MatSnackBar
-  ) { }
+    onAddAddress(addressData: {address: Address, primary: boolean}): void {
+        this.addressService.postAddress(addressData.address, addressData.primary).subscribe();
+    }
 
-  ngOnInit(): void {
-    this.getAddresses();
-  }
-
-  getAddresses(): void {
-    this.addressSubscription = this._addressService.getAddresses()
-        .subscribe(_addresses => {
-          this.addresses = _addresses
-        });
-    this.primaryAddressIdSubscription = this._authService.user.subscribe(user => {
-        this.primaryAddressId = user?.primaryAddressId;
-    });
-  }
-
-  onAddAddress(addressData: {address: Address, primary: boolean}): void {
-      this._addressService.postAddress(addressData.address, addressData.primary)
-          .subscribe(res => {
-              if(res.status === 200) {
-                  this._snackBar.open('Address added.', '', { duration: 3000 });
-
-                  // Highlight new primary address (primaryAddressId stored in user info)
-                  if(addressData.primary) {
-                      this._authService.refreshUser();
-                  }
-
-                  this.getAddresses();
-              }
-          });
-  }
-
-  onDeleteAddress(address: Address): void {
-    this._addressService.deleteAddress(address.id || -1)
-        .subscribe(res => {
-          if(res.status === 200) {
-            this._snackBar.open('Address deleted.', '', { duration: 3000 });
-            this.getAddresses();
-          } else {
-            this._snackBar.open('Something went wrong.', '', { duration: 3000 });
-          }
-        });
-  }
-
-    ngOnDestroy(): void {
-      if(this.addressSubscription) {
-          this.addressSubscription.unsubscribe();
-      }
-      if(this.primaryAddressIdSubscription) {
-          this.primaryAddressIdSubscription.unsubscribe();
-      }
+    onDeleteAddress(address: Address): void {
+        this.addressService.deleteAddress(address.id || -1).subscribe();
     }
 }

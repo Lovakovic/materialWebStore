@@ -1,4 +1,4 @@
-<mat-expansion-panel *ngIf="categories">
+<mat-expansion-panel *ngIf="categories$ | async as categories">
     <mat-expansion-panel-header>
         <mat-panel-title> CATEGORIES </mat-panel-title>
     </mat-expansion-panel-header>

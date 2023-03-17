@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
-import {catchError, delay, map, Observable, of, Subscription, switchMap} from "rxjs";
+import {catchError, delay, map, Observable, of, switchMap} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 
@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
   selector: 'app-register',
   templateUrl: './register.component.html'
 })
-export class RegisterComponent implements OnInit, OnDestroy {
+export class RegisterComponent {
   registerForm = new FormGroup({
     username: new FormControl('', [
         Validators.required,
@@ -35,17 +35,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
       validators: this.passwordsMatchValidator('password', 'passwordRepeat')
   });
 
-  registerSubscription: Subscription | undefined;
-
   constructor(
-      private auth: AuthService,
+      private authService: AuthService,
       private snackbar: MatSnackBar,
       private router: Router
-  ) {
-  }
-
-  ngOnInit(): void {
-  }
+  ) { }
 
     get email() {
         return this.registerForm.get('email');
@@ -57,6 +51,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
     get passwordRepeat() {
         return this.registerForm.get('passwordRepeat');
+    }
+
+    get username() {
+        return this.registerForm.get('username');
     }
 
   passwordsMatchValidator(passwordKey: string, passwordConfirmKey: string) {
@@ -83,23 +81,19 @@ export class RegisterComponent implements OnInit, OnDestroy {
           }
       }
   }
+
     // Validator with debounce timer of 500ms
-
-  uniqueEmailValidator(): AsyncValidatorFn {
-      return (control: AbstractControl): Observable<ValidationErrors | null> => {
-       return of(control.value).pipe(
-           delay(500),
-           switchMap(email => this.auth.checkEmailAvailability(email).pipe(
-               map(exists => exists ? { taken: true } : null ),
-               catchError(() => of(null))
-           ))
-       );
-      }
-  }
-
-  get username() {
-      return this.registerForm.get('username');
-  }
+    uniqueEmailValidator(): AsyncValidatorFn {
+        return (control: AbstractControl): Observable<ValidationErrors | null> => {
+            return of(control.value).pipe(
+                delay(500),
+                switchMap(email => this.authService.checkEmailAvailability(email).pipe(
+                    map(exists => exists ? { taken: true } : null ),
+                    catchError(() => of(null))
+                ))
+            );
+        }
+    }
 
   onSubmit() {
       // Simplify the object model and throw away unnecessary stuff
@@ -111,17 +105,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
       }
 
       // Redirect the user to login page upon successful registration
-      this.registerSubscription = this.auth.register(credentials).subscribe(res => {
-          if(res === 'Success') {
+      this.authService.register(credentials).subscribe(success => {
+          if(success) {
               this.snackbar.open('Registration successful, please log in.', '', { duration: 3000 });
               this.router.navigate(['login']);
           } else {
               this.snackbar.open('Something went wrong, please try again later.', 'OK');
           }
       });
-  }
-
-  ngOnDestroy(): void {
-    this.registerSubscription?.unsubscribe();
   }
 }

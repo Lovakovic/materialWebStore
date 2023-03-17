@@ -1,26 +1,23 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {AuthService} from "../services/auth.service";
 import {Address} from "../models/address.model";
-import {map, Observable} from "rxjs";
+import {User} from "../models/user.model";
 
 @Pipe({
   name: 'findPrimaryAddress'
 })
 export class FindPrimaryAddressPipe implements PipeTransform {
+  transform(addresses: Array<Address>, user: User): Address[] {
+      if (!user || !user.primaryAddressId || !addresses) {
+          return addresses || [];
+      }
 
-  constructor(private _authService: AuthService) {}
+      const primaryAddress = addresses.find(address => address.id === user.primaryAddressId);
+      const otherAddresses = addresses.filter(address => address.id !== user.primaryAddressId);
 
-  transform(addresses: Array<Address>): Observable<Array<Address>> {
-    return this._authService.user.pipe(
-        map(user => {
-          if (!user || !user.primaryAddressId) {
-            return addresses || [];
-          }
-
-          const primaryAddress = addresses.find(address => address.id === user.primaryAddressId);
-          const otherAddresses = addresses.filter(address => address.id !== user.primaryAddressId);
-          return [primaryAddress, ...otherAddresses] as Array<Address>;
-        })
-    );
+      if(primaryAddress) {
+          return [primaryAddress, ...otherAddresses];
+      } else {
+          return otherAddresses;
+      }
   }
 }

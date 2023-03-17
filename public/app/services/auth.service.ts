@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Credentials} from "../models/credentials.model";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, catchError, map, Observable, of, switchMap, tap} from "rxjs";
 import {response} from "express";
 import {User} from "../models/user.model";
 import {CartService} from "./cart.service";
@@ -11,37 +11,52 @@ import {environment} from "../../environment/environment";
   providedIn: 'root'
 })
 export class AuthService {
-  private _user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
+  private userSubject = new BehaviorSubject<User | undefined>(undefined);
+  user$: Observable<User | undefined> = this.userSubject.asObservable();
 
   constructor(
       private http: HttpClient,
       private cartService: CartService
   ) {
-    this.checkForLocalAuth();
+    this.checkForLocalStorageAuth();
   }
 
-  get user() {
-    return this._user.asObservable();
+  register(credentials: Credentials): Observable<boolean> {
+    return this.http.post<HttpResponse<string>>(`${environment.baseUrl}/auth/register`, credentials)
+        .pipe(map(res => res.status === 200));
   }
 
-  register(credentials: Credentials) {
-    return this.http.post(`${environment.baseUrl}/auth/register`, credentials);
-  }
-
-  login(credentials: Credentials) {
+  login(credentials: Credentials): Observable<boolean> {
     let loginHttpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true,
       observe: 'response' as 'response'
-    }
+    };
+      let tokenExpires: Date;
 
-    return this.http.post<HttpResponse<number>>(`${environment.baseUrl}/auth/login`, credentials, loginHttpOptions);
+      return this.http
+          .post<HttpResponse<number>>(`${environment.baseUrl}/auth/login`, credentials, loginHttpOptions)
+          .pipe(
+              switchMap((res: HttpResponse<any>) => {
+                  tokenExpires = new Date(res.body);
+                  return this.getProfile().pipe(
+                      tap((user: User) => {
+                          console.log(`Your login expires at ${tokenExpires.toString()}`);
+                          this.saveAuthToLocalStorage(user, tokenExpires);
+                      }),
+                      map(() => true)
+                  );
+              }),
+              catchError(() => {
+                  return of(false)
+              })
+          );
   }
 
   logout() {
     localStorage.clear();
-    this.cartService.clearLocalCart();
-    this._user.next(undefined);
+    this.cartService.updateLocalCart({ items: [] });
+    this.updateLocalUser(undefined);
     return this.http.get(`${environment.baseUrl}/auth/logout`, { withCredentials: true });
   }
 
@@ -53,36 +68,30 @@ export class AuthService {
     return this.http.get<User>(`${environment.baseUrl}/auth/me`, { withCredentials: true });
   }
 
-  /**
-   *
-   * @param user
-   * @param expires
-   */
-  saveAuthToLocal(user: User, expires: Date) {
-    this._user.next(user);
+  updateLocalUser(user: User | undefined) {
+    this.userSubject.next(user);
+  }
+
+  saveAuthToLocalStorage(user: User, expires: Date) {
+    this.updateLocalUser(user);
     localStorage.setItem('jwtExpiry', expires.toISOString());
 
     setTimeout(() => {
-      this.validateTokenExpiry(expires.toISOString());
+      this.validateJwtExpiry(expires.toISOString());
     }, expires.getTime() - new Date().getTime());
   }
 
-  checkForLocalAuth() {
+  checkForLocalStorageAuth() {
     // First check if user is already saved locally
     const jwtExpiry = localStorage.getItem('jwtExpiry');
 
     // If token is still valid, just refresh profile info
-    if(jwtExpiry && this.validateTokenExpiry(jwtExpiry)) {
-      this.getProfile().subscribe(user => this._user.next(user));
+    if(jwtExpiry && this.validateJwtExpiry(jwtExpiry)) {
+      this.getProfile().subscribe(user => this.updateLocalUser(user));
     }
   }
 
-  /**
-   * Checks whether token in local storage expired,
-   * returns true if expired, else false
-   * @param jwtExpiry ISO format string of expiry date
-   */
-  validateTokenExpiry(jwtExpiry: string): boolean {
+  validateJwtExpiry(jwtExpiry: string): boolean {
     // If JWT is invalid we remove user and its expiry date
     if(new Date() > new Date(jwtExpiry)) {
       localStorage.removeItem('jwtExpiry');
@@ -94,6 +103,6 @@ export class AuthService {
   }
 
   refreshUser(): void {
-    this.getProfile().subscribe(user => this._user.next(user));
+    this.getProfile().subscribe(user => this.updateLocalUser(user));
   }
 }
