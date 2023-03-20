@@ -17,9 +17,7 @@ export class AuthService {
   constructor(
       private http: HttpClient,
       private cartService: CartService
-  ) {
-    this.checkForLocalStorageAuth();
-  }
+  ) {}
 
   register(credentials: Credentials): Observable<boolean> {
     return this.http.post<HttpResponse<string>>(`${environment.baseUrl}/auth/register`, credentials,
