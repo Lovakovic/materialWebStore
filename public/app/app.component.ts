@@ -1,5 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CartService} from "./services/cart.service";
+import {AuthService} from "./services/auth.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -9,10 +11,23 @@ import {CartService} from "./services/cart.service";
   `,
   styles: []
 })
-export class AppComponent implements OnInit {
-  constructor(private cartService: CartService) {}
+export class AppComponent implements OnInit, OnDestroy {
+    private subscription_: Subscription = new Subscription();
 
-  ngOnInit(): void {
-    this.cartService.init();
-  }
+    constructor(
+      private authService: AuthService,
+      private cartService: CartService) { }
+
+    ngOnInit(): void {
+      this.authService.checkForLocalStorageAuth();
+      this.subscription_.add(this.authService.user$.subscribe(user => {
+          if(user) {
+              this.cartService.init();
+          }
+      }))
+    }
+
+    ngOnDestroy(): void {
+        this.subscription_.unsubscribe();
+    }
 }
