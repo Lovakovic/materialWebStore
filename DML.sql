@@ -24,3 +24,6 @@ INSERT INTO address (userId, name, street, city, zipCode, country, phone) VALUE
     (1, 'Tony Filipovic', 'Ulica Ive Sanadera 1', 'Rijeka', '51000', 'Croatia', '92 274 1927');
 INSERT INTO address (userId, name, addressNickname, street, city, zipCode, country, phone) VALUE
     (1, 'Ivo Markovic', 'Budapest apartment', 'Harosz Matyak street 4', 'Budapest', '16500', 'Hungary', '92 837 1847');
+
+# Assign a primary address to admin
+UPDATE user SET primaryAddressId = 1 WHERE id = 1;

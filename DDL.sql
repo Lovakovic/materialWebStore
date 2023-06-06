@@ -62,6 +62,12 @@ CREATE TABLE address (
      CONSTRAINT fkAddress_userId FOREIGN KEY (userId) REFERENCES user(id)
 );
 
+# View with added `isPrimary` column for primary address distinction
+CREATE VIEW userAddress AS
+    SELECT a.*,
+           IF(a.id = u.primaryAddressId, 1, 0) AS isPrimary
+        FROM address a JOIN user u on u.id = a.userId;
+
 ALTER TABLE user ADD CONSTRAINT fkUser_primaryAddressId
     FOREIGN KEY (primaryAddressId) REFERENCES address(id);
 
