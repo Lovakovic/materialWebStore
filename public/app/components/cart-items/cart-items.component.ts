@@ -20,8 +20,7 @@ export class CartItemsComponent {
     @Input() cartItems!: CartItem[];
 
     constructor(
-        public cartService: CartService,
-        public router: Router
+        public cartService: CartService
     ) {}
 
     getTotal(): number {
@@ -42,9 +41,5 @@ export class CartItemsComponent {
 
     onRemoveQuantity(item: CartItem): void {
         this.cartService.removeQuantity(item);
-    }
-
-    onProceedToCheckout(): void {
-        this.router.navigate(['checkout']);
     }
 }

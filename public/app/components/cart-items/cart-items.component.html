@@ -7,9 +7,7 @@
                      class="w-[100px] my-5"
                 />
             </td>
-            <td mat-footer-cell *matFooterCellDef>
-                <button mat-raised-button routerLink="/home">Continue shopping</button>
-            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
@@ -34,7 +32,6 @@
                     <mat-icon>remove</mat-icon>
                 </button>
                 {{element.quantity}}
-<!--                The button below is supposed to increment item quantity but it doesn't-->
                 <button
                         (click)="onAddQuantity(element)"
                         mat-icon-button>
@@ -71,14 +68,7 @@
                     <mat-icon>close</mat-icon>
                 </button>
             </td>
-            <td mat-footer-cell *matFooterCellDef>
-                <button mat-raised-button color="primary"
-                        class="float-right"
-                        (click)="onProceedToCheckout()"
-                >
-                    Proceed To Checkout
-                </button>
-            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
