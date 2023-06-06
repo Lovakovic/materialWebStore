@@ -1,13 +1,13 @@
-import {Component} from '@angular/core';
-import {Cart, CartItem} from "../../models/cart.model";
-import {CartService} from "../../services/cart.service";
-import {Router} from "@angular/router";
+import { Component, Input } from '@angular/core';
+import { CartItem } from "../../models/cart.model";
+import { CartService } from "../../services/cart.service";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-cart',
-  templateUrl: './cart.component.html'
+    selector: 'app-cart-items',
+    templateUrl: './cart-items.component.html'
 })
-export class CartComponent {
+export class CartItemsComponent {
     displayColumns: Array<string> = [
         'product',
         'name',
@@ -17,14 +17,15 @@ export class CartComponent {
         'action'
     ];
 
+    @Input() cartItems!: CartItem[];
 
     constructor(
         public cartService: CartService,
         public router: Router
     ) {}
 
-    getTotal(cart: Cart): number {
-        return this.cartService.getTotal(cart);
+    getTotal(): number {
+        return this.cartService.getTotal({items: this.cartItems});
     }
 
     onClearCart(): void {
@@ -36,7 +37,7 @@ export class CartComponent {
     }
 
     onAddQuantity(item: CartItem): void {
-        this.cartService.addToCart(item);
+        this.cartService.addToCart(item, true).subscribe();
     }
 
     onRemoveQuantity(item: CartItem): void {

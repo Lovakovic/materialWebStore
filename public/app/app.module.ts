@@ -40,6 +40,9 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { FindPrimaryAddressPipe } from './pipes/find-primary-address.pipe';
 import { TrimDirective } from './directives/trim.directive';
+import { CheckoutComponent } from './pages/checkout/checkout.component';
+import {MatStepperModule} from "@angular/material/stepper";
+import { CartItemsComponent } from './components/cart-items/cart-items.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +60,9 @@ import { TrimDirective } from './directives/trim.directive';
     ProfileHeaderComponent,
     NewAddressComponent,
     FindPrimaryAddressPipe,
-    TrimDirective
+    TrimDirective,
+    CheckoutComponent,
+    CartItemsComponent
   ],
     imports: [
         BrowserModule,
@@ -82,7 +87,8 @@ import { TrimDirective } from './directives/trim.directive';
         MatInputModule,
         MatSelectModule,
         MatTooltipModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MatStepperModule
     ],
   providers: [CartService, StoreService],
   bootstrap: [AppComponent]
