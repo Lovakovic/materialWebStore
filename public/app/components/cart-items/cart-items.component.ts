@@ -1,7 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { CartItem } from "../../models/cart.model";
-import { CartService } from "../../services/cart.service";
-import { Router } from "@angular/router";
+import {Component, Input} from '@angular/core';
+import {CartItem} from "../../models/cart.model";
+import {CartService} from "../../services/cart.service";
 
 @Component({
     selector: 'app-cart-items',
