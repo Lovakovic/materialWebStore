@@ -128,27 +128,27 @@ export class CartService {
     let itemForRemoval: CartItem | undefined;
 
     let filteredItems = this.cartSubject.value.items.map((_item) => {
-      if(_item.productId === item.productId) {
-        _item.quantity--;
+        if(_item.productId === item.productId) {
+            _item.quantity--;
 
-        // Check if item has to be removed from cart altogether
-        if(_item.quantity === 0) {
-          itemForRemoval = _item;
-        }
+            // Check if item has to be removed from cart altogether
+            if(_item.quantity === 0) {
+            itemForRemoval = _item;
+            }
       }
 
       return _item;
     });
 
-    // Remove if there is no quantity of item in cart
-    if(itemForRemoval) {
-      this.removeFromCart(itemForRemoval, false);
-    } else {
-      this.patchCart(item).subscribe(() => {
-        this.updateLocalCart({ items: filteredItems });
-        this.snackBar.open(`1 item removed from cart.`, '',
-            { duration: 3000 });
-      })
-    }
+        // Remove if there is no quantity of item in cart
+        if(itemForRemoval) {
+            this.removeFromCart(itemForRemoval, false);
+        } else {
+            this.patchCart(item).subscribe(() => {
+                this.updateLocalCart({ items: filteredItems });
+                this.snackBar.open(`1 item removed from cart.`, '',
+                    { duration: 3000 });
+            })
+        }
     }
 }
