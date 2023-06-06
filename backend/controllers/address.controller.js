@@ -10,14 +10,19 @@ const getAddresses = async (req, res) => {
         if(limit) {
             rows = await  conn.query(
                 'SELECT id, name, addressNickname, companyName, street, city, zipCode, country, phone, ' +
-                'deliveryInstructions FROM address WHERE userId = ? ORDER BY lastModified DESC LIMIT ?',
+                'deliveryInstructions, isPrimary FROM userAddress WHERE userId = ? ORDER BY lastModified DESC LIMIT ?',
                 [userId, limit]);
         } else {
             rows = await  conn.query(
                 'SELECT id, name, addressNickname, companyName, street, city, zipCode, country, phone, ' +
-                'deliveryInstructions FROM address WHERE userId = ? ORDER BY lastModified DESC', userId);
+                'deliveryInstructions, isPrimary FROM userAddress WHERE userId = ? ORDER BY lastModified DESC', userId);
         }
         conn.release();
+
+        // Convert `isPrimary` from numeric to boolean
+        rows = rows.map(row => {
+            return {...row, isPrimary: !!row.isPrimary};
+        });
 
         return res.json(rows);
     } catch(err) {

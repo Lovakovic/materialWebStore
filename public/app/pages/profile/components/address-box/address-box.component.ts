@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Address} from "../../../../models/address.model";
 
 @Component({
@@ -11,14 +11,18 @@ import {Address} from "../../../../models/address.model";
     }
   `]
 })
-export class AddressBoxComponent {
-  @Input() address!: Address;
-  @Input() isPrimary: boolean = false;
-  @Input() expanded!: boolean;
+export class AddressBoxComponent implements OnInit {
+    @Input() address!: Address;
+    @Input() expanded!: boolean;
+    @Input() action!: string;
 
-  @Output() deleteAddress = new EventEmitter();
+    @Output() chooseAddress = new EventEmitter();
 
-  onDeleteAddress(): void {
-      this.deleteAddress.emit(this.address);
-  }
+	ngOnInit(): void {
+		console.log("Address found!")
+	}
+
+    onAddressChosen(): void {
+		this.chooseAddress.emit(this.address);
+    }
 }
