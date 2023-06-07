@@ -1,0 +1,34 @@
+<mat-stepper [linear]="true" #stepper>
+    <mat-step label="Address">
+        <mat-accordion>
+            <ng-container *ngIf="addresses.length > 0">
+                <app-address-box *ngFor="let address of addresses"
+                                 [expanded]="address.isPrimary"
+                                 [address]="address"
+                                 (chooseAddress)="onChooseAddress($event)"
+                                 [action]="'Choose'"
+                                 class="w-full"
+                ></app-address-box>
+            </ng-container>
+            <mat-expansion-panel hideToggle>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-base">New address</mat-panel-title>
+                    <mat-icon>add</mat-icon>
+                </mat-expansion-panel-header>
+                <app-new-address (addAddress)="onAddAddress($event)" ></app-new-address>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <ng-template #loading>
+            Loading...
+        </ng-template>
+    </mat-step>
+    <mat-step label="Payment">
+<!--        Choose payment option-->
+    </mat-step>
+    <mat-step label="Review and confirm">
+<!--        Review and confirm-->
+    </mat-step>
+    <mat-step label="Done!">
+<!--        Success!-->
+    </mat-step>
+</mat-stepper>
