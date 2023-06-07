@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Address} from "../../models/address.model";
 
 @Component({
   selector: 'app-new-address',
@@ -103,7 +104,7 @@ export class NewAddressComponent {
       } = this.newAddressForm.value;
 
       // Remove fields that the user didn't enter, standardize values returned
-      // form newAddressForm, so it fits the Address model
+      // from newAddressForm, so it fits the Address model
       const flatAddress = {
           name: name || '',
           addressNickname: addressNickname || undefined,
@@ -113,9 +114,10 @@ export class NewAddressComponent {
           zipCode: zipCode || undefined,
           country: country || '',
           phone: phone || '',
-          deliveryInstructions: deliveryInstructions || undefined
+          deliveryInstructions: deliveryInstructions || undefined,
+	      isPrimary: primary || undefined
       }
 
-      this.addAddress.emit({ address: flatAddress, primary});
+      this.addAddress.emit(flatAddress);
   }
 }
