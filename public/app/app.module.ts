@@ -38,7 +38,6 @@ import { ProfileHeaderComponent } from './pages/profile/components/profile-heade
 import { NewAddressComponent } from './components/new-address/new-address.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import { FindPrimaryAddressPipe } from './pipes/find-primary-address.pipe';
 import { TrimDirective } from './directives/trim.directive';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import {MatStepperModule} from "@angular/material/stepper";
@@ -59,7 +58,6 @@ import { CartItemsComponent } from './components/cart-items/cart-items.component
     AddressBoxComponent,
     ProfileHeaderComponent,
     NewAddressComponent,
-    FindPrimaryAddressPipe,
     TrimDirective,
     CheckoutComponent,
     CartItemsComponent
