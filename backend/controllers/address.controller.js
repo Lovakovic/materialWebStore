@@ -33,7 +33,7 @@ const getAddresses = async (req, res) => {
 const postAddress = async (req, res) => {
     try {
         const userId = req.userId;
-        const address = req.body.address;
+        const address = req.body;
 
         let conn = await pool.getConnection();
 
@@ -78,7 +78,7 @@ const postAddress = async (req, res) => {
         conn.query(query, values);
 
         // Modify the user table and set the new primary address id
-        if(req.body.newPrimary) {
+        if(address.isPrimary) {
             const addressId = await conn.query('SELECT LAST_INSERT_ID() AS addressId');
             await conn.query('UPDATE user SET primaryAddressId = ? WHERE id = ?',
                 [addressId[0].addressId, userId]);
