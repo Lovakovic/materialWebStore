@@ -86,7 +86,7 @@ const postAddress = async (req, res) => {
         }
 
         // Fetch the inserted address
-        const [newAddress] = await conn.query('SELECT * FROM address WHERE id = ?', [insertResponse.insertId]);
+        const [newAddress] = await conn.query('SELECT * FROM userAddress WHERE id = ?', [insertResponse.insertId]);
 
         conn.release();
 
