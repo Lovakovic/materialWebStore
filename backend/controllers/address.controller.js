@@ -105,7 +105,7 @@ const deleteAddress = async (req, res) => {
         conn.release();
 
         console.log(`Deleted address with id ${req.params.id}`);
-        return res.status(200).json();
+        return res.status(204).json();
     } catch(err) {
         return res.status(500).json('Internal server error.');
     }
