@@ -59,7 +59,7 @@ const postAddress = async (req, res) => {
             fields += `, deliveryInstructions`;
             placeholders += `, ?`;
         }
-        query =  query + fields + `) VALUE (?, ?, ?, ?, ?, ?` + placeholders + `)`;
+        query =  query + fields + `) VALUES (?, ?, ?, ?, ?, ?` + placeholders + `)`;
 
         // Add values, filter out the undefined
         const values = [
@@ -75,20 +75,23 @@ const postAddress = async (req, res) => {
             address['deliveryInstructions']
         ].filter(Boolean);
 
-        conn.query(query, values);
+        // Execute the INSERT query
+        const insertResponse = await conn.query(query, values);
 
         // Modify the user table and set the new primary address id
         if(address.isPrimary) {
-            const addressId = await conn.query('SELECT LAST_INSERT_ID() AS addressId');
-            await conn.query('UPDATE user SET primaryAddressId = ? WHERE id = ?',
-                [addressId[0].addressId, userId]);
-
+            const addressId = insertResponse.insertId;
+            await conn.query('UPDATE user SET primaryAddressId = ? WHERE id = ?', [addressId, userId]);
             console.log(`Updated ${userId}'s primary address to ${addressId}`);
         }
 
+        // Fetch the inserted address
+        const [newAddress] = await conn.query('SELECT * FROM address WHERE id = ?', [insertResponse.insertId]);
+
         conn.release();
 
-        return res.status(200).send();
+        // Return the created address with a 201 status code
+        return res.status(201).json(newAddress);
     } catch(err) {
         console.log(err);
         return res.status(500).json('Internal server error.');
