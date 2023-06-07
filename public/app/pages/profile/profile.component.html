@@ -4,7 +4,7 @@
         <div class="w-5/12 ml-6 mt-6">
             <h2 class="text-center">Your addresses</h2>
             <mat-accordion>
-                <ng-container *ngIf="addressService.addresses$ | async as addresses">
+                <ng-container *ngIf="addresses.length > 0">
                     <app-address-box *ngFor="let address of addresses"
                                      [expanded]="address.isPrimary"
                                      [address]="address"

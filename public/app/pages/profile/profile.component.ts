@@ -8,14 +8,14 @@ import {AuthService} from "../../services/auth.service";
   templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnInit {
-    constructor(
-        public addressService: AddressService,
-        public authService: AuthService
-    ) { }
+	addresses: Array<Address> = [];
 
-    ngOnInit(): void {
-        this.addressService.fetchAddresses();
-    }
+    constructor(public addressService: AddressService) { }
+
+	ngOnInit(): void {
+		this.addressService.getAddress().subscribe(_addresses =>
+			this.addresses = _addresses);
+	}
 
     onAddAddress(addressData: {address: Address, primary: boolean}): void {
         this.addressService.postAddress(addressData.address, addressData.primary).subscribe();
