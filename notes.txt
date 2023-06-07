@@ -1,14 +1,17 @@
 Next:
     - create checkout page (4 steps)
-        - cart overview component (always shown)
+        - cart overview component (in desktop mode always shown on left half)
             - displays products in cart
                 - modify existing `product-box` component
                     - enable horizontal scaling
                     - hide the add to cart button
                     - add increment, decrement and remove buttons
         1) choose or add address
-            - primary address is chosen by default and step is completed
-            - user can go back and choose another address
+            + primary address is expanded by default
+            - user has to click `Choose` button to confirm address
+            	- create `CheckoutService` which saves chosen address (dont post anything to server
+            	 until tha order is placed)
+            - user can expand other addresses and choose them
             - can't proceed to next step if no address is added
         2) choose or add payment option
             - form to add a new credit card with simple validation
