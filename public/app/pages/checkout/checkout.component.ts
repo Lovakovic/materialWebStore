@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {AddressService} from "../../services/address.service";
-import {AuthService} from "../../services/auth.service";
 import {Address} from "../../models/address.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
