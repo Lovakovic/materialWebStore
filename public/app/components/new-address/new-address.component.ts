@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Address} from "../../models/address.model";
 
 @Component({
   selector: 'app-new-address',
