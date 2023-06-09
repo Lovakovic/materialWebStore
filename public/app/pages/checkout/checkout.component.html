@@ -1,22 +1,32 @@
-<mat-stepper [linear]="true" #stepper>
+<mat-stepper [linear]="true" #stepper class="max-w-7xl m-auto">
     <mat-step label="Address">
-        <mat-accordion>
-            <ng-container *ngIf="addresses.length > 0">
-                <app-address-box *ngFor="let address of addresses"
-                                 [expanded]="address.isPrimary"
-                                 [address]="address"
-                                 (chooseAddress)="onChooseAddress($event)"
-                                 [action]="'Choose'"
-                                 class="w-full"
-                ></app-address-box>
+        <div class="my-5" *ngIf="cartService.cart$ | async as cart">
+            <h1>Review your cart</h1>
+            <ng-container *ngIf="cart.items.length > 0">
+                <app-cart-items [cartItems]="cart.items"
+                                [hideClearAllButton]="true"
+                ></app-cart-items>
             </ng-container>
-            <mat-expansion-panel hideToggle>
-                <mat-expansion-panel-header>
-                    <mat-panel-title class="text-base">New address</mat-panel-title>
-                    <mat-icon>add</mat-icon>
-                </mat-expansion-panel-header>
-                <app-new-address (addAddress)="onAddAddress($event)" ></app-new-address>
-            </mat-expansion-panel>
+        </div>
+        <mat-accordion>
+            <div class="mt-10">
+                <h1>Choose existing or add a new shipping address</h1>
+                <ng-container *ngIf="addresses.length > 0">
+                    <app-address-box *ngFor="let address of addresses"
+                                     [expanded]="address.isPrimary"
+                                     [address]="address"
+                                     (chooseAddress)="onChooseAddress($event)"
+                                     [action]="'Choose'"
+                    ></app-address-box>
+                </ng-container>
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="text-base">New address</mat-panel-title>
+                        <mat-icon>add</mat-icon>
+                    </mat-expansion-panel-header>
+                    <app-new-address (addAddress)="onAddAddress($event)" ></app-new-address>
+                </mat-expansion-panel>
+            </div>
         </mat-accordion>
         <ng-template #loading>
             Loading...

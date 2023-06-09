@@ -1,7 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {AddressService} from "../../services/address.service";
 import {Address} from "../../models/address.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {CartItem} from "../../models/cart.model";
+import {CartService} from "../../services/cart.service";
+import {MatStepper} from "@angular/material/stepper";
 
 @Component({
   selector: 'app-checkout',
@@ -11,18 +14,28 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 })
 export class CheckoutComponent implements OnInit {
 	addresses: Array<Address> = [];
+	cartItems: Array<CartItem> = [];
 
-    constructor(public addressService: AddressService,
-                private snackBar: MatSnackBar) {
-    }
+	shippingAddress?: Address;
+	billingAddress?: Address;
+
+	@ViewChild('stepper') stepper!: MatStepper;
+
+    constructor(private addressService: AddressService,
+                private snackBar: MatSnackBar,
+                public cartService: CartService
+    ) {}
 
 	ngOnInit(): void {
 		this.addressService.getAddress().subscribe(
 			_addresses => this.addresses = _addresses);
+		this.cartService.getCart().subscribe(
+			cart => this.cartItems = cart.items);
 	}
 
 	onChooseAddress(address: Address) {
-		// Implement checkout service and post the chosen address here
+		this.shippingAddress = address;
+		this.stepper.next();
 	}
 
 	onAddAddress(address: Address) {
