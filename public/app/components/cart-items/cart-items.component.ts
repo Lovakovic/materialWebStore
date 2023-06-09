@@ -17,6 +17,7 @@ export class CartItemsComponent {
     ];
 
     @Input() cartItems!: CartItem[];
+	@Input() hideClearAllButton = false;
 
     constructor(
         public cartService: CartService
