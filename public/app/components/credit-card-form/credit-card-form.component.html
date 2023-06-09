@@ -1,0 +1,35 @@
+<form [formGroup]="creditCardForm" (ngSubmit)="onFormSubmit()" class="space-y-4">
+    <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Name on card</mat-label>
+        <input matInput formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Card number</mat-label>
+        <input matInput formControlName="cardNumber">
+        <mat-error *ngIf="creditCardForm.controls['cardNumber'].hasError('invalidCardNumber')">
+            Invalid card number
+        </mat-error>
+    </mat-form-field>
+
+    <div class="flex space-x-4">
+        <mat-form-field appearance="outline" class="w-1/2">
+            <mat-label>Expiration date</mat-label>
+            <input matInput formControlName="expirationDate">
+            <mat-error *ngIf="creditCardForm.controls['expirationDate'].hasError('invalidFormat')">
+                Date must be in the MM/YYYY format
+            </mat-error>
+            <mat-error *ngIf="creditCardForm.controls['expirationDate'].hasError('forbiddenDate')">
+                Date must be in the future
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-1/2">
+            <mat-label>CVV</mat-label>
+            <input matInput formControlName="cvv">
+        </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="primary" type="submit"
+            class="mt-4" [disabled]="creditCardForm.invalid">Continue</button>
+</form>

@@ -11,16 +11,12 @@ import {Address} from "../../../../models/address.model";
     }
   `]
 })
-export class AddressBoxComponent implements OnInit {
+export class AddressBoxComponent {
     @Input() address!: Address;
     @Input() expanded!: boolean;
     @Input() action!: string;
 
     @Output() chooseAddress = new EventEmitter();
-
-	ngOnInit(): void {
-		console.log("Address found!")
-	}
 
     onAddressChosen(): void {
 		this.chooseAddress.emit(this.address);

@@ -42,6 +42,8 @@ import { TrimDirective } from './directives/trim.directive';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import {MatStepperModule} from "@angular/material/stepper";
 import { CartItemsComponent } from './components/cart-items/cart-items.component';
+import { PaymentFormComponent } from './pages/checkout/components/payment-form/payment-form.component';
+import { CreditCardFormComponent } from './components/credit-card-form/credit-card-form.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +62,9 @@ import { CartItemsComponent } from './components/cart-items/cart-items.component
     NewAddressComponent,
     TrimDirective,
     CheckoutComponent,
-    CartItemsComponent
+    CartItemsComponent,
+    PaymentFormComponent,
+    CreditCardFormComponent
   ],
     imports: [
         BrowserModule,

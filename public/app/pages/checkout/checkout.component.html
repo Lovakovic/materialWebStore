@@ -33,7 +33,9 @@
         </ng-template>
     </mat-step>
     <mat-step label="Payment">
-<!--        Choose payment option-->
+        <div class="mt-5">
+            <app-payment-form (selectPaymentOption)="onSelectPaymentOption($event)"></app-payment-form>
+        </div>
     </mat-step>
     <mat-step label="Review and confirm">
 <!--        Review and confirm-->

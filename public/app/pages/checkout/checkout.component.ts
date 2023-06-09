@@ -5,6 +5,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {CartItem} from "../../models/cart.model";
 import {CartService} from "../../services/cart.service";
 import {MatStepper} from "@angular/material/stepper";
+import {PaymentOption} from "../../models/payment-option.model";
 
 @Component({
   selector: 'app-checkout',
@@ -17,6 +18,7 @@ export class CheckoutComponent implements OnInit {
 	cartItems: Array<CartItem> = [];
 
 	shippingAddress?: Address;
+	paymentOption!: PaymentOption;
 
 	@ViewChild('stepper') stepper!: MatStepper;
 
@@ -48,5 +50,10 @@ export class CheckoutComponent implements OnInit {
 				}
 			}
 		);
+	}
+
+	onSelectPaymentOption(paymentOption: PaymentOption) {
+		this.paymentOption = paymentOption;
+		this.stepper.next();
 	}
 }

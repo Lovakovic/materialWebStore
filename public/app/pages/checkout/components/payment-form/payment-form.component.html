@@ -1,0 +1,22 @@
+<form [formGroup]="paymentForm" (ngSubmit)="onSelectPaymentOption()" class="space-y-4">
+    <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Payment option</mat-label>
+        <mat-select formControlName="paymentOption">
+            <mat-option *ngFor="let option of paymentOptions" [value]="option">
+                {{ option }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <ng-container *ngIf="paymentForm.get('paymentOption')!.value === 'Credit card'">
+        <app-credit-card-form (onCreditCardFormSubmit)="onCreditCardFormSubmit($event)"></app-credit-card-form>
+    </ng-container>
+
+    <ng-container *ngIf="paymentForm.get('paymentOption')!.value === 'Bank transfer'">
+        <p>Bank transfer info</p>
+    </ng-container>
+
+    <ng-container *ngIf="paymentForm.get('paymentOption')!.value === 'Payment on delivery'">
+        <p>Payment on delivery info</p>
+    </ng-container>
+</form>
