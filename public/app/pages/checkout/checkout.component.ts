@@ -17,7 +17,6 @@ export class CheckoutComponent implements OnInit {
 	cartItems: Array<CartItem> = [];
 
 	shippingAddress?: Address;
-	billingAddress?: Address;
 
 	@ViewChild('stepper') stepper!: MatStepper;
 
