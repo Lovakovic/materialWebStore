@@ -14,9 +14,11 @@
 
     <ng-container *ngIf="paymentForm.get('paymentOption')!.value === 'Bank transfer'">
         <p>Bank transfer info</p>
+        <button mat-raised-button color="primary" type="submit">Confirm</button>
     </ng-container>
 
     <ng-container *ngIf="paymentForm.get('paymentOption')!.value === 'Payment on delivery'">
         <p>Payment on delivery info</p>
+        <button mat-raised-button color="primary" type="submit">Confirm</button>
     </ng-container>
 </form>
