@@ -7,6 +7,7 @@ import {PaymentOption} from "../../../../models/payment-option.model";
   selector: 'app-review-order',
   templateUrl: 'review-order.component.html',
   styles: [
+	  ' p { margin-bottom: 0.3rem }'
   ]
 })
 export class ReviewOrderComponent {

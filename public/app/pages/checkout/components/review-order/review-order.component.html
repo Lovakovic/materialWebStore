@@ -2,11 +2,14 @@
 <div class="bg-white p-4 rounded shadow">
     <div *ngIf="shippingAddress; else enterShippingAddress">
         <h2 class="font-medium text-base mb-2">Shipping Address:</h2>
-        <p>{{ shippingAddress.name }}</p>
-        <p>{{ shippingAddress.street }}, {{ shippingAddress.city }}</p>
-        <p>{{ shippingAddress.zipCode }}</p>
+        <p class="font-bold">{{ shippingAddress.name }}</p>
+        <p>{{ shippingAddress.street }}</p>
+        <p>{{ shippingAddress.city }} {{ shippingAddress.zipCode }}</p>
         <p>{{ shippingAddress.country }}</p>
         <p>{{ shippingAddress.phone }}</p>
+        <p *ngIf="shippingAddress.deliveryInstructions" class="my-3">
+            <span class="font-medium">Delivery instructions:</span> {{ shippingAddress.deliveryInstructions }}
+        </p>
     </div>
     <ng-template #enterShippingAddress>
         <p>Please choose the shipping address to shipping address info.</p>
