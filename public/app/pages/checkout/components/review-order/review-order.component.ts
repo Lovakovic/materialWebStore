@@ -25,6 +25,11 @@ export class ReviewOrderComponent {
 		return this.paymentOption?.cardDetails?.cardNumber.slice(-4);
 	}
 
+	get infoComplete() {
+		return (this.cartItems.length > 0) &&
+			this.shippingAddress != undefined && this.paymentOption != undefined;
+	}
+
 	onConfirmOrder() {
 		this.confirmOrder.emit();
 	}
