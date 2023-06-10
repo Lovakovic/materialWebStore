@@ -6,10 +6,18 @@
 
     <mat-form-field appearance="outline" class="w-full">
         <mat-label>Card number</mat-label>
-        <input matInput formControlName="cardNumber">
+        <input matInput formControlName="cardNumber" (keyup)="getCardType()">
         <mat-error *ngIf="creditCardForm.controls['cardNumber'].hasError('invalidCardNumber')">
             Invalid card number
         </mat-error>
+
+        <div class="card-icons">
+            <img *ngFor="let card of cardIcons | keyvalue"
+                 [src]="card.value"
+                 [class.active]="getCardType() === card.key"
+                 class="inline"
+                 alt="{{card.key}}">
+        </div>
     </mat-form-field>
 
     <div class="flex space-x-4">

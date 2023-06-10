@@ -1,0 +1,9 @@
+.card-icons img {
+    height: 1rem;
+    margin-right: 0.3rem;
+    opacity: 0.3;
+}
+
+.card-icons img.active {
+    opacity: 1;
+}
