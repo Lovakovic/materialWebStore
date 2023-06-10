@@ -6,6 +6,7 @@ import {CartItem} from "../../models/cart.model";
 import {CartService} from "../../services/cart.service";
 import {MatStepper} from "@angular/material/stepper";
 import {PaymentOption} from "../../models/payment-option.model";
+import {ReviewOrderComponent} from "./components/review-order/review-order.component";
 
 @Component({
   selector: 'app-checkout',
@@ -21,6 +22,7 @@ export class CheckoutComponent implements OnInit {
 	paymentOption!: PaymentOption;
 
 	@ViewChild('stepper') stepper!: MatStepper;
+	@ViewChild('reviewOrder', {static: false}) reviewOrder!: ReviewOrderComponent;
 
     constructor(private addressService: AddressService,
                 private snackBar: MatSnackBar,
@@ -55,5 +57,13 @@ export class CheckoutComponent implements OnInit {
 	onSelectPaymentOption(paymentOption: PaymentOption) {
 		this.paymentOption = paymentOption;
 		this.stepper.next();
+	}
+
+	onConfirmOrder() {
+		const order = {
+			cartItems: this.cartItems,
+			shippingAddress: this.shippingAddress,
+			paymentOption: this.paymentOption
+		};
 	}
 }

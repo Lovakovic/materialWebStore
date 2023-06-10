@@ -38,7 +38,12 @@
         </div>
     </mat-step>
     <mat-step label="Review and confirm">
-<!--        Review and confirm-->
+        <app-review-order #reviewOrder
+                          [cartItems]="cartItems"
+                          [shippingAddress]="shippingAddress"
+                          [paymentOption]="paymentOption"
+                          (confirmOrder)="onConfirmOrder()"
+        ></app-review-order>
     </mat-step>
     <mat-step label="Done!">
 <!--        Success!-->

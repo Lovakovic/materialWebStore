@@ -1,0 +1,26 @@
+<div class="bg-white p-4 rounded shadow">
+    <h2 class="text-xl font-semibold mb-2">Review and confirm</h2>
+    <div *ngIf="shippingAddress">
+        <h3 class="font-medium text-base mb-2">Shipping Address</h3>
+        <p>{{ shippingAddress.name }}, {{ shippingAddress.street }}, {{ shippingAddress.city }}, {{ shippingAddress.zipCode }}, {{ shippingAddress.country }}, {{ shippingAddress.phone }}</p>
+    </div>
+    <div class="mt-4">
+        <h3 class="font-medium text-base mb-2">Items in cart</h3>
+        <div *ngFor="let item of cartItems" class="flex justify-between items-center border-b border-gray-200 py-2">
+            <p class="text-gray-600">{{ item.name }} x {{ item.quantity }}</p>
+            <p>${{ item.price * item.quantity }}</p>
+        </div>
+        <div class="flex justify-between items-center pt-2">
+            <p class="text-gray-600">Total</p>
+            <p>${{ total }}</p>
+        </div>
+    </div>
+    <div class="mt-4" *ngIf="paymentOption">
+        <h3 class="font-medium text-base mb-2">Payment Option</h3>
+        <p *ngIf="paymentOption.type === 'Credit card'; else nonCardPayment">{{ paymentOption.type }} ending in {{ last4Digits }}</p>
+        <ng-template #nonCardPayment><p>{{ paymentOption.type }}</p></ng-template>
+    </div>
+    <div class="mt-4">
+        <button mat-raised-button color="primary" (click)="onConfirmOrder()">Confirm Order</button>
+    </div>
+</div>
