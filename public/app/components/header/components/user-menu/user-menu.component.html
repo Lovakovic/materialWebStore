@@ -1,0 +1,29 @@
+<button class="truncate text-xs mr-3 mt-2"
+        [matMenuTriggerFor]="userMenu"
+        (mouseover)="openMenu()"
+>
+    Hi {{username}}!
+    <u class="text-base block">Your page.</u>
+</button>
+<mat-menu #userMenu="matMenu" (mouseover)="keepOpen()" (mouseleave)="closeMenuAfterSomeTime()">
+    <button mat-menu-item (click)="onNavigateToProfile()">
+        Account info
+        <mat-icon>account_circle</mat-icon>
+    </button>
+    <button mat-menu-item>
+        My orders
+        <mat-icon>description</mat-icon>
+    </button>
+    <button mat-menu-item>
+        Addresses
+        <mat-icon>streetview</mat-icon>
+    </button>
+    <button mat-menu-item>
+        Payment options
+        <mat-icon>credit_card</mat-icon>
+    </button>
+    <button mat-menu-item (click)="onLogout()">
+        Log out
+        <mat-icon>arrow_forward</mat-icon>
+    </button>
+</mat-menu>

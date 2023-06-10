@@ -44,6 +44,7 @@ import {MatStepperModule} from "@angular/material/stepper";
 import { CartItemsComponent } from './components/cart-items/cart-items.component';
 import { PaymentFormComponent } from './pages/checkout/components/payment-form/payment-form.component';
 import { CreditCardFormComponent } from './components/credit-card-form/credit-card-form.component';
+import { UserMenuComponent } from './components/header/components/user-menu/user-menu.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { CreditCardFormComponent } from './components/credit-card-form/credit-ca
     CheckoutComponent,
     CartItemsComponent,
     PaymentFormComponent,
-    CreditCardFormComponent
+    CreditCardFormComponent,
+    UserMenuComponent
   ],
     imports: [
         BrowserModule,
