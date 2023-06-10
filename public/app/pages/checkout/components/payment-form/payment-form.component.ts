@@ -28,7 +28,7 @@ export class PaymentFormComponent {
 
 	onCreditCardFormSubmit(creditCardDetails: CardDetails) {
 		this.selectPaymentOption.emit({
-			type: 'credit-card',
+			type: 'Credit card',
 			cardDetails: creditCardDetails
 		});
 	}

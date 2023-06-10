@@ -1,5 +1,5 @@
 export interface PaymentOption {
-	type: 'credit-card' | 'bank-transfer' | 'payment-on-delivery';
+	type: 'Credit card' | 'Bank transfer' | 'Payment on delivery';
 	cardDetails?: CardDetails;
 }
 
