@@ -51,4 +51,7 @@ app.use('/address', addressRouter);
 const cartRouter = require('./routes/cart.routes');
 app.use('/cart', cartRouter);
 
+const orderRouter = require('./routes/order.routes');
+app.use('/order', orderRouter);
+
 module.exports = app;

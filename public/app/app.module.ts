@@ -46,6 +46,7 @@ import { PaymentFormComponent } from './pages/checkout/components/payment-form/p
 import { CreditCardFormComponent } from './components/credit-card-form/credit-card-form.component';
 import { UserMenuComponent } from './components/header/components/user-menu/user-menu.component';
 import { ReviewOrderComponent } from './pages/checkout/components/review-order/review-order.component';
+import {NgxPayPalModule} from "ngx-paypal";
 
 @NgModule({
   declarations: [
@@ -70,32 +71,33 @@ import { ReviewOrderComponent } from './pages/checkout/components/review-order/r
     UserMenuComponent,
     ReviewOrderComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatSidenavModule,
-        MatGridListModule,
-        MatMenuModule,
-        MatButtonModule,
-        MatCardModule,
-        MatIconModule,
-        MatExpansionModule,
-        MatListModule,
-        MatToolbarModule,
-        MatTableModule,
-        MatBadgeModule,
-        MatSnackBarModule,
-        HttpClientModule,
-        MatButtonToggleModule,
-        MatRadioModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        MatSelectModule,
-        MatTooltipModule,
-        MatCheckboxModule,
-        MatStepperModule
-    ],
+	imports: [
+		BrowserModule,
+		AppRoutingModule,
+		BrowserAnimationsModule,
+		MatSidenavModule,
+		MatGridListModule,
+		MatMenuModule,
+		MatButtonModule,
+		MatCardModule,
+		MatIconModule,
+		MatExpansionModule,
+		MatListModule,
+		MatToolbarModule,
+		MatTableModule,
+		MatBadgeModule,
+		MatSnackBarModule,
+		HttpClientModule,
+		MatButtonToggleModule,
+		MatRadioModule,
+		ReactiveFormsModule,
+		MatInputModule,
+		MatSelectModule,
+		MatTooltipModule,
+		MatCheckboxModule,
+		MatStepperModule,
+		NgxPayPalModule
+	],
   providers: [CartService, StoreService],
   bootstrap: [AppComponent]
 })

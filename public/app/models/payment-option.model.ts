@@ -1,9 +1,9 @@
 export interface PaymentOption {
-	type: 'Credit card' | 'Bank transfer' | 'Payment on delivery';
-	cardDetails?: CardDetails;
+	type: 'PayPal' | 'Credit card' | 'Bank transfer' | 'Payment on delivery';
+	cardDetails?: CreditCard;
 }
 
-export interface CardDetails {
+export interface CreditCard {
 	name: string;
 	cardNumber: string;
 	expirationDate: string;

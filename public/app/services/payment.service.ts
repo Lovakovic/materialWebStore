@@ -1,12 +1,18 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
-export class CheckoutService {
+export class PaymentService {
 
 	constructor(private http: HttpClient) { }
 
+	postPaymentOption() {
 
+	}
+
+	postCreditCart() {
+
+	}
 }

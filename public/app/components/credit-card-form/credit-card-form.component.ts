@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import * as Card from 'card-validator';
-import {CardDetails} from "../../models/payment-option.model";
+import {CreditCard} from "../../models/payment-option.model";
 import * as moment from 'moment';
 
 @Component({
@@ -10,7 +10,7 @@ import * as moment from 'moment';
 	styleUrls: ['credit-card-form.component.css']
 })
 export class CreditCardFormComponent {
-	@Output() onCreditCardFormSubmit = new EventEmitter<CardDetails>();
+	@Output() onCreditCardFormSubmit = new EventEmitter<CreditCard>();
 
 	creditCardForm: FormGroup;
 

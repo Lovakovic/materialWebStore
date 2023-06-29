@@ -1,21 +1,12 @@
 Next:
     - create checkout page (4 steps)
-        - cart overview component (in desktop mode always shown on left half)
-            - displays products in cart
-                - modify existing `product-box` component
-                    - enable horizontal scaling
-                    - hide the add to cart button
-                    - add increment, decrement and remove buttons
         1) choose or add address
             + primary address is expanded by default
-            - user has to click `Choose` button to confirm address
-            	- create `CheckoutService` which saves chosen address (dont post anything to server
-            	 until tha order is placed)
-            - user can expand other addresses and choose them
-            - can't proceed to next step if no address is added
+            + user has to click `Choose` button to confirm address
+            	+ save the chosen address to component state
+            + user can expand other addresses and choose them
         2) choose or add payment option
-            - form to add a new credit card with simple validation
-            - mockup of GooglePay, PayPal, and AmazonPay options (just buttons which proceed to next step for now)
+            + form to add a new credit card with simple validation
         3) review and confirm
             - upon confirm
                 - send entire cart to backend to confirm and sync state
@@ -167,7 +158,7 @@ Todo from project requirements:
 
 Advanced concepts or functionality
     -> user experience
-        - create a small drop down menu on `Your page` navbar button that opens upon hover
+        + create a small drop down menu on `Your page` navbar button that opens upon hover
         - change the layout of profile page on mobile aspect ratios so that orders and addresses are
             displayed one above the other
         - enable users to change their user account data (name, password...) or close the account
@@ -176,6 +167,7 @@ Advanced concepts or functionality
         - add a country picker drop down menu for choosing a country when adding an address
         - add http interceptor that displays loading bar on top of the heading when http request is loading
         - in case user is not logged in, resort to local storage for saving and restoring cart
+        - add PayPal and GooglePay payment options on checkout
 
     -> code
         - modify frontend HTTP response checks to respond to status codes, not error messages
