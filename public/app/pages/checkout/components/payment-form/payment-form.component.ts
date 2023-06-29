@@ -2,7 +2,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
 import {CreditCard, PaymentOption} from "../../../../models/payment-option.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ICreateOrderRequest, IPayPalConfig} from "ngx-paypal";
-import {environment} from "../../../../../environment/environment";
+import {environment} from "../../../../../environment/dev.environment";
 
 @Component({
 	selector: 'app-payment-form',

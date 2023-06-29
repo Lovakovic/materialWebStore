@@ -5,7 +5,7 @@ import {BehaviorSubject, catchError, map, Observable, of, switchMap, tap} from "
 import {response} from "express";
 import {User} from "../models/user.model";
 import {CartService} from "./cart.service";
-import {environment} from "../../environment/environment";
+import {environment} from "../../environment/dev.environment";
 
 /**
  * A service providing authentication functionality including register, login, logout, and profile fetching.

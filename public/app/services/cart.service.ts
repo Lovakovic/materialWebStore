@@ -3,7 +3,7 @@ import {BehaviorSubject, catchError, map, Observable, switchMap, take, tap, thro
 import {Cart, CartItem} from "../models/cart.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../../environment/environment";
+import {environment} from "../../environment/dev.environment";
 
 /**
  * A service providing shopping cart functionality, including cart update, item addition and removal.
