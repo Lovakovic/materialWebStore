@@ -21,8 +21,4 @@
         <p>Payment on delivery info</p>
         <button mat-raised-button color="primary" type="submit">Confirm</button>
     </ng-container>
-
-    <ng-container *ngIf="paymentForm.get('paymentOption')!.value === 'PayPal'">
-        <ngx-paypal [config]="payPalConfig"></ngx-paypal>
-    </ng-container>
 </form>
