@@ -11,10 +11,11 @@ const postOrder =  async (req, res) => {
     try {
         const userId = req.userId;
         const order = req.body;
+        const paymentMethod = order.paymentMethod;
         const addressId = order.shippingAddress.id;
 
         let conn = await pool.getConnection();
-        let rows = await conn.query('SELECT createOrder(?, ?) AS orderId', [userId, addressId]);
+        let rows = await conn.query('SELECT createOrder(?, ?, ?) AS orderId', [userId, addressId, paymentMethod]);
         conn.release();
 
         if (rows[0] === 0) {
@@ -35,62 +36,119 @@ const postOrder =  async (req, res) => {
     }
 }
 
-const createOrder = async (req) => {
-    const cartItems = req.body.cartItems;
-    const purchase_units = cartItems.map(item => {
-        return {
-            amount: {
-                currency_code: 'EUR',
-                value: (item.price * item.quantity).toFixed(2)
-            },
-            description: item.name,
-            quantity: item.quantity.toString(),
-        };
-    });
+const createPaypalOrder = async (req) => {
+    try {
+        const cartItems = req.body.cartItems;
 
-    const accessToken = await generateAccessToken();
-    const url = `${baseURL.sandbox}/v2/checkout/orders`;
-    const response = await axios.post(url, {
-        intent: "CAPTURE",
-        purchase_units: purchase_units
-    }, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-        }
-    });
-    return response.data.id;
+        const totalAmount = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
+
+        const purchase_units = [
+            {
+                amount: {
+                    currency_code: 'EUR',
+                    value: totalAmount,
+                },
+            }
+        ];
+
+        const accessToken = await generateAccessToken();
+        const url = `${baseURL.sandbox}/v2/checkout/orders`;
+        const response = await axios.post(url, {
+            intent: "CAPTURE",
+            purchase_units: purchase_units
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            }
+        });
+
+        return response.data.id;
+    } catch (error) {
+        console.log('Error creating PayPal order:', error.message);
+        throw error;
+    }
 }
 
 
-const capturePayment = async (req) => {
-    const orderId = req.body.orderId;
+const processPaypalPayment = async (req, res) => {
+    try {
+        const transactionId = req.body.transactionId;
+        const userId = req.userId;
+
+        // Fetch transaction details from PayPal
+        const transactionDetails = await fetchTransactionDetails(transactionId);
+        if (transactionDetails.status !== 'COMPLETED') {
+            throw new Error('Transaction not completed');
+        }
+
+        // Store the transaction in the database if it is approved
+        let conn = await pool.getConnection();
+        await conn.query('INSERT INTO paypalTransaction (id, status) VALUES (?, ?)', [transactionId, transactionDetails.status]);
+
+        // Check if the address already exists in DB
+        const shipping = transactionDetails.purchase_units[0].shipping;
+        const [existingAddress] = await conn.query('SELECT id FROM archivedAddress WHERE name = ? AND street = ? AND city = ?', [shipping.name.full_name, shipping.address.address_line_1, shipping.address.admin_area_2]);
+        let addressId;
+        if (existingAddress?.length) {
+            // If address exists, grab its id
+            addressId = existingAddress[0].id;
+        } else {
+            // If address does not exist, insert a new one and grab its id
+            let result = await conn.query('INSERT INTO archivedAddress (userId, name, street, city, country) VALUES (?, ?, ?, ?, ?)', [userId, shipping.name.full_name, shipping.address.address_line_1, shipping.address.admin_area_2, shipping.address.country_code]);
+            addressId = result.insertId;
+        }
+
+        // Create a new order in DB
+        const orderTotal = transactionDetails.purchase_units[0].amount.value;
+        const orderPaymentMethod = 'paypal';
+        let orderResult = await conn.query('INSERT INTO `order` (userId, archivedAddressId, total, paymentMethod, paypalTransactionId) VALUES (?, ?, ?, ?, ?)', [userId, addressId, orderTotal, orderPaymentMethod, transactionId]);
+
+        const orderId = orderResult.insertId; // Fetch the id of the newly inserted order
+
+        // Fetch the new order details
+        let newOrder = await conn.query('SELECT * FROM `order` WHERE id = ?', [orderId]);
+
+        // Close the database connection
+        conn.release();
+
+        return newOrder[0];
+    } catch (err) {
+        console.log(err);
+        throw new Error('Error while processing transaction.'); // Changed this to throw the error
+    }
+}
+
+async function fetchTransactionDetails(transactionId) {
     const accessToken = await generateAccessToken();
-    const url = `${baseURL.sandbox}/v2/checkout/orders/${orderId}/capture`;
-    const response = await axios.post(url, {}, {
+    const url = `${baseURL.sandbox}/v2/checkout/orders/${transactionId}`;
+    const response = await axios.get(url, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
         },
     });
-
-    // TODO: store payment information such as the transaction ID
 
     return response.data;
 }
 
 async function generateAccessToken() {
-    const auth = Buffer.from(CLIENT_ID + ":" + APP_SECRET).toString("base64");
-    const response = await axios.post(`${baseURL.sandbox}/v1/oauth2/token`, "grant_type=client_credentials", {
-        headers: {
-            Authorization: `Basic ${auth}`,
-        },
-    });
-    return response.data.access_token;
+    try {
+        const auth = Buffer.from(CLIENT_ID + ":" + APP_SECRET).toString("base64");
+        const response = await axios.post(`${baseURL.sandbox}/v1/oauth2/token`, "grant_type=client_credentials", {
+            headers: {
+                Authorization: `Basic ${auth}`,
+            },
+        });
+        return response.data.access_token;
+    } catch (error) {
+        console.error('Error generating access token:', error.message);
+        throw error;
+    }
 }
 
 module.exports = {
     postOrder,
-    createOrder,
-    capturePayment
+    createPaypalOrder,
+    processPaypalPayment
 }

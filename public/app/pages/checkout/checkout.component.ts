@@ -8,6 +8,7 @@ import {MatStepper} from "@angular/material/stepper";
 import {PaymentOption} from "../../models/payment-option.model";
 import {ReviewOrderComponent} from "./components/review-order/review-order.component";
 import {OrderService} from "../../services/order.service";
+import {Order} from "../../models/order.model";
 
 @Component({
   selector: 'app-checkout',
@@ -20,6 +21,7 @@ export class CheckoutComponent implements OnInit {
 
 	shippingAddress?: Address;
 	paymentOption!: PaymentOption;
+	order?: Order;
 
 	@ViewChild('stepper') stepper!: MatStepper;
 	@ViewChild('reviewOrder', {static: false}) reviewOrder!: ReviewOrderComponent;
@@ -62,11 +64,18 @@ export class CheckoutComponent implements OnInit {
 
 	onConfirmOrder() {
 		this.stepper.next();
-		// const order = {
-		// 	items: this.cartItems,
-		// 	shippingAddress: this.shippingAddress!
-		// }
-		//
-		// this.orderService.postOrder(order).subscribe();
+	}
+
+	onPayPalOrderSubmitted(data: any) {
+		// Post the transaction id to your server
+		this.orderService.processPaypalPayment({ transactionId: data.id }).subscribe(response => {
+			// If successful, inform the user
+			this.snackBar.open('Transaction processed successfully.', '', { duration: 3000 });
+			this.order = response;
+			console.log(this.order)
+			this.stepper.next();
+		}, error => {
+			console.log(error);
+		});
 	}
 }

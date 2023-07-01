@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {IPayPalConfig} from "ngx-paypal";
 import {OrderService} from "../../../../services/order.service";
 import {CartItem} from "../../../../models/cart.model";
@@ -15,6 +15,7 @@ export class PaypalComponent implements OnInit {
 	private showError: boolean = false;
 
 	@Input() orderItems!: CartItem[];
+	@Output() orderDetailEmitter: EventEmitter<object> = new EventEmitter();
 
 	constructor(private orderService: OrderService) { }
 
@@ -44,6 +45,7 @@ export class PaypalComponent implements OnInit {
 			onClientAuthorization: (data) => {
 				console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
 				this.showSuccess = true;
+				this.emitOrderDetails(data);
 			},
 			onCancel: (data, actions) => {
 				console.log('OnCancel', data, actions);
@@ -58,6 +60,10 @@ export class PaypalComponent implements OnInit {
 				this.resetStatus();
 			},
 		};
+	}
+
+	private emitOrderDetails(orderData: any): void  {
+		this.orderDetailEmitter.emit(orderData);
 	}
 
 	private resetStatus() {

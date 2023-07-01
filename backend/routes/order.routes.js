@@ -8,20 +8,21 @@ router.post('', verifyJwt, orderController.postOrder);
 
 router.post('/create-paypal-order', verifyJwt, async (req, res, next) => {
     try {
-        const order = await orderController.createOrder(req, res);
+        const order = await orderController.createPaypalOrder(req, res);
         res.json(order);
     } catch (error) {
         next(error);
     }
 });
 
-router.post('/capture-paypal-order', verifyJwt, async (req, res, next) => {
+router.post('/process-paypal-payment', verifyJwt, async (req, res, next) => {
     try {
-        const payment = await orderController.capturePayment(req, res);
-        res.json(payment);
+        const payment = await orderController.processPaypalPayment(req, res);
+        res.status(200).json(payment);
     } catch (error) {
-        next(error);
+        res.status(500).send({ error: error.message });
     }
 });
+
 
 module.exports = router;

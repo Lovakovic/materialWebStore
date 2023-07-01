@@ -56,7 +56,7 @@ CREATE TABLE address (
      city VARCHAR(45) NOT NULL,
      zipCode VARCHAR(16),
      country VARCHAR(75) NOT NULL,
-     phone VARCHAR(20) NOT NULL,
+     phone VARCHAR(20),
      deliveryInstructions TEXT,
      lastModified DATETIME DEFAULT NOW(),
      CONSTRAINT fkAddress_userId FOREIGN KEY (userId) REFERENCES user(id)
@@ -151,11 +151,26 @@ CREATE TABLE archivedAddress (
      city VARCHAR(45) NOT NULL,
      zipCode VARCHAR(16),
      country VARCHAR(75) NOT NULL,
-     phone VARCHAR(20) NOT NULL,
+     phone VARCHAR(20),
      deliveryInstructions TEXT,
      archivedAt DATETIME DEFAULT NOW(),
      CONSTRAINT fkArchivedAddress_userId FOREIGN KEY (userId) REFERENCES user(id)
 );
+
+DROP TABLE IF EXISTS paypalTransaction;
+CREATE TABLE paypalTransaction (
+    id VARCHAR(128) PRIMARY KEY ,
+    status ENUM('CREATED', 'SAVED', 'APPROVED', 'VOIDED', 'COMPLETED') DEFAULT 'CREATED',
+    createdAt DATETIME DEFAULT NOW(),
+    updatedAt DATETIME
+);
+
+# Update modifiedAt fields automatically
+CREATE TRIGGER paypalTransactionModified BEFORE UPDATE ON paypalTransaction
+    FOR EACH ROW
+BEGIN
+    SET NEW.updatedAt = NOW();
+END;
 
 DROP TABLE IF EXISTS `order`;
 CREATE TABLE `order` (
@@ -164,11 +179,13 @@ CREATE TABLE `order` (
     archivedAddressId INT NOT NULL,
     status ENUM('created', 'confirmed', 'shipped', 'deleted') DEFAULT 'created',
     paymentMethod ENUM('on-delivery', 'bank-transfer', 'paypal') NOT NULL,
+    paypalTransactionId VARCHAR(255),
     total DECIMAL(10, 2) NOT NULL,
     createdAt DATETIME DEFAULT NOW(),
     updatedAt DATETIME,
     CONSTRAINT fkOrder_userId FOREIGN KEY (userId) REFERENCES user(id),
-    CONSTRAINT fkOrder_archivedAddressId FOREIGN KEY (archivedAddressId) REFERENCES archivedAddress(id)
+    CONSTRAINT fkOrder_archivedAddressId FOREIGN KEY (archivedAddressId) REFERENCES archivedAddress(id),
+    CONSTRAINT fkOrder_paypalTransactionId FOREIGN KEY (paypalTransactionId) REFERENCES paypalTransaction(id)
 );
 
 DROP TABLE IF EXISTS orderItem;
@@ -184,7 +201,7 @@ CREATE TABLE orderItem (
 # Moves item from cartItem to orderItem, and archives address used for ordering
 DROP FUNCTION IF EXISTS createOrder;
 DELIMITER //
-CREATE FUNCTION createOrder(i_userId INT, i_addressId INT) RETURNS INT
+CREATE FUNCTION createOrder(i_userId INT, i_addressId INT, i_paymentMethod VARCHAR(50)) RETURNS INT
 DETERMINISTIC
 BEGIN
     DECLARE v_itemsInCart, v_archivedAddressId, v_orderId INT DEFAULT 0;
@@ -220,7 +237,7 @@ BEGIN
                                                    WHERE userId = i_userId;
 
     # Creat order
-    INSERT INTO `order` (userId, archivedAddressId, total) VALUE (i_userId, v_archivedAddressId, v_orderTotal);
+    INSERT INTO `order` (userId, archivedAddressId, total, paymentMethod) VALUE (i_userId, v_archivedAddressId, v_orderTotal, i_paymentMethod);
 
     # Grab the new order id
     SELECT LAST_INSERT_ID() INTO v_orderId;
@@ -236,21 +253,3 @@ BEGIN
     RETURN v_orderId;
 END //
 DELIMITER ;
-
-DROP TABLE IF EXISTS paypalTransaction;
-CREATE TABLE paypalTransaction (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    orderId INT NOT NULL,
-    transactionId VARCHAR(128) NOT NULL,
-    status ENUM('CREATED', 'SAVED', 'APPROVED', 'VOIDED', 'COMPLETED') DEFAULT 'CREATED',
-    createdAt DATETIME DEFAULT NOW(),
-    updatedAt DATETIME,
-    CONSTRAINT fkPaypalTransaction_orderId FOREIGN KEY (orderId) REFERENCES `order`(id)
-);
-
-# Update modifiedAt fields automatically
-CREATE TRIGGER paypalTransactionModified BEFORE UPDATE ON paypalTransaction
-    FOR EACH ROW
-BEGIN
-    SET NEW.updatedAt = NOW();
-END;

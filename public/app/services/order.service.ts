@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {environment} from "../../environment/dev.environment";
 import {HttpClient} from "@angular/common/http";
-import {Order} from "../models/order.model";
+import {Order, PayPalTransaction} from "../models/order.model";
 import {CartItem} from "../models/cart.model";
 
 @Injectable({
@@ -19,7 +19,7 @@ export class OrderService {
 		return this.http.post<string>(`${environment.baseUrl}/order/create-paypal-order`, { cartItems }, { withCredentials: true });
 	}
 
-	capturePayPalOrder(orderId: string) {
-		return this.http.post(`${environment.baseUrl}/order/capture-paypal-order`, { orderId }, { withCredentials: true });
+	processPaypalPayment(newPaypalTransaction: PayPalTransaction) {
+		return this.http.post<Order>(`${environment.baseUrl}/order/process-paypal-payment`, newPaypalTransaction, { withCredentials: true });
 	}
 }

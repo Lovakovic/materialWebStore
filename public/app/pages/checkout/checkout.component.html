@@ -49,11 +49,11 @@
             <div class="line"></div>
             <div class="paypal-option">
                 <h2>Or pay with PayPal</h2>
-                <app-paypal [orderItems]="cartItems"></app-paypal>
+                <app-paypal [orderItems]="cartItems" (orderDetailEmitter)="onPayPalOrderSubmitted($event)"></app-paypal>
             </div>
         </div>
     </mat-step>
     <mat-step label="Done!">
-<!--        Success!-->
+        <app-order-success [order]="order"></app-order-success>
     </mat-step>
 </mat-stepper>
