@@ -26,6 +26,11 @@ export class CartService {
     	return this.http.get<Cart>(`${environment.baseUrl}/cart`, { withCredentials: true });
     }
 
+	refreshCart(): void {
+		this.http.get<Cart>(`${environment.baseUrl}/cart`, { withCredentials: true }).subscribe(cart =>
+		this.cartSubject.next(cart));
+	}
+
     deleteCart() {
     	return this.http.delete(`${environment.baseUrl}/cart`, { withCredentials: true });
     }
@@ -53,7 +58,7 @@ export class CartService {
 				    map(() => ({...cart, updatedItems})),
 				    catchError(err => {
 					  // Handle errors from patchCart() here
-					  return throwError(err);
+					  return throwError(() => err);
 				    })
 			    );
 			}),

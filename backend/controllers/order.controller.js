@@ -100,11 +100,10 @@ const processPaypalPayment = async (req, res) => {
         }
 
         // Create a new order in DB
-        const orderTotal = transactionDetails.purchase_units[0].amount.value;
         const orderPaymentMethod = 'paypal';
-        let orderResult = await conn.query('INSERT INTO `order` (userId, archivedAddressId, total, paymentMethod, paypalTransactionId) VALUES (?, ?, ?, ?, ?)', [userId, addressId, orderTotal, orderPaymentMethod, transactionId]);
-
-        const orderId = orderResult.insertId; // Fetch the id of the newly inserted order
+        let rows = await conn.query('SELECT createOrder(?, ?, ?) AS orderId', [userId, addressId, orderPaymentMethod]);
+        let orderId = rows[0].orderId;
+        await conn.query('UPDATE `order` SET paypalTransactionId = ? WHERE id = ?', [transactionId, orderId])
 
         // Fetch the new order details
         let newOrder = await conn.query('SELECT * FROM `order` WHERE id = ?', [orderId]);

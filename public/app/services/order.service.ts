@@ -3,13 +3,16 @@ import {environment} from "../../environment/dev.environment";
 import {HttpClient} from "@angular/common/http";
 import {Order, PayPalTransaction} from "../models/order.model";
 import {CartItem} from "../models/cart.model";
+import {CartService} from "./cart.service";
+import {tap} from "rxjs";
 
 @Injectable({
 	providedIn: 'root'
 })
 export class OrderService {
 
-	constructor(private http: HttpClient) {}
+	constructor(private http: HttpClient,
+				private cartService: CartService) {}
 
 	postOrder(order: Order) {
 		return this.http.post<Order>(`${environment.baseUrl}/order`, order, { withCredentials: true });
@@ -20,6 +23,7 @@ export class OrderService {
 	}
 
 	processPaypalPayment(newPaypalTransaction: PayPalTransaction) {
-		return this.http.post<Order>(`${environment.baseUrl}/order/process-paypal-payment`, newPaypalTransaction, { withCredentials: true });
+		return this.http.post<Order>(`${environment.baseUrl}/order/process-paypal-payment`, newPaypalTransaction, { withCredentials: true })
+			.pipe(tap(() => this.cartService.refreshCart()));
 	}
 }
