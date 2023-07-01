@@ -5,9 +5,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environment/dev.environment";
 
-/**
- * A service providing shopping cart functionality, including cart update, item addition and removal.
- */
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,18 +13,11 @@ export class CartService {
 	private cartSubject = new BehaviorSubject<Cart>({ items: [] });
     cart$: Observable<Cart> = this.cartSubject.asObservable();
 
-	/**
-	 * @param http HttpClient used for making HTTP requests.
-	 * @param snackBar MatSnackBar used for showing notifications.
-	 */
     constructor(
         private http: HttpClient,
         private snackBar: MatSnackBar
     ) { }
 
-	/**
-	 * Initializes the cart by fetching the cart data.
-	 */
     init(): void {
 		this.getCart().subscribe(cart => this.updateLocalCart(cart));
     }

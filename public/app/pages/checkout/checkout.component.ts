@@ -7,6 +7,7 @@ import {CartService} from "../../services/cart.service";
 import {MatStepper} from "@angular/material/stepper";
 import {PaymentOption} from "../../models/payment-option.model";
 import {ReviewOrderComponent} from "./components/review-order/review-order.component";
+import {OrderService} from "../../services/order.service";
 
 @Component({
   selector: 'app-checkout',
@@ -26,7 +27,8 @@ export class CheckoutComponent implements OnInit {
 
     constructor(private addressService: AddressService,
                 private snackBar: MatSnackBar,
-                public cartService: CartService
+                public cartService: CartService,
+				private orderService: OrderService
     ) {}
 
 	ngOnInit(): void {
@@ -61,9 +63,10 @@ export class CheckoutComponent implements OnInit {
 
 	onConfirmOrder() {
 		const order = {
-			cartItems: this.cartItems,
-			shippingAddress: this.shippingAddress,
-			paymentOption: this.paymentOption
-		};
+			items: this.cartItems,
+			shippingAddress: this.shippingAddress!
+		}
+
+		this.orderService.postOrder(order).subscribe();
 	}
 }
