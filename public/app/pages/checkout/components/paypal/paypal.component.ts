@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {IPayPalConfig} from "ngx-paypal";
 import {OrderService} from "../../../../services/order.service";
 import {CartItem} from "../../../../models/cart.model";
+import {environment} from "../../../../../environment/dev.environment";
 
 @Component({
 	selector: 'app-paypal',
@@ -24,7 +25,7 @@ export class PaypalComponent implements OnInit {
 	private initConfig(): void {
 		this.payPalConfig = {
 			currency: 'EUR',
-			clientId: 'sb',
+			clientId: environment.paypalClientId,
 			createOrderOnServer: data => this.orderService.createPayPalOrder(this.orderItems)
 				.toPromise().then(result => result ? result : 'fallback'),
 			advanced: {
