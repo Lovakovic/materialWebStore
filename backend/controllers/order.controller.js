@@ -71,7 +71,7 @@ const createPaypalOrder = async (req) => {
 }
 
 
-const processPaypalPayment = async (req, res) => {
+const processPaypalPayment = async (req) => {
     try {
         const transactionId = req.body.transactionId;
         const userId = req.userId;
@@ -114,7 +114,7 @@ const processPaypalPayment = async (req, res) => {
         return newOrder[0];
     } catch (err) {
         console.log(err);
-        throw new Error('Error while processing transaction.'); // Changed this to throw the error
+        throw new Error('Error while processing transaction.');
     }
 }
 
