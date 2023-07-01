@@ -6,6 +6,7 @@ import {RegisterComponent} from "./pages/register/register.component";
 import {LoginComponent} from "./pages/login/login.component";
 import {ProfileComponent} from "./pages/profile/profile.component";
 import {CheckoutComponent} from "./pages/checkout/checkout.component";
+import {PaypalComponent} from "./pages/checkout/components/paypal/paypal.component";
 
 const routes: Routes = [
     {
@@ -34,7 +35,11 @@ const routes: Routes = [
     {
         path: '',
         component: HomeComponent
-    }
+    },
+	{
+		path: 'paypal',
+		component: PaypalComponent
+	}
 ];
 
 @NgModule({

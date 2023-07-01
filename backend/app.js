@@ -7,6 +7,7 @@ const mysql = require('promise-mysql');
 const helmet = require('helmet');
 
 const config = require('./config');
+require('dotenv').config();
 
 // Export the pool, so as not to pass it around as param
 module.exports = { pool: mysql.createPool(config.pool) };

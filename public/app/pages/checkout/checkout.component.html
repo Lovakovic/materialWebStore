@@ -32,18 +32,26 @@
             Loading...
         </ng-template>
     </mat-step>
-    <mat-step label="Payment">
-        <div class="mt-5">
-            <app-payment-form (selectPaymentOption)="onSelectPaymentOption($event)"></app-payment-form>
-        </div>
-    </mat-step>
-    <mat-step label="Review and confirm">
+    <mat-step label="Review order items">
         <app-review-order #reviewOrder
                           [cartItems]="cartItems"
                           [shippingAddress]="shippingAddress"
                           [paymentOption]="paymentOption"
                           (confirmOrder)="onConfirmOrder()"
         ></app-review-order>
+    </mat-step>
+    <mat-step label="Payment">
+        <div class="mt-5 payment-container">
+            <div class="payment-option">
+                <h2>Choose a payment option</h2>
+                <app-payment-form (selectPaymentOption)="onSelectPaymentOption($event)"></app-payment-form>
+            </div>
+            <div class="line"></div>
+            <div class="paypal-option">
+                <h2>Or pay with PayPal</h2>
+                <app-paypal [orderItems]="cartItems"></app-paypal>
+            </div>
+        </div>
     </mat-step>
     <mat-step label="Done!">
 <!--        Success!-->

@@ -1,0 +1,14 @@
+.payment-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.payment-option, .paypal-option {
+    width: 45%; /* adjust this as needed */
+}
+
+.line {
+    border-left: 1px solid #000; /* adjust color as needed */
+    height: 500px; /* adjust this as needed */
+    width: 1px;
+}

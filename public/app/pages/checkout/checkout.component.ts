@@ -12,8 +12,7 @@ import {OrderService} from "../../services/order.service";
 @Component({
   selector: 'app-checkout',
   templateUrl: 'checkout.component.html',
-  styles: [
-  ]
+  styleUrls: ['checkout.component.css']
 })
 export class CheckoutComponent implements OnInit {
 	addresses: Array<Address> = [];
@@ -62,11 +61,12 @@ export class CheckoutComponent implements OnInit {
 	}
 
 	onConfirmOrder() {
-		const order = {
-			items: this.cartItems,
-			shippingAddress: this.shippingAddress!
-		}
-
-		this.orderService.postOrder(order).subscribe();
+		this.stepper.next();
+		// const order = {
+		// 	items: this.cartItems,
+		// 	shippingAddress: this.shippingAddress!
+		// }
+		//
+		// this.orderService.postOrder(order).subscribe();
 	}
 }

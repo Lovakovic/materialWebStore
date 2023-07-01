@@ -26,11 +26,6 @@
             <p>${{ total }}</p>
         </div>
     </div>
-    <div class="mt-4" *ngIf="paymentOption">
-        <h2 class="font-medium text-base mb-2">Payment Option</h2>
-        <p *ngIf="paymentOption.type === 'Credit card'; else nonCardPayment">{{ paymentOption.type }} ending in {{ last4Digits }}</p>
-        <ng-template #nonCardPayment><p>{{ paymentOption.type }}</p></ng-template>
-    </div>
     <div class="mt-4">
         <button mat-raised-button color="primary"
                 [disabled]="!infoComplete"

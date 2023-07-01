@@ -163,6 +163,7 @@ CREATE TABLE `order` (
     userId INT NOT NULL,
     archivedAddressId INT NOT NULL,
     status ENUM('created', 'confirmed', 'shipped', 'deleted') DEFAULT 'created',
+    paymentMethod ENUM('on-delivery', 'bank-transfer', 'paypal') NOT NULL,
     total DECIMAL(10, 2) NOT NULL,
     createdAt DATETIME DEFAULT NOW(),
     updatedAt DATETIME,
@@ -235,3 +236,21 @@ BEGIN
     RETURN v_orderId;
 END //
 DELIMITER ;
+
+DROP TABLE IF EXISTS paypalTransaction;
+CREATE TABLE paypalTransaction (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    orderId INT NOT NULL,
+    transactionId VARCHAR(128) NOT NULL,
+    status ENUM('CREATED', 'SAVED', 'APPROVED', 'VOIDED', 'COMPLETED') DEFAULT 'CREATED',
+    createdAt DATETIME DEFAULT NOW(),
+    updatedAt DATETIME,
+    CONSTRAINT fkPaypalTransaction_orderId FOREIGN KEY (orderId) REFERENCES `order`(id)
+);
+
+# Update modifiedAt fields automatically
+CREATE TRIGGER paypalTransactionModified BEFORE UPDATE ON paypalTransaction
+    FOR EACH ROW
+BEGIN
+    SET NEW.updatedAt = NOW();
+END;

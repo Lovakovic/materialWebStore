@@ -8,10 +8,6 @@
         </mat-select>
     </mat-form-field>
 
-    <ng-container *ngIf="paymentForm.get('paymentOption')!.value === 'Credit card'">
-        <app-credit-card-form (onCreditCardFormSubmit)="onCreditCardFormSubmit($event)"></app-credit-card-form>
-    </ng-container>
-
     <ng-container *ngIf="paymentForm.get('paymentOption')!.value === 'Bank transfer'">
         <p>Bank transfer info</p>
         <button mat-raised-button color="primary" type="submit">Confirm</button>

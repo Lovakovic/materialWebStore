@@ -43,10 +43,10 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
 import {MatStepperModule} from "@angular/material/stepper";
 import { CartItemsComponent } from './components/cart-items/cart-items.component';
 import { PaymentFormComponent } from './pages/checkout/components/payment-form/payment-form.component';
-import { CreditCardFormComponent } from './components/credit-card-form/credit-card-form.component';
 import { UserMenuComponent } from './components/header/components/user-menu/user-menu.component';
 import { ReviewOrderComponent } from './pages/checkout/components/review-order/review-order.component';
 import {NgxPayPalModule} from "ngx-paypal";
+import { PaypalComponent } from './pages/checkout/components/paypal/paypal.component';
 
 @NgModule({
   declarations: [
@@ -67,9 +67,9 @@ import {NgxPayPalModule} from "ngx-paypal";
     CheckoutComponent,
     CartItemsComponent,
     PaymentFormComponent,
-    CreditCardFormComponent,
     UserMenuComponent,
-    ReviewOrderComponent
+    ReviewOrderComponent,
+    PaypalComponent
   ],
 	imports: [
 		BrowserModule,

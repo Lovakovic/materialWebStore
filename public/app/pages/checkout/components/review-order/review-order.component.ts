@@ -21,13 +21,9 @@ export class ReviewOrderComponent {
 		return this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 	}
 
-	get last4Digits() {
-		return this.paymentOption?.cardDetails?.cardNumber.slice(-4);
-	}
-
 	get infoComplete() {
 		return (this.cartItems.length > 0) &&
-			this.shippingAddress != undefined && this.paymentOption != undefined;
+			this.shippingAddress != undefined;
 	}
 
 	onConfirmOrder() {
