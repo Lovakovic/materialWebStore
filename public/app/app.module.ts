@@ -48,6 +48,7 @@ import {ReviewOrderComponent} from './pages/checkout/components/review-order/rev
 import {NgxPayPalModule} from "ngx-paypal";
 import {PaypalComponent} from './pages/checkout/components/paypal/paypal.component';
 import {OrderSuccessComponent} from './pages/checkout/components/order-success/order-success.component';
+import { CartMenuComponent } from './components/header/components/cart-menu/cart-menu.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import {OrderSuccessComponent} from './pages/checkout/components/order-success/o
     UserMenuComponent,
     ReviewOrderComponent,
     PaypalComponent,
-    OrderSuccessComponent
+    OrderSuccessComponent,
+    CartMenuComponent
   ],
 	imports: [
 		BrowserModule,

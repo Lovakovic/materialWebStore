@@ -2,10 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Credentials} from "../models/credentials.model";
 import {BehaviorSubject, catchError, map, Observable, of, switchMap, tap} from "rxjs";
-import {response} from "express";
 import {User} from "../models/user.model";
 import {CartService} from "./cart.service";
-import {environment} from "../../environment/environment";
+import {environment} from "../../environment/dev.environment";
 
 @Injectable({
   providedIn: 'root'

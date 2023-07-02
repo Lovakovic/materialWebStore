@@ -7,7 +7,7 @@ import {MatMenuTrigger} from "@angular/material/menu";
 @Component({
   selector: 'app-user-menu',
   templateUrl: 'user-menu.component.html',
-  styles: []
+  styleUrls: ['user-menu.component.css']
 })
 export class UserMenuComponent {
 	@Input() username: string = '';
