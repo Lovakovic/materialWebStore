@@ -42,7 +42,7 @@ CREATE TABLE user (
     primaryAddressId INT,
     createdAt DATETIME DEFAULT NOW(),
     updatedAt DATETIME,
-    role CHAR(3) DEFAULT 'usr'
+    role ENUM('usr', 'adm') DEFAULT 'usr'
 );
 
 DROP TABLE IF EXISTS address;
