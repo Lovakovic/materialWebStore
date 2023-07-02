@@ -114,4 +114,8 @@ export class RegisterComponent {
           }
       });
   }
+
+	onNavigateToLogin() {
+		this.router.navigate(['login']);
+	}
 }

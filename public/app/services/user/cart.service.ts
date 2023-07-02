@@ -87,33 +87,33 @@ export class CartService {
     }
 
     clearCart(): void {
-    this.deleteCart().subscribe(() => {
-      this.updateLocalCart({ items: [] });
-      this.snackBar.open('Cart is cleared.', '', { duration: 3000 });
-    });
+		this.updateLocalCart({ items: [] });
+		this.deleteCart().subscribe(() => {
+			this.snackBar.open('Cart is cleared.', '', { duration: 3000 });
+		});
     }
 
     getItemQuantity(cart: Cart): number {
-    return cart.items.reduce((total, item) => total + item.quantity, 0);
+    	return cart.items.reduce((total, item) => total + item.quantity, 0);
     }
 
     getTotal(cart: Cart): number {
-    return cart.items.map(item => item.price * item.quantity)
-        .reduce((prev, current) => prev + current, 0);
+		return cart.items.map(item => item.price * item.quantity)
+			.reduce((prev, current) => prev + current, 0);
     }
 
     // Removes item type from user-cart
     removeFromCart(item: CartItem, update = true): Array<CartItem> {
-    const filteredItems = this.cartSubject.value.items.filter(_item => _item.productId !== item.productId);
+		const filteredItems = this.cartSubject.value.items.filter(_item => _item.productId !== item.productId);
 
-    this.patchCart({ productId: item.productId, quantity: 0 }).subscribe(() => {
-      this.updateLocalCart({ items: filteredItems });
-      this.snackBar.open(`${item.name} removed from cart.`, '', { duration: 3000 });
+		this.patchCart({ productId: item.productId, quantity: 0 }).subscribe(() => {
+			this.updateLocalCart({ items: filteredItems });
+			this.snackBar.open(`${item.name} removed from cart.`, '', { duration: 3000 });
 
-      // Alert the user via snackbar
-      if(update) {
-        this.snackBar.open(`1 item removed from cart.`, '', { duration: 3000 });
-      }
+		// Alert the user via snackbar
+		if(update) {
+			this.snackBar.open(`1 item removed from cart.`, '', { duration: 3000 });
+		}
     })
 
     return filteredItems;
