@@ -7,17 +7,22 @@ import { AdminOrdersComponent } from './components/order-list/admin-orders.compo
 import {MatCardModule} from "@angular/material/card";
 import { OrderDetailComponent } from './components/order-list/components/order-detail/order-detail.component';
 import {MatButtonModule} from "@angular/material/button";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {MatIconModule} from "@angular/material/icon";
+import { ManageProductsComponent } from './components/manage-products/manage-products.component';
+import { AddNewProductComponent } from './components/manage-products/components/add-new-product/add-new-product.component';
+import {UserModule} from "../user/user.module";
 
 
 @NgModule({
   declarations: [
     AdminHomeComponent,
     AdminOrdersComponent,
-    OrderDetailComponent
+    OrderDetailComponent,
+    ManageProductsComponent,
+    AddNewProductComponent
   ],
 	imports: [
 		CommonModule,
@@ -27,7 +32,9 @@ import {MatIconModule} from "@angular/material/icon";
 		FormsModule,
 		MatInputModule,
 		MatSelectModule,
-		MatIconModule
+		MatIconModule,
+		ReactiveFormsModule,
+		UserModule
 	]
 })
 export class AdminModule { }

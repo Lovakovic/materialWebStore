@@ -5,7 +5,7 @@ import {UserRoutingModule} from './user-routing.module';
 import {UserHomeComponent} from "./comonents/user-home/user-home.component";
 import {ProductsHeaderComponent} from "./comonents/user-home/components/products-header/products-header.component";
 import {FiltersComponent} from "./comonents/user-home/components/filters/filters.component";
-import {ProductBoxComponent} from "./comonents/user-home/components/product-box/product-box.component";
+import {ProductBoxComponent} from "../../components/product-box/product-box.component";
 import {UserCartComponent} from "./comonents/user-cart/user-cart.component";
 import {UserAddressBoxComponent} from "./comonents/user-address-box/user-address-box.component";
 import {UserNewAddressComponent} from "./comonents/user-new-address/user-new-address.component";
@@ -57,7 +57,8 @@ import {UserOrdersComponent} from "./comonents/user-orders/user-orders.component
 		UserOrdersComponent
 	],
 	exports: [
-		TrimDirective
+		TrimDirective,
+		ProductBoxComponent
 	],
 	imports: [
 		CommonModule,

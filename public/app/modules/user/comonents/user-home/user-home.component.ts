@@ -43,7 +43,7 @@ export class UserHomeComponent implements OnDestroy {
 
   onAddToCart({id, image, name, price}: Product): void {
     this.subscription.add(
-        this.cartService.addToCart({productId: id, image, name, price, quantity: 1}, true).subscribe());
+        this.cartService.addToCart({productId: id!, image, name, price, quantity: 1}, true).subscribe());
   }
 
   onItemsCountChange(newCount: number): void {
