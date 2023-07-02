@@ -73,7 +73,7 @@ const createPaypalOrder = async (req) => {
 
 const processPaypalPayment = async (req) => {
     try {
-        const transactionId = req.body.transactionId;
+        const { transactionId, shippingAddressId } = req.body;
         const userId = req.userId;
 
         // Fetch transaction details from PayPal
@@ -84,26 +84,40 @@ const processPaypalPayment = async (req) => {
 
         // Store the transaction in the database if it is approved
         let conn = await pool.getConnection();
-        await conn.query('INSERT INTO paypalTransaction (id, status) VALUES (?, ?)', [transactionId, transactionDetails.status]);
+        await conn.query('INSERT INTO paypalTransaction (id, status) VALUES (?, ?)',
+            [transactionId, transactionDetails.status]);
 
-        // Check if the address already exists in DB
-        const shipping = transactionDetails.purchase_units[0].shipping;
-        const [existingAddress] = await conn.query('SELECT id FROM archivedAddress WHERE name = ? AND street = ? AND city = ?', [shipping.name.full_name, shipping.address.address_line_1, shipping.address.admin_area_2]);
-        let addressId;
-        if (existingAddress?.length) {
-            // If address exists, grab its id
-            addressId = existingAddress[0].id;
+       // Grab the address info from PayPal transaction
+        const { name: {
+            full_name: name
+        },
+            address: {
+                address_line_1: street,
+                admin_area_2: city,
+                country_code: countryCode
+            }
+        } = transactionDetails.purchase_units[0].shipping;
+
+        // Check if billing address from PayPal transaction is already archived
+        const [existingBillingAddress] = await conn.query('SELECT id FROM archivedAddress ' +
+            'WHERE name = ? AND street = ? AND city = ?', [name, street, city]);
+        let billingAddressId;
+        if (existingBillingAddress?.id) {
+            billingAddressId = existingBillingAddress.id;
         } else {
-            // If address does not exist, insert a new one and grab its id
-            let result = await conn.query('INSERT INTO archivedAddress (userId, name, street, city, country) VALUES (?, ?, ?, ?, ?)', [userId, shipping.name.full_name, shipping.address.address_line_1, shipping.address.admin_area_2, shipping.address.country_code]);
-            addressId = result.insertId;
+            // Archive it
+            let result = await conn.query('INSERT INTO archivedAddress (userId, name, street, city, country) ' +
+                'VALUES (?, ?, ?, ?, ?)', [userId, name, street, city, countryCode]);
+            billingAddressId = result.insertId;
         }
 
         // Create a new order in DB
         const orderPaymentMethod = 'paypal';
-        let rows = await conn.query('SELECT createOrder(?, ?, ?) AS orderId', [userId, addressId, orderPaymentMethod]);
+        let rows = await conn.query('SELECT createOrder(?, ?, ?) AS orderId',
+            [userId, shippingAddressId, orderPaymentMethod]);
         let orderId = rows[0].orderId;
-        await conn.query('UPDATE `order` SET paypalTransactionId = ? WHERE id = ?', [transactionId, orderId])
+        await conn.query('UPDATE `order` SET paypalTransactionId = ?, billingAddressId = ? WHERE id = ?',
+            [transactionId, billingAddressId, orderId]);
 
         // Fetch the new order details
         let newOrder = await conn.query('SELECT * FROM `order` WHERE id = ?', [orderId]);

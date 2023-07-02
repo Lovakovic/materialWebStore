@@ -176,7 +176,8 @@ DROP TABLE IF EXISTS `order`;
 CREATE TABLE `order` (
     id INT PRIMARY KEY AUTO_INCREMENT,
     userId INT NOT NULL,
-    archivedAddressId INT NOT NULL,
+    shippingAddressId INT NOT NULL,
+    billingAddressId INT,
     status ENUM('created', 'confirmed', 'shipped', 'deleted') DEFAULT 'created',
     paymentMethod ENUM('on-delivery', 'bank-transfer', 'paypal') NOT NULL,
     paypalTransactionId VARCHAR(255),
@@ -184,7 +185,8 @@ CREATE TABLE `order` (
     createdAt DATETIME DEFAULT NOW(),
     updatedAt DATETIME,
     CONSTRAINT fkOrder_userId FOREIGN KEY (userId) REFERENCES user(id),
-    CONSTRAINT fkOrder_archivedAddressId FOREIGN KEY (archivedAddressId) REFERENCES archivedAddress(id),
+    CONSTRAINT fkOrder_shippingAddressId FOREIGN KEY (shippingAddressId) REFERENCES archivedAddress(id),
+    CONSTRAINT fkOrder_billingAddressId FOREIGN KEY (billingAddressId) REFERENCES archivedAddress(id),
     CONSTRAINT fkOrder_paypalTransactionId FOREIGN KEY (paypalTransactionId) REFERENCES paypalTransaction(id)
 );
 
@@ -198,11 +200,40 @@ CREATE TABLE orderItem (
     CONSTRAINT fkOrderItem_productId FOREIGN KEY (productId) REFERENCES product(id)
 );
 
+# Checks if an address with a given id has been archived, if not archives it, returns archived address's
+# id in both scenarios
+DROP FUNCTION IF EXISTS processAddress;
+DELIMITER //
+CREATE FUNCTION processAddress(i_addressId INT) RETURNS INT DETERMINISTIC
+BEGIN
+    DECLARE v_archivedAddressId INT DEFAULT 0;
+
+    # Check if address has already been archived
+    SELECT aa.id INTO v_archivedAddressId FROM address a JOIN archivedAddress aa ON
+                a.name = aa.name AND a.companyName = aa.companyName AND
+                a.street = aa.street AND a.city = aa.city AND
+                a.zipCode = aa.zipCode AND a.country = aa.country AND
+                a.phone = aa.phone AND a.deliveryInstructions = aa.deliveryInstructions
+    WHERE a.id = i_addressId;
+
+    # If address isn't archived, copy it to archive
+    IF v_archivedAddressId = 0 THEN
+        INSERT INTO archivedAddress
+        (userId, name, companyName, street, city, zipCode, country, phone, deliveryInstructions) SELECT
+         userId, name, companyName, street, city, zipCode, country, phone, deliveryInstructions
+        FROM address WHERE id = i_addressId;
+
+        # Then grab its id for referencing inside order
+        SELECT LAST_INSERT_ID() INTO v_archivedAddressId;
+    END IF;
+
+    RETURN v_archivedAddressId;
+END //
+
 # Moves item from cartItem to orderItem, and archives address used for ordering
 DROP FUNCTION IF EXISTS createOrder;
 DELIMITER //
-CREATE FUNCTION createOrder(i_userId INT, i_addressId INT, i_paymentMethod VARCHAR(50)) RETURNS INT
-DETERMINISTIC
+CREATE FUNCTION createOrder(i_userId INT, i_addressId INT, i_paymentMethod VARCHAR(50)) RETURNS INT DETERMINISTIC
 BEGIN
     DECLARE v_itemsInCart, v_archivedAddressId, v_orderId INT DEFAULT 0;
     DECLARE v_orderTotal DECIMAL(10, 2) DEFAULT 0;
@@ -213,31 +244,21 @@ BEGIN
         RETURN 0;
     END IF;
 
-    # Check if address has already been archived
-    SELECT aa.id INTO v_archivedAddressId FROM address a JOIN archivedAddress aa ON
-        a.name = aa.name AND a.companyName = aa.companyName AND
-        a.street = aa.street AND a.city = aa.city AND
-        a.zipCode = aa.zipCode AND a.country = aa.country AND
-        a.phone = aa.phone AND a.deliveryInstructions = aa.deliveryInstructions
-    WHERE a.userId = i_userId AND a.id = i_addressId;
-
-    # If address isn't archived, copy it to archive
-    IF v_archivedAddressId = 0 THEN
-        INSERT INTO archivedAddress
-            (userId, name, companyName, street, city, zipCode, country, phone, deliveryInstructions) SELECT
-             userId, name, companyName, street, city, zipCode, country, phone, deliveryInstructions
-        FROM address WHERE id = i_addressId;
-
-        # Then grab its id for referencing inside order
-        SELECT LAST_INSERT_ID() INTO v_archivedAddressId;
-    END IF;
+    # Archive the address if it isn't already archived
+    SELECT processAddress(i_addressId) INTO v_archivedAddressId;
 
     # Calculate order total
     SELECT SUM(price * quantity) INTO v_orderTotal FROM cartItem JOIN product ON productId = product.id
                                                    WHERE userId = i_userId;
 
-    # Creat order
-    INSERT INTO `order` (userId, archivedAddressId, total, paymentMethod) VALUE (i_userId, v_archivedAddressId, v_orderTotal, i_paymentMethod);
+    # If order is paid using paypal don't insert the billing address, otherwise shipping and billing addresses are the same
+    IF STRCMP(i_paymentMethod, 'paypal') != 0 THEN
+        INSERT INTO `order` (userId, shippingAddressId, total, paymentMethod)
+           VALUE (i_userId, v_archivedAddressId, v_orderTotal, i_paymentMethod);
+    ELSE
+        INSERT INTO `order` (userId, shippingAddressId, billingAddressId, total, paymentMethod)
+            VALUE (i_userId, v_archivedAddressId, v_archivedAddressId, v_orderTotal, i_paymentMethod);
+    END IF;
 
     # Grab the new order id
     SELECT LAST_INSERT_ID() INTO v_orderId;

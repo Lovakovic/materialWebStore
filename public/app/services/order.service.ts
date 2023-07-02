@@ -22,8 +22,10 @@ export class OrderService {
 		return this.http.post<string>(`${environment.baseUrl}/order/create-paypal-order`, { cartItems }, { withCredentials: true });
 	}
 
-	processPaypalPayment(newPaypalTransaction: PayPalTransaction) {
-		return this.http.post<Order>(`${environment.baseUrl}/order/process-paypal-payment`, newPaypalTransaction, { withCredentials: true })
+	processPaypalPayment(newPaypalTransaction: PayPalTransaction, shippingAddressId?: number) {
+		return this.http.post<Order>(`${environment.baseUrl}/order/process-paypal-payment`,
+			{ transactionId: newPaypalTransaction.transactionId, shippingAddressId
+			}, { withCredentials: true })
 			.pipe(tap(() => this.cartService.refreshCart()));
 	}
 }

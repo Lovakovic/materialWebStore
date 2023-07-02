@@ -68,8 +68,7 @@ export class CheckoutComponent implements OnInit {
 
 	onPayPalOrderSubmitted(data: any) {
 		// Post the transaction id to your server
-		this.orderService.processPaypalPayment({ transactionId: data.id }).subscribe(response => {
-			// If successful, inform the user
+		this.orderService.processPaypalPayment({ transactionId: data.id }, this.shippingAddress?.id).subscribe(response => {
 			this.snackBar.open('Transaction processed successfully.', '', { duration: 3000 });
 			this.order = response;
 			console.log(this.order)
