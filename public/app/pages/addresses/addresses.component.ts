@@ -1,27 +1,28 @@
-import {Component, OnInit} from '@angular/core';
+import { Component } from '@angular/core';
 import {Address} from "../../models/address.model";
 import {AddressService} from "../../services/address.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html'
+  selector: 'app-addresses',
+  templateUrl: 'addresses.component.html'
 })
-export class ProfileComponent implements OnInit {
+export class AddressesComponent {
 	addresses: Array<Address> = [];
 
-    constructor(
+	constructor(
 		private addressService: AddressService,
 		private snackBar: MatSnackBar
-    ) { }
+	) { }
 
 	ngOnInit(): void {
-		this.addressService.getAddress().subscribe(
-			_addresses => this.addresses = _addresses);
+		this.addressService.getAddresses().subscribe(
+			_addresses => this.addresses = _addresses
+		);
 	}
 
-    onAddAddress(address: Address): void {
-        this.addressService.postAddress(address).subscribe(
+	onAddAddress(address: Address): void {
+		this.addressService.postAddress(address).subscribe(
 			response => {
 				if(response.body) {
 					this.addresses.push(response.body);
@@ -30,17 +31,17 @@ export class ProfileComponent implements OnInit {
 					this.snackBar.open('Something went wrong.', '', { duration: 3000 });
 				}
 			}
-        );
-    }
+		);
+	}
 
-    onDeleteAddress(address: Address): void {
-        this.addressService.deleteAddress(address.id || -1).subscribe( res =>{
+	onDeleteAddress(address: Address): void {
+		this.addressService.deleteAddress(address.id ?? -1).subscribe( res => {
 			if(res.status === 204) {
 				this.addresses = this.addresses.filter(_address => _address != address);
 				this.snackBar.open('Address deleted.', '', { duration: 3000 });
 			} else {
 				this.snackBar.open('Something went wrong.', '', { duration: 3000 });
 			}
-        });
-    }
+		});
+	}
 }

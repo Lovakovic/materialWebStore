@@ -33,7 +33,7 @@ export class CheckoutComponent implements OnInit {
     ) {}
 
 	ngOnInit(): void {
-		this.addressService.getAddress().subscribe(
+		this.addressService.getAddresses().subscribe(
 			_addresses => this.addresses = _addresses);
 		this.cartService.getCart().subscribe(
 			cart => this.cartItems = cart.items);
@@ -68,13 +68,16 @@ export class CheckoutComponent implements OnInit {
 
 	onPayPalOrderSubmitted(data: any) {
 		// Post the transaction id to your server
-		this.orderService.processPaypalPayment({ transactionId: data.id }, this.shippingAddress?.id).subscribe(response => {
-			this.snackBar.open('Transaction processed successfully.', '', { duration: 3000 });
-			this.order = response;
-			console.log(this.order)
-			this.stepper.next();
-		}, error => {
-			console.log(error);
+		this.orderService.processPaypalPayment({ transactionId: data.id }, this.shippingAddress?.id).subscribe({
+			next: response => {
+				this.snackBar.open('Transaction processed successfully.', '', { duration: 3000 });
+				this.order = response;
+				console.log(this.order)
+				this.stepper.next();
+			},
+			error: error => {
+				console.log(error);
+			}
 		});
 	}
 }

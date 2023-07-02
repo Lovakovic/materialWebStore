@@ -11,7 +11,7 @@ export class AddressService {
 
 	constructor(private http: HttpClient) { }
 
-	getAddress(): Observable<Address[]> {
+	getAddresses(): Observable<Address[]> {
 		return this.http.get<Address[]>(`${environment.baseUrl}/address`, { withCredentials: true });
 	}
 

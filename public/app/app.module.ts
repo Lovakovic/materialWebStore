@@ -32,9 +32,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {LoginComponent} from './pages/login/login.component';
-import {ProfileComponent} from './pages/profile/profile.component';
-import {AddressBoxComponent} from './pages/profile/components/address-box/address-box.component';
-import {ProfileHeaderComponent} from './pages/profile/components/profile-header/profile-header.component';
+import {AddressBoxComponent} from './components/address-box/address-box.component';
 import {NewAddressComponent} from './components/new-address/new-address.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -48,7 +46,8 @@ import {ReviewOrderComponent} from './pages/checkout/components/review-order/rev
 import {NgxPayPalModule} from "ngx-paypal";
 import {PaypalComponent} from './pages/checkout/components/paypal/paypal.component';
 import {OrderSuccessComponent} from './pages/checkout/components/order-success/order-success.component';
-import { CartMenuComponent } from './components/header/components/cart-menu/cart-menu.component';
+import {CartMenuComponent} from './components/header/components/cart-menu/cart-menu.component';
+import {AddressesComponent} from './pages/addresses/addresses.component';
 
 @NgModule({
   declarations: [
@@ -61,9 +60,7 @@ import { CartMenuComponent } from './components/header/components/cart-menu/cart
     CartComponent,
     RegisterComponent,
     LoginComponent,
-    ProfileComponent,
     AddressBoxComponent,
-    ProfileHeaderComponent,
     NewAddressComponent,
     TrimDirective,
     CheckoutComponent,
@@ -73,7 +70,8 @@ import { CartMenuComponent } from './components/header/components/cart-menu/cart
     ReviewOrderComponent,
     PaypalComponent,
     OrderSuccessComponent,
-    CartMenuComponent
+    CartMenuComponent,
+    AddressesComponent
   ],
 	imports: [
 		BrowserModule,

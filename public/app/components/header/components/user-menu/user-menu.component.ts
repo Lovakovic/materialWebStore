@@ -45,4 +45,8 @@ export class UserMenuComponent {
 	keepOpen() {
 		clearTimeout(this.menuTimeout);
 	}
+
+	onAddressesClicked() {
+		this.router.navigate(['my-addresses'])
+	}
 }

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Address} from "../../../../models/address.model";
+import {Address} from "../../models/address.model";
 
 @Component({
   selector: 'app-address-box',
