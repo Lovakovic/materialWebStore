@@ -4,16 +4,14 @@
         <div class="w-5/12 ml-6 mt-6">
             <h2 class="text-center">Your addresses</h2>
             <mat-accordion>
-                <ng-container *ngIf="authService.user$ | async as user">
-                    <ng-container *ngIf="addressService.addresses$ | async as addresses">
-                        <app-address-box *ngFor="let address of addresses | findPrimaryAddress: user; let i = index"
-                                         [expanded]="i === 0"
-                                         [address]="address"
-                                         [isPrimary]="(authService.user$ | async)?.primaryAddressId === address.id"
-                                         (deleteAddress)="onDeleteAddress($event)"
-                                         class="w-full"
-                        ></app-address-box>
-                    </ng-container>
+                <ng-container *ngIf="addresses.length > 0">
+                    <app-address-box *ngFor="let address of addresses"
+                                     [expanded]="address.isPrimary"
+                                     [address]="address"
+                                     (chooseAddress)="onDeleteAddress($event)"
+                                     [action]="'Delete'"
+                                     class="w-full"
+                    ></app-address-box>
                 </ng-container>
                 <mat-expansion-panel hideToggle>
                     <mat-expansion-panel-header>

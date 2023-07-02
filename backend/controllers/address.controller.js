@@ -10,14 +10,19 @@ const getAddresses = async (req, res) => {
         if(limit) {
             rows = await  conn.query(
                 'SELECT id, name, addressNickname, companyName, street, city, zipCode, country, phone, ' +
-                'deliveryInstructions FROM address WHERE userId = ? ORDER BY lastModified DESC LIMIT ?',
+                'deliveryInstructions, isPrimary FROM userAddress WHERE userId = ? ORDER BY lastModified DESC LIMIT ?',
                 [userId, limit]);
         } else {
             rows = await  conn.query(
                 'SELECT id, name, addressNickname, companyName, street, city, zipCode, country, phone, ' +
-                'deliveryInstructions FROM address WHERE userId = ? ORDER BY lastModified DESC', userId);
+                'deliveryInstructions, isPrimary FROM userAddress WHERE userId = ? ORDER BY lastModified DESC', userId);
         }
         conn.release();
+
+        // Convert `isPrimary` from numeric to boolean
+        rows = rows.map(row => {
+            return {...row, isPrimary: !!row.isPrimary};
+        });
 
         return res.json(rows);
     } catch(err) {
@@ -28,7 +33,7 @@ const getAddresses = async (req, res) => {
 const postAddress = async (req, res) => {
     try {
         const userId = req.userId;
-        const address = req.body.address;
+        const address = req.body;
 
         let conn = await pool.getConnection();
 
@@ -54,7 +59,7 @@ const postAddress = async (req, res) => {
             fields += `, deliveryInstructions`;
             placeholders += `, ?`;
         }
-        query =  query + fields + `) VALUE (?, ?, ?, ?, ?, ?` + placeholders + `)`;
+        query =  query + fields + `) VALUES (?, ?, ?, ?, ?, ?` + placeholders + `)`;
 
         // Add values, filter out the undefined
         const values = [
@@ -70,20 +75,23 @@ const postAddress = async (req, res) => {
             address['deliveryInstructions']
         ].filter(Boolean);
 
-        conn.query(query, values);
+        // Execute the INSERT query
+        const insertResponse = await conn.query(query, values);
 
         // Modify the user table and set the new primary address id
-        if(req.body.newPrimary) {
-            const addressId = await conn.query('SELECT LAST_INSERT_ID() AS addressId');
-            await conn.query('UPDATE user SET primaryAddressId = ? WHERE id = ?',
-                [addressId[0].addressId, userId]);
-
+        if(address.isPrimary) {
+            const addressId = insertResponse.insertId;
+            await conn.query('UPDATE user SET primaryAddressId = ? WHERE id = ?', [addressId, userId]);
             console.log(`Updated ${userId}'s primary address to ${addressId}`);
         }
 
+        // Fetch the inserted address
+        const [newAddress] = await conn.query('SELECT * FROM userAddress WHERE id = ?', [insertResponse.insertId]);
+
         conn.release();
 
-        return res.status(200).send();
+        // Return the created address with a 201 status code
+        return res.status(201).json(newAddress);
     } catch(err) {
         console.log(err);
         return res.status(500).json('Internal server error.');
@@ -97,7 +105,7 @@ const deleteAddress = async (req, res) => {
         conn.release();
 
         console.log(`Deleted address with id ${req.params.id}`);
-        return res.status(200).json();
+        return res.status(204).json();
     } catch(err) {
         return res.status(500).json('Internal server error.');
     }

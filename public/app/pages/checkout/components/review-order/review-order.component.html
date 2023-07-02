@@ -1,0 +1,34 @@
+<h1 class="text-xl font-bold mb-2">Review and confirm</h1>
+<div class="bg-white p-4 rounded shadow">
+    <div *ngIf="shippingAddress; else enterShippingAddress">
+        <h2 class="font-medium text-base mb-2">Shipping Address:</h2>
+        <p class="font-bold">{{ shippingAddress.name }}</p>
+        <p>{{ shippingAddress.street }}</p>
+        <p>{{ shippingAddress.city }} {{ shippingAddress.zipCode }}</p>
+        <p>{{ shippingAddress.country }}</p>
+        <p>{{ shippingAddress.phone }}</p>
+        <p *ngIf="shippingAddress.deliveryInstructions" class="my-3">
+            <span class="font-medium">Delivery instructions:</span> {{ shippingAddress.deliveryInstructions }}
+        </p>
+    </div>
+    <ng-template #enterShippingAddress>
+        <p>Please choose the shipping address to shipping address info.</p>
+    </ng-template>
+    <hr>
+    <div class="mt-4">
+        <h2 class="font-medium text-base mb-2">Items in cart</h2>
+        <div *ngFor="let item of cartItems" class="flex justify-between items-center border-b border-gray-200 py-2">
+            <p class="text-gray-600">{{ item.name }} x {{ item.quantity }}</p>
+            <p>${{ item.price * item.quantity }}</p>
+        </div>
+        <div class="flex justify-between items-center pt-2">
+            <p class="text-gray-600">Total</p>
+            <p>${{ total }}</p>
+        </div>
+    </div>
+    <div class="mt-4">
+        <button mat-raised-button color="primary"
+                [disabled]="!infoComplete"
+                (click)="onConfirmOrder()">Next step</button>
+    </div>
+</div>

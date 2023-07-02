@@ -9,5 +9,6 @@ export interface Address {
     country: string;
     phone: string;
     deliveryInstructions?: string;
-    lastModified?: string;
+	isPrimary: boolean;
+	lastModified?: string;
 }

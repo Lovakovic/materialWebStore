@@ -1,4 +1,18 @@
 Next:
+    - create checkout page (4 steps)
+        1) choose or add address
+            + primary address is expanded by default
+            + user has to click `Choose` button to confirm address
+            	+ save the chosen address to component state
+            + user can expand other addresses and choose them
+        2) choose or add payment option
+            + form to add a new credit card with simple validation
+        3) review and confirm
+            - upon confirm
+                - send entire cart to backend to confirm and sync state
+                - call an endpoint which calls `createOrder` function in DB
+        4) order placed
+            - confirm to user that order has been placed
 
 Basic functionality:
 -> user login functionality
@@ -26,7 +40,6 @@ Basic functionality:
             + hide the button if user is logged in
 	+ implement JWT authentication on frontend
 	    + delete the local storage data after the cookie and jwt expire
-	    	- delete user's cart from local storage
 	- implement JWT authentication for user specific data requests on backend
 	    + for user's account data
 	    + for user's addresses
@@ -80,28 +93,52 @@ Basic functionality:
 
 -> ordering functionality
     - create order model in DB
-        - create table `order` for storing info about orders
-        - create table `orderItem` for storing archived info about item's past price
-        - create table `archivedAddress` for storing info about addresses that have been used for orders
+        + create table `order` for storing info about orders
+        + create table `orderItem` for storing archived info about item's past price
+        + create table `archivedAddress` for storing info about addresses that have been used for orders
         - create function `createOrder`
-            - takes in `userId` and `addressId`, selects user's `cartItem`s into `orderItems` and deletes `cartItem`s
-            - copies the entire address with given `addressId` into `archivedAddress`
-            - lastly, inserts the new row into `order table` that reflects order info
-                - IMPORTANT - `order` table has fk that references `archivedAddress` id, not `address` id,
-                    as `address` can be deleted
-            - returns order id
+            + takes in `userId` and `addressId`
+            + copies the entire address with given `addressId` into `archivedAddress`
+            + inserts the new row into `order` table that reflects order info
+                            + IMPORTANT - `order` table has fk that references `archivedAddress` id, not `address` id,
+                                as `address` can be deleted by user
+            + selects user's `cartItem`s into `orderItems` and deletes `cartItem`s
+            + returns order id
     - create order controller on backend
         - sync carts
             - expects an entire cart from frontend
-            - UPDATE `cartItem` rows for each item in cart so it is in sync with user's (forntend) cart
+            - UPDATE `cartItem` rows for each item in cart so it is in sync with user's (frontend) cart
         - create order
         - update order
             - can only be changed before its status is set to shipped
         - cancel order
-    - order on frontend
-        - send entire cart to backend to sync before committing to order
-        - create order page
-        - in case of address not being provided beforehand, user cant order before entering address info
+    - create order page (4 steps)
+        - cart overview component (always shown)
+            - displays products in cart
+                - modify existing `product-box` component
+                    - enable horizontal scaling
+                    - hide the add to cart button
+                    - add increment, decrement and remove buttons
+        1) choose or add address
+            - primary address is chosen by default and step is completed
+            - user can go back and choose another address
+            - can't proceed to next step if no address is added
+        2) choose or add payment option
+            - form to add a new credit card with simple validation
+            - mockup of GooglePay, PayPal, and AmazonPay options (just buttons which proceed to next step for now)
+        4) review and confirm
+            - upon confirm
+                - send entire cart to backend to confirm and sync state
+                - call an endpoint which calls `createOrder` function in DB
+        3) order placed
+            - confirm to user that order has been placed
+
+
+-> store cart in local storage for users that aren't logged in
+
+-> add payment options
+    - add actual payment options when ordering
+    - allow user to modify his payment options on his profile page
 
 -> product rating
 
@@ -110,10 +147,6 @@ Basic functionality:
 -> ability to search products by name
 
 -> separate the app into (lazily loaded) modules
-
-Good practices to implement:
-    - implement subscription handler class for automatic unsubscribing like
-        described in this video: https://youtu.be/TkcLN95R0VA?t=466
 
 Todo from project requirements:
     + validate registration and login info
@@ -125,7 +158,7 @@ Todo from project requirements:
 
 Advanced concepts or functionality
     -> user experience
-        - create a small drop down menu on `Your page` navbar button that opens upon hover
+        + create a small drop down menu on `Your page` navbar button that opens upon hover
         - change the layout of profile page on mobile aspect ratios so that orders and addresses are
             displayed one above the other
         - enable users to change their user account data (name, password...) or close the account
@@ -134,6 +167,7 @@ Advanced concepts or functionality
         - add a country picker drop down menu for choosing a country when adding an address
         - add http interceptor that displays loading bar on top of the heading when http request is loading
         - in case user is not logged in, resort to local storage for saving and restoring cart
+        - add PayPal and GooglePay payment options on checkout
 
     -> code
         - modify frontend HTTP response checks to respond to status codes, not error messages
@@ -167,7 +201,8 @@ Bugs to squash:
 + if new address is added, deleting it right after (without first refreshing the page) doesn't
 	trigger component refresh
 - clear the `new-address` form's inputs upon submit
++ incrementing item quantity in `cart-items.component` doesn't work
 + hide the name of the address if it overflows the container
 - allow the user to unselect the product filter (to show all products again)
 - fix SQL injection vulnerability in products.controller.js when injecting sort parameter into query
-- don't try to fetch user's cart if user is not logged in (produces 401 HTTP)
++ don't fetch user's cart from server if user is not logged in (produces 401 HTTP)

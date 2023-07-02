@@ -33,7 +33,7 @@ to set the project up.
 
 1. Execute `npm install` to install packages for frontend and backend 
    * Packages for frontend and backend are both bundled in the same `package.json` file[^1]
-2. Set up your MySQL database, execute `db_DDL.sql` except for the last few lines 
+2. Set up your MySQL database, execute `DDL.sql` except for the last few lines 
 (the reason is explained in comments above them)
 3. Edit the `backend/config.js` to your needs or desires 
 4. Make a `media` directory inside of project root directory and add pictures of products inside of them, remember

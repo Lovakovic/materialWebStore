@@ -45,3 +45,7 @@ Thumbs.db
 /dummy/
 /db_model.mwb
 /webStoreDB.mwb.bak
+/public/environment/development.ts
+/public/environment/environment.ts
+/public/environment/dev.environment.ts
+/.env

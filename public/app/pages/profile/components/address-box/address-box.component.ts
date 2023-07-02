@@ -12,13 +12,13 @@ import {Address} from "../../../../models/address.model";
   `]
 })
 export class AddressBoxComponent {
-  @Input() address!: Address;
-  @Input() isPrimary: boolean = false;
-  @Input() expanded!: boolean;
+    @Input() address!: Address;
+    @Input() expanded!: boolean;
+    @Input() action!: string;
 
-  @Output() deleteAddress = new EventEmitter();
+    @Output() chooseAddress = new EventEmitter();
 
-  onDeleteAddress(): void {
-      this.deleteAddress.emit(this.address);
-  }
+    onAddressChosen(): void {
+		this.chooseAddress.emit(this.address);
+    }
 }

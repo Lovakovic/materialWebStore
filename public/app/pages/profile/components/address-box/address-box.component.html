@@ -1,9 +1,8 @@
-<mat-expansion-panel hideToggle *ngIf="address"
-                     [expanded]="expanded">
+<mat-expansion-panel hideToggle [expanded]="expanded">
     <mat-expansion-panel-header>
         <mat-panel-title class="flex justify-between text-base">
             {{address.addressNickname ? address.addressNickname : address.name}}
-            <a mat-button *ngIf="isPrimary" color="accent" disabled>(default)</a>
+            <a mat-button *ngIf="address.isPrimary" disabled>(default)</a>
         </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-list role="list">
@@ -19,6 +18,6 @@
         </mat-list-item>
     </mat-list>
     <button mat-stroked-button color="warn" class="w-full mt-4"
-            (click)="onDeleteAddress()"
-    >Delete</button>
+            (click)="onAddressChosen()"
+    >{{action}}</button>
 </mat-expansion-panel>

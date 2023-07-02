@@ -4,3 +4,6 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/*This fixes a TailwindCSS bug where Angular Material input field has an out of place border*/
+.mdc-notched-outline__notch { border-right: none; }
