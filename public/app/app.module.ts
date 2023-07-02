@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
-import {AppRoutingModule} from './app-routing.module';
+import {AppRoutingModule} from './routing/app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSidenavModule} from "@angular/material/sidenav";
@@ -49,6 +49,8 @@ import {OrderSuccessComponent} from './pages/checkout/components/order-success/o
 import {CartMenuComponent} from './components/header/components/cart-menu/cart-menu.component';
 import {AddressesComponent} from './pages/addresses/addresses.component';
 import { OrdersComponent } from './pages/orders/orders.component';
+import {UserRoutingModule} from "./routing/user/user-routing.module";
+import {AdminRoutingModule} from "./routing/admin/admin-routing.module";
 
 @NgModule({
   declarations: [
@@ -73,7 +75,7 @@ import { OrdersComponent } from './pages/orders/orders.component';
     OrderSuccessComponent,
     CartMenuComponent,
     AddressesComponent,
-    OrdersComponent
+    OrdersComponent,
   ],
 	imports: [
 		BrowserModule,
@@ -100,7 +102,9 @@ import { OrdersComponent } from './pages/orders/orders.component';
 		MatTooltipModule,
 		MatCheckboxModule,
 		MatStepperModule,
-		NgxPayPalModule
+		NgxPayPalModule,
+		UserRoutingModule,
+		AdminRoutingModule
 	],
   providers: [CartService, StoreService],
   bootstrap: [AppComponent]

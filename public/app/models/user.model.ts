@@ -3,4 +3,5 @@ export interface User {
     username: string;
     email: string;
     primaryAddressId?: number;
+	role: 'usr' | 'adm';
 }

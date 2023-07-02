@@ -91,7 +91,7 @@ const getProfile = async (req, res) => {
 
       // Check if the user still exists
       let conn = await pool.getConnection();
-      let rows = await  conn.query('SELECT id, username, email, primaryAddressId FROM user WHERE id = ?',
+      let rows = await  conn.query('SELECT id, username, email, primaryAddressId, role FROM user WHERE id = ?',
           userId);
 
       conn.release();

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
-import {AuthService} from "../../services/auth.service";
+import {AuthService} from "../../services/auth/auth.service";
 import {catchError, delay, map, Observable, of, switchMap} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
