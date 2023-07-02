@@ -1,5 +1,6 @@
 export interface Order {
-	id?: number;
+	id: number;
+	username?: string;
 	items?: OrderItem[];
 	shippingStreet: string;
 	shippingCity: string;

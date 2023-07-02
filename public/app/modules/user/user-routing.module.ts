@@ -27,12 +27,12 @@ const routes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'my-addresses',
+		path: 'addresses',
 		component: UserAddressesComponent,
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'my-orders',
+		path: 'orders',
 		component: UserOrdersComponent,
 		canActivate: [AuthGuard]
 	}

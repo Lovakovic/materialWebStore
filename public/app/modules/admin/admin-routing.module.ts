@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {AdminGuard} from "./admin.guard";
 import { AdminHomeComponent } from "./components/admin-home/admin-home.component";
+import {AdminOrdersComponent} from "./components/order-list/admin-orders.component";
 
 const routes: Routes = [
 	{
@@ -12,6 +13,11 @@ const routes: Routes = [
 	{
 		path: 'home',
 		component: AdminHomeComponent,
+		canActivate: [AdminGuard]
+	},
+	{
+		path: 'orders',
+		component: AdminOrdersComponent,
 		canActivate: [AdminGuard]
 	}
 ];

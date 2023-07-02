@@ -7,6 +7,10 @@ const router = express.Router();
 router.post('', verifyJwt, orderController.postOrder);
 router.get('', verifyJwt, orderController.getOrders);
 
+// Admin-only should be implemented
+router.get('/all', verifyJwt, orderController.getAllOrders);
+router.put('/status', verifyJwt, orderController.updateOrderStatus);
+
 router.post('/create-paypal-order', verifyJwt, async (req, res, next) => {
     try {
         const order = await orderController.createPaypalOrder(req, res);

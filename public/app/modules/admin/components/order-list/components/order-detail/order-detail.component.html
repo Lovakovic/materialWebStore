@@ -1,0 +1,65 @@
+<mat-card class="p-4 m-2">
+    <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold">Order ID: {{order.id}}</h2>
+        <div class="flex items-center justify-between">
+            <button mat-stroked-button color="primary" class="m-2" (click)="editMode = !editMode">
+                Change order status
+            </button>
+            <button mat-raised-button color="warn" class="m-2" (click)="deleteOrder()">
+                Delete Order
+            </button>
+        </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4 mt-4">
+        <div>
+            <h3 class="text-lg font-semibold">Shipping Address</h3>
+            <p>{{order.shippingStreet}}, {{order.shippingCity}}, {{order.shippingCountry}}</p>
+        </div>
+        <div *ngIf="order.billingStreet">
+            <h3 class="text-lg font-semibold">Billing Address</h3>
+            <p>{{billingAddress}}</p>
+        </div>
+        <div>
+            <h3 class="text-lg font-semibold">Payment Method</h3>
+            <p>{{order.paymentMethod}}</p>
+        </div>
+        <div>
+            <h3 class="text-lg font-semibold">Order Status</h3>
+            <p *ngIf="!editMode">{{order.status}}</p>
+            <mat-form-field *ngIf="editMode">
+                <mat-select [(ngModel)]="editedStatus">
+                    <mat-option value="created">Created</mat-option>
+                    <mat-option value="confirmed">Confirmed</mat-option>
+                    <mat-option value="shipped">Shipped</mat-option>
+                    <mat-option value="deleted">Deleted</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button mat-button *ngIf="editMode" (click)="saveEdit()">Save</button>
+        </div>
+        <div>
+            <h3 class="text-lg font-semibold">Created At</h3>
+            <p>{{order.createdAt | date:'longDate'}}</p>
+        </div>
+        <div *ngIf="order.updatedAt">
+            <h3 class="text-lg font-semibold">Last Updated At</h3>
+            <p>{{order.updatedAt | date:'longDate'}}</p>
+        </div>
+        <div>
+            <h3 class="text-lg font-semibold">Total</h3>
+            <p>{{order.total}}</p>
+        </div>
+        <div *ngIf="order.paypalTransactionId">
+            <h3 class="text-lg font-semibold">PayPal Transaction ID</h3>
+            <p>{{order.paypalTransactionId}}</p>
+        </div>
+    </div>
+
+    <div class="mt-4 grid grid-cols-3 gap-4">
+        <div *ngFor="let item of order.items">
+            <div>
+                <h4 class="text-md font-semibold">{{item.name}}</h4>
+                <p class="text-sm">{{item.quantity}} x {{item.price}}</p>
+            </div>
+        </div>
+    </div>
+</mat-card>

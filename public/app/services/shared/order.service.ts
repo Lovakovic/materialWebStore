@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Order, PayPalTransaction} from "../../models/order.model";
 import {CartItem} from "../../models/cart.model";
 import {CartService} from "../user/cart.service";
-import {tap} from "rxjs";
+import {Observable, tap} from "rxjs";
 
 @Injectable({
 	providedIn: 'root'
@@ -21,6 +21,14 @@ export class OrderService {
 
 	getOrders() {
 		return this.http.get<Order[]>(`${environment.baseUrl}/order`, { withCredentials: true });
+	}
+
+	changeOrderStatus(orderId: number, newStatus: string) {
+		return this.http.put(`${environment.baseUrl}/order/status`, { orderId, newStatus }, { withCredentials: true })
+	}
+
+	getAdminOrders(): Observable<any> {
+		return this.http.get(`${environment.baseUrl}/order/all`, { withCredentials: true });
 	}
 
 	createPayPalOrder(cartItems: CartItem[]) {

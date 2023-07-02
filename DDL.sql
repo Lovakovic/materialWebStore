@@ -190,6 +190,9 @@ CREATE TABLE `order` (
     CONSTRAINT fkOrder_paypalTransactionId FOREIGN KEY (paypalTransactionId) REFERENCES paypalTransaction(id)
 );
 
+CREATE TRIGGER orderModified BEFORE UPDATE ON `order`
+    FOR EACH ROW SET NEW.updatedAt = NOW();
+
 DROP TABLE IF EXISTS orderItem;
 CREATE TABLE orderItem (
     orderId INT NOT NULL,
@@ -288,10 +291,13 @@ SELECT
     ba.street AS billingStreet,
     ba.city AS billingCity,
     ba.country AS billingCountry,
-    pt.status AS paypalStatus
+    pt.status AS paypalStatus,
+    u.username AS username
 FROM `order` o
          JOIN orderItem oi ON oi.orderId = o.id
          JOIN product p ON oi.productId = p.id
          JOIN archivedAddress sa ON sa.id = o.shippingAddressId
          LEFT JOIN archivedAddress ba ON ba.id = o.billingAddressId
-         LEFT JOIN paypalTransaction pt ON pt.id = o.paypalTransactionId;
+         LEFT JOIN paypalTransaction pt ON pt.id = o.paypalTransactionId
+         JOIN user u ON u.id = o.userId;
+

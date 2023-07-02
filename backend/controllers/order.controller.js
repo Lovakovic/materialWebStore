@@ -53,6 +53,35 @@ const getOrders = async (req, res) => {
     }
 }
 
+const getAllOrders = async (req, res) => {
+    try {
+        // Fetch all orders
+        let conn = await pool.getConnection();
+        let result = await conn.query('SELECT * FROM orderWithItems ORDER BY FIELD(status, "created", "confirmed", "shipped", "deleted")');
+        conn.release();
+
+        const orders = completeOrderMapper(result);
+        return res.status(200).json(orders);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send({ error: 'Error while fetching all orders.' });
+    }
+}
+
+const updateOrderStatus = async (req, res) => {
+    try {
+        const { orderId, newStatus } = req.body;
+        let conn = await pool.getConnection();
+        await conn.query('UPDATE `order` SET status = ? WHERE id = ?', [newStatus, orderId]);
+        conn.release();
+        return res.status(200).json({ message: 'Order status updated successfully' });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: 'Error while updating order status.' });
+    }
+}
+
+
 
 const createPaypalOrder = async (req) => {
     try {
@@ -218,6 +247,8 @@ const completeOrderMapper = (rows) => {
 module.exports = {
     postOrder,
     getOrders,
+    getAllOrders,
+    updateOrderStatus,
     createPaypalOrder,
     processPaypalPayment
 }
