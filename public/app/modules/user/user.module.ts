@@ -38,24 +38,27 @@ import {UserOrdersComponent} from "./comonents/user-orders/user-orders.component
 
 
 @NgModule({
-  declarations: [
-	  UserHomeComponent,
-	  ProductsHeaderComponent,
-	  FiltersComponent,
-	  ProductBoxComponent,
-	  UserCartComponent,
-	  UserAddressBoxComponent,
-	  UserNewAddressComponent,
-	  TrimDirective,
-	  UserCheckoutComponent,
-	  UserCartItemsComponent,
-	  PaymentFormComponent,
-	  ReviewOrderComponent,
-	  PaypalComponent,
-	  OrderSuccessComponent,
-	  UserAddressesComponent,
-	  UserOrdersComponent
-  ],
+	declarations: [
+		UserHomeComponent,
+		ProductsHeaderComponent,
+		FiltersComponent,
+		ProductBoxComponent,
+		UserCartComponent,
+		UserAddressBoxComponent,
+		UserNewAddressComponent,
+		TrimDirective,
+		UserCheckoutComponent,
+		UserCartItemsComponent,
+		PaymentFormComponent,
+		ReviewOrderComponent,
+		PaypalComponent,
+		OrderSuccessComponent,
+		UserAddressesComponent,
+		UserOrdersComponent
+	],
+	exports: [
+		TrimDirective
+	],
 	imports: [
 		CommonModule,
 		UserRoutingModule,
