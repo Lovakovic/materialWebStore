@@ -23,10 +23,10 @@ export class HeaderMenuComponent {
 	}
 
 	onAddressesClicked() {
-		this.router.navigate(['my-user-addresses'])
+		this.router.navigate(['my-addresses'])
 	}
 
 	onOrdersClicked() {
-		this.router.navigate(['my-user-orders']);
+		this.router.navigate(['my-orders']);
 	}
 }

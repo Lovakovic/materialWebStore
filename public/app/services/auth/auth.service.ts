@@ -26,6 +26,11 @@ export class AuthService {
 	this.checkForLocalStorageAuth();
 	}
 
+	isAdmin(): boolean {
+		const user = this.userSubject.value;
+		return user ? user.role === 'adm' : false;
+	}
+
 	register(credentials: Credentials): Observable<boolean> {
 	return this.http.post<HttpResponse<string>>(`${environment.baseUrl}/auth/register`, credentials,
 		{observe: 'response'})
@@ -61,30 +66,30 @@ export class AuthService {
 
 	logout() {
 	localStorage.clear();
-	this.cartService.updateLocalCart({ items: [] });
-	this.updateLocalUser(undefined);
-	return this.http.get(`${environment.baseUrl}/auth/logout`, { withCredentials: true });
+		this.cartService.updateLocalCart({ items: [] });
+		this.updateLocalUser(undefined);
+		return this.http.get(`${environment.baseUrl}/auth/logout`, { withCredentials: true });
 	}
 
 	checkEmailAvailability(email: string) {
-	return this.http.post<HttpResponse<{ taken: boolean }>>(`${environment.baseUrl}/auth/email`, { email });
+		return this.http.post<HttpResponse<{ taken: boolean }>>(`${environment.baseUrl}/auth/email`, { email });
 	}
 
 	getProfile() {
-	return this.http.get<User>(`${environment.baseUrl}/auth/me`, { withCredentials: true });
+		return this.http.get<User>(`${environment.baseUrl}/auth/me`, { withCredentials: true });
 	}
 
 	updateLocalUser(user: User | undefined) {
-	this.userSubject.next(user);
+		this.userSubject.next(user);
 	}
 
 	saveAuthToLocalStorage(user: User, expires: Date) {
-	this.updateLocalUser(user);
-	localStorage.setItem('jwtExpiry', expires.toISOString());
+		this.updateLocalUser(user);
+		localStorage.setItem('jwtExpiry', expires.toISOString());
 
-	setTimeout(() => {
-	  this.validateJwtExpiry(expires.toISOString());
-	}, expires.getTime() - new Date().getTime());
+		setTimeout(() => {
+			this.validateJwtExpiry(expires.toISOString());
+		}, expires.getTime() - new Date().getTime());
 	}
 
 
@@ -115,9 +120,5 @@ export class AuthService {
 	}
 
 	return true;
-	}
-
-	refreshUser(): void {
-	this.getProfile().subscribe(user => this.updateLocalUser(user));
 	}
 }

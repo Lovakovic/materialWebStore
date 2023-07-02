@@ -1,5 +1,5 @@
 <mat-toolbar class="border-x justify-between">
-    <a [routerLink]="['home']">Home</a>
+    <a (click)="onNavigateToHome()" class="cursor-pointer">Home</a>
     <div class="flex">
         <app-header-menu *ngIf="(this.authService.user$ | async) as user; else loginButton">
         </app-header-menu>
