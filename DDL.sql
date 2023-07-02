@@ -97,7 +97,7 @@ BEGIN
 END;
 
 #
-# Shopping cart & order related
+# Shopping user-cart & order related
 #
 DROP TABLE IF EXISTS cartItem;
 CREATE TABLE cartItem (
@@ -125,11 +125,11 @@ BEGIN
     DECLARE v_prevQuantity INT DEFAULT 0;
     SELECT quantity INTO v_prevQuantity FROM cartItem WHERE userId = i_userId AND productId = i_productId;
 
-    # Item to be removed from cart
+    # Item to be removed from user-cart
     IF i_quantity = 0 THEN
         DELETE FROM cartItem WHERE userId = i_userId AND productId = i_productId;
 
-    # Item isn't yet in cart
+    # Item isn't yet in user-cart
     ELSEIF v_prevQuantity = 0 THEN
         INSERT INTO cartItem (userId, productId, quantity) VALUE (i_userId, i_productId, i_quantity);
 
@@ -140,7 +140,7 @@ BEGIN
 END //
 DELIMITER ;
 
-# For preserving addresses that have been used to order items
+# For preserving user-addresses that have been used to order items
 DROP TABLE IF EXISTS archivedAddress;
 CREATE TABLE archivedAddress (
      id INT PRIMARY KEY AUTO_INCREMENT,
@@ -238,7 +238,7 @@ BEGIN
     DECLARE v_itemsInCart, v_archivedAddressId, v_orderId INT DEFAULT 0;
     DECLARE v_orderTotal DECIMAL(10, 2) DEFAULT 0;
 
-    # Check if there are items in cart
+    # Check if there are items in user-cart
     SELECT COUNT(*) INTO v_itemsInCart FROM cartItem WHERE userId = i_userId;
     IF v_itemsInCart = 0 THEN
         RETURN 0;
@@ -251,7 +251,7 @@ BEGIN
     SELECT SUM(price * quantity) INTO v_orderTotal FROM cartItem JOIN product ON productId = product.id
                                                    WHERE userId = i_userId;
 
-    # If order is paid using paypal don't insert the billing address, otherwise shipping and billing addresses are the same
+    # If order is paid using paypal don't insert the billing address, otherwise shipping and billing user-addresses are the same
     IF STRCMP(i_paymentMethod, 'paypal') != 0 THEN
         INSERT INTO `order` (userId, shippingAddressId, total, paymentMethod)
            VALUE (i_userId, v_archivedAddressId, v_orderTotal, i_paymentMethod);
@@ -275,7 +275,7 @@ BEGIN
 END //
 DELIMITER ;
 
-# Used for displaying user's orders
+# Used for displaying user's user-orders
 CREATE VIEW orderWithItems AS
 SELECT
     o.*,

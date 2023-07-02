@@ -19,7 +19,7 @@ const postOrder =  async (req, res) => {
         conn.release();
 
         if (rows[0] === 0) {
-            return res.status(400).json({ error: 'No items in the cart.' });
+            return res.status(400).json({ error: 'No items in the user-cart.' });
         }
 
         order.id = rows[0].orderId;
@@ -29,7 +29,7 @@ const postOrder =  async (req, res) => {
         let newOrder = await conn.query('SELECT * FROM `order` WHERE id = ?', [order.id]);
         conn.release();
 
-        return res.status(200).json(newOrder);
+        return res.status(200).json(newOrder[0]);
     } catch (err) {
         console.log(err);
         return res.status(500).send({ error: 'Error while creating order.' });
@@ -40,7 +40,7 @@ const getOrders = async (req, res) => {
     try {
         const userId = req.userId;
 
-        // Fetch user's orders
+        // Fetch user's user-orders
         let conn = await pool.getConnection();
         let result = await conn.query('SELECT * FROM orderWithItems WHERE userId = ?', [userId]);
         conn.release();
@@ -49,7 +49,7 @@ const getOrders = async (req, res) => {
         return res.status(200).json(orders);
     } catch (err) {
         console.log(err);
-        return res.status(500).send({ error: 'Error while fetching orders.' });
+        return res.status(500).send({ error: 'Error while fetching user-orders.' });
     }
 }
 

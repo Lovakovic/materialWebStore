@@ -1,3 +1,3 @@
 export interface PaymentOption {
-	type: 'PayPal' | 'Bank transfer' | 'Payment on delivery';
+	type: 'paypal' | 'bank-transfer' | 'on-delivery';
 }

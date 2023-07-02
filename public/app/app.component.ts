@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {CartService} from "./services/cart.service";
+import {CartService} from "./services/user/cart.service";
 import {AuthService} from "./services/auth/auth.service";
 import {Subscription} from "rxjs";
 

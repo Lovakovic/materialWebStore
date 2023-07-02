@@ -1,0 +1,59 @@
+<mat-stepper [linear]="true" #stepper class="max-w-7xl m-auto">
+    <mat-step label="Address">
+        <div class="my-5" *ngIf="cartService.cart$ | async as cart">
+            <h1>Review your cart</h1>
+            <ng-container *ngIf="cart.items.length > 0">
+                <app-user-user-cart-items [cartItems]="cart.items"
+                                [hideClearAllButton]="true"
+                ></app-user-user-cart-items>
+            </ng-container>
+        </div>
+        <mat-accordion>
+            <div class="mt-10">
+                <h1>Choose existing or add a new shipping address</h1>
+                <ng-container *ngIf="addresses.length > 0">
+                    <app-user-address-box *ngFor="let address of addresses"
+                                     [expanded]="address.isPrimary"
+                                     [address]="address"
+                                     (chooseAddress)="onChooseAddress($event)"
+                                     [action]="'Choose'"
+                    ></app-user-address-box>
+                </ng-container>
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="text-base">New address</mat-panel-title>
+                        <mat-icon>add</mat-icon>
+                    </mat-expansion-panel-header>
+                    <app-user-new-address (addAddress)="onAddAddress($event)" ></app-user-new-address>
+                </mat-expansion-panel>
+            </div>
+        </mat-accordion>
+        <ng-template #loading>
+            Loading...
+        </ng-template>
+    </mat-step>
+    <mat-step label="Review order items">
+        <app-review-order #reviewOrder
+                          [cartItems]="cartItems"
+                          [shippingAddress]="shippingAddress"
+                          [paymentOption]="paymentOption"
+                          (confirmOrder)="onConfirmOrder()"
+        ></app-review-order>
+    </mat-step>
+    <mat-step label="Payment">
+        <div class="mt-5 payment-container">
+            <div class="payment-option">
+                <h2>Choose a payment option</h2>
+                <app-payment-form (selectPaymentOption)="onConfirmPaymentOption($event)"></app-payment-form>
+            </div>
+            <div class="line"></div>
+            <div class="paypal-option">
+                <h2>Or pay with PayPal</h2>
+                <app-paypal [orderItems]="cartItems" (orderDetailEmitter)="onPayPalOrderSubmitted($event)"></app-paypal>
+            </div>
+        </div>
+    </mat-step>
+    <mat-step label="Done!">
+        <app-order-success [order]="order"></app-order-success>
+    </mat-step>
+</mat-stepper>

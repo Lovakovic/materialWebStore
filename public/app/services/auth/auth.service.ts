@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Credentials} from "../../models/credentials.model";
 import {BehaviorSubject, catchError, map, Observable, of, switchMap, tap} from "rxjs";
 import {User} from "../../models/user.model";
-import {CartService} from "../cart.service";
+import {CartService} from "../user/cart.service";
 import {environment} from "../../../environment/dev.environment";
 type ResponseObserveType = 'response';
 

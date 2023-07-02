@@ -11,11 +11,12 @@ INSERT INTO product (name, price, categoryId, description, image) VALUES
   ('Dummy shoe', 130, 2, 'Hey, look at me! I am a dummy sneaker.', 'AF1_low_unc_white.webp'),
   ('Dummy part', 1399, 3, 'Hey, look at me! I am a dummy RTX 4090.', '4090_fe.webp');
 
-# Insert admin with password = adminpass
-INSERT INTO user (id, username, password, email, role) VALUE
-    (1, 'admin', '$2b$10$zr/wOggWaTeD1yzyc65/kezK4e5Mj1.2tZW6IUviAbnaO0AxktBNS', 'admin@mail.com', 'adm');
+# Insert admin with password = adminpass and user with password = userpass
+INSERT INTO user (id, username, password, email, role) VALUES
+    (1, 'admin', '$2b$10$zr/wOggWaTeD1yzyc65/kezK4e5Mj1.2tZW6IUviAbnaO0AxktBNS', 'admin@mail.com', 'adm'),
+    (2, 'user', '$2a$10$ZM3iMgisxW0Y47nQuVQVaOf4MlVomkBzB8DDTbCI2a6TfvFDCazwC', 'user@mail.com', 'usr');
 
-# A few addresses with different non-mandatory attributes omitted
+# A few user-addresses with different non-mandatory attributes omitted
 INSERT INTO address (userId, name, addressNickname, companyName, street, city, zipCode, country, phone,
                      deliveryInstructions) VALUE
     (1, 'Danijel Franko', 'Danko\'s place (full)', 'KingICT', 'Ulica Hrvatskih Uhljeba 15', 'Zagreb', '10000', 'Croatia',

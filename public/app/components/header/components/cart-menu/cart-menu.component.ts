@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import {Cart} from "../../../../models/cart.model";
-import {CartService} from "../../../../services/cart.service";
+import {CartService} from "../../../../services/user/cart.service";
 
 @Component({
-  selector: 'app-cart-menu',
+  selector: 'app-user-cart-menu',
   templateUrl: 'cart-menu.component.html'
 })
 export class CartMenuComponent {
@@ -22,5 +22,4 @@ export class CartMenuComponent {
 	onClearCart(): void {
 		this.cartService.clearCart();
 	}
-
 }
