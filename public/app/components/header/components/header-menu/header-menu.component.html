@@ -3,9 +3,17 @@
         Orders
         <mat-icon>description</mat-icon>
     </button>
-    <button mat-menu-item class="min-width-btn" (click)="onAddressesClicked()">
+    <button mat-menu-item class="min-width-btn" *ngIf="!authService.isAdmin()" (click)="onAddressesClicked()">
         Addresses
         <mat-icon>streetview</mat-icon>
+    </button>
+    <button mat-menu-item class="min-width-btn" *ngIf="authService.isAdmin()" (click)="onProductsClicked()">
+        Products
+        <mat-icon>storefront</mat-icon>
+    </button>
+    <button mat-menu-item class="min-width-btn" *ngIf="authService.isAdmin()" (click)="onUsersClicked()">
+        Users
+        <mat-icon>group</mat-icon>
     </button>
     <button mat-menu-item class="min-width-btn" (click)="onLogout()">
         Log out

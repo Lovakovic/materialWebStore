@@ -31,4 +31,8 @@ export class HeaderComponent {
 			this.router.navigate(['user']);
 		}
 	}
+
+	isAdmin() {
+		return this.authService.isAdmin();
+	}
 }

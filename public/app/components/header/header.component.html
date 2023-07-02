@@ -9,6 +9,6 @@
                     (click)="onNavigateToLogin()"
             >Log in</button>
         </ng-template>
-        <app-user-cart-menu></app-user-cart-menu>
+        <app-cart-menu *ngIf="!isAdmin()"></app-cart-menu>
     </div>
 </mat-toolbar>

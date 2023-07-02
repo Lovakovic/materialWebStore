@@ -3,7 +3,7 @@ import {Cart} from "../../../../models/cart.model";
 import {CartService} from "../../../../services/user/cart.service";
 
 @Component({
-  selector: 'app-user-cart-menu',
+  selector: 'app-cart-menu',
   templateUrl: 'cart-menu.component.html'
 })
 export class CartMenuComponent {

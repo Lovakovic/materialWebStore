@@ -10,7 +10,7 @@ import {Router} from "@angular/router";
 })
 export class HeaderMenuComponent {
 	constructor(
-		private authService: AuthService,
+		public authService: AuthService,
 		private router: Router,
 		private snackBar: MatSnackBar
 	) { }
@@ -22,11 +22,23 @@ export class HeaderMenuComponent {
 		});
 	}
 
-	onAddressesClicked() {
-		this.router.navigate(['my-addresses'])
+	onOrdersClicked() {
+		if (this.authService.isAdmin()) {
+			this.router.navigate(['admin/orders']);
+		} else {
+			this.router.navigate(['user/orders']);
+		}
 	}
 
-	onOrdersClicked() {
-		this.router.navigate(['my-orders']);
+	onAddressesClicked() {
+		this.router.navigate(['user/addresses'])
+	}
+
+	onProductsClicked() {
+		this.router.navigate(['admin/products']);
+	}
+
+	onUsersClicked() {
+		this.router.navigate(['admin/users']);
 	}
 }
