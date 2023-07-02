@@ -1,0 +1,41 @@
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <h1 class="text-2xl font-semibold text-gray-900">Your Orders</h1>
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let order of orders; index as i">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Order #{{i + 1}}
+                </mat-panel-title>
+                <mat-panel-description>
+                    Created at: {{order.createdAt | date: 'short'}}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900">Shipping Address</h2>
+                    <p>{{order.shippingStreet}}, {{order.shippingCity}}, {{order.shippingCountry}}</p>
+                </div>
+                <div *ngIf="order.billingStreet">
+                    <h2 class="text-lg font-semibold text-gray-900">Billing Address</h2>
+                    <p>{{order.billingStreet}}, {{order.billingCity}}, {{order.billingCountry}}</p>
+                </div>
+            </div>
+            <div *ngIf="order.items && order.items.length > 0" class="mt-4">
+                <h2 class="text-lg font-semibold text-gray-900">Items</h2>
+                <div *ngFor="let item of order.items" class="py-2">
+                    <p>{{item.name}} x {{item.quantity}} - {{item.price}}</p>
+                </div>
+            </div>
+            <div *ngIf="order.paypalTransactionId" class="mt-4">
+                <h2 class="text-lg font-semibold text-gray-900">PayPal Transaction Status</h2>
+                <p>{{order.paypalStatus}}</p>
+            </div>
+            <div class="mt-4">
+                <h2 class="text-lg font-semibold text-gray-900">Order Details</h2>
+                <p>Total: {{order.total | currency: 'EUR' }}</p>
+                <p>Status: {{order.status}}</p>
+                <p *ngIf="order.updatedAt">Last updated at: {{order.updatedAt | date: 'short'}}</p>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

@@ -1,8 +1,7 @@
 <mat-toolbar class="border-x justify-between">
     <a routerLink="home">Home</a>
     <div class="flex">
-        <app-user-menu *ngIf="(this.authService.user$ | async) as user; else loginButton"
-                       [username]="user.username">
+        <app-user-menu *ngIf="(this.authService.user$ | async) as user; else loginButton">
         </app-user-menu>
         <ng-template #loginButton>
             <button mat-raised-button color="primary"

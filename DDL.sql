@@ -274,3 +274,24 @@ BEGIN
     RETURN v_orderId;
 END //
 DELIMITER ;
+
+# Used for displaying user's orders
+CREATE VIEW orderWithItems AS
+SELECT
+    o.*,
+    oi.quantity,
+    oi.price,
+    p.name as productName,
+    sa.street AS shippingStreet,
+    sa.city AS shippingCity,
+    sa.country AS shippingCountry,
+    ba.street AS billingStreet,
+    ba.city AS billingCity,
+    ba.country AS billingCountry,
+    pt.status AS paypalStatus
+FROM `order` o
+         JOIN orderItem oi ON oi.orderId = o.id
+         JOIN product p ON oi.productId = p.id
+         JOIN archivedAddress sa ON sa.id = o.shippingAddressId
+         LEFT JOIN archivedAddress ba ON ba.id = o.billingAddressId
+         LEFT JOIN paypalTransaction pt ON pt.id = o.paypalTransactionId;

@@ -48,6 +48,7 @@ import {PaypalComponent} from './pages/checkout/components/paypal/paypal.compone
 import {OrderSuccessComponent} from './pages/checkout/components/order-success/order-success.component';
 import {CartMenuComponent} from './components/header/components/cart-menu/cart-menu.component';
 import {AddressesComponent} from './pages/addresses/addresses.component';
+import { OrdersComponent } from './pages/orders/orders.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import {AddressesComponent} from './pages/addresses/addresses.component';
     PaypalComponent,
     OrderSuccessComponent,
     CartMenuComponent,
-    AddressesComponent
+    AddressesComponent,
+    OrdersComponent
   ],
 	imports: [
 		BrowserModule,

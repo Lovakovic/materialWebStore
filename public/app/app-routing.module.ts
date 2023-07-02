@@ -6,6 +6,7 @@ import {RegisterComponent} from "./pages/register/register.component";
 import {LoginComponent} from "./pages/login/login.component";
 import {CheckoutComponent} from "./pages/checkout/checkout.component";
 import {AddressesComponent} from "./pages/addresses/addresses.component";
+import {OrdersComponent} from "./pages/orders/orders.component";
 
 const routes: Routes = [
     {
@@ -27,6 +28,10 @@ const routes: Routes = [
 	{
 		path: 'my-addresses',
 		component: AddressesComponent
+	},
+	{
+		path: 'my-orders',
+		component: OrdersComponent
 	},
     {
         path: 'home', redirectTo: '', pathMatch: "full"

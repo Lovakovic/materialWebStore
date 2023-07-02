@@ -5,6 +5,7 @@ const router = express.Router();
 
 // Protected with JWT
 router.post('', verifyJwt, orderController.postOrder);
+router.get('', verifyJwt, orderController.getOrders);
 
 router.post('/create-paypal-order', verifyJwt, async (req, res, next) => {
     try {
@@ -23,6 +24,5 @@ router.post('/process-paypal-payment', verifyJwt, async (req, res, next) => {
         res.status(500).send({ error: error.message });
     }
 });
-
 
 module.exports = router;

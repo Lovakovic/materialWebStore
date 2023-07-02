@@ -36,6 +36,24 @@ const postOrder =  async (req, res) => {
     }
 }
 
+const getOrders = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        // Fetch user's orders
+        let conn = await pool.getConnection();
+        let result = await conn.query('SELECT * FROM orderWithItems WHERE userId = ?', [userId]);
+        conn.release();
+
+        const orders = completeOrderMapper(result);
+        return res.status(200).json(orders);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send({ error: 'Error while fetching orders.' });
+    }
+}
+
+
 const createPaypalOrder = async (req) => {
     try {
         const cartItems = req.body.cartItems;
@@ -160,8 +178,46 @@ async function generateAccessToken() {
     }
 }
 
+const completeOrderMapper = (rows) => {
+    let ordersMap = {};
+    for (let row of rows) {
+        if (!ordersMap[row.id]) {
+            ordersMap[row.id] = {
+                id: row.id,
+                items: [],
+                shippingStreet: row.shippingStreet,
+                shippingCity: row.shippingCity,
+                shippingCountry: row.shippingCountry,
+                paymentMethod: row.paymentMethod,
+                status: row.status,
+                total: row.total,
+                createdAt: row.createdAt,
+                updatedAt: row.updatedAt,
+                paypalTransactionId: row.paypalTransactionId,
+                paypalStatus: row.paypalStatus
+            };
+
+            if (row.billingStreet) {
+                ordersMap[row.id].billingStreet = row.billingStreet;
+                ordersMap[row.id].billingCity = row.billingCity;
+                ordersMap[row.id].billingCountry = row.billingCountry;
+            }
+        }
+
+        ordersMap[row.id].items.push({
+            productId: row.productId,
+            name: row.productName,
+            price: row.price,
+            quantity: row.quantity
+        });
+    }
+
+    return Object.values(ordersMap);
+}
+
 module.exports = {
     postOrder,
+    getOrders,
     createPaypalOrder,
     processPaypalPayment
 }
