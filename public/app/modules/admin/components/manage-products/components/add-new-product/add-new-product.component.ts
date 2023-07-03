@@ -72,7 +72,8 @@ export class AddNewProductComponent implements OnInit{
 		this.productService.addProduct(product).subscribe(() => {
 			this.productChanged.emit();
 			console.log('Added product:', product);
-			this.productForm.reset();
+			this.resetForm();
+			this.refreshCategories();
 			this.editMode = false;
 		});
 	}
@@ -81,14 +82,23 @@ export class AddNewProductComponent implements OnInit{
 		this.productService.updateProduct(product).subscribe(() => {
 			this.productChanged.emit();
 			console.log('Updated product:', product);
-			this.productForm.reset();
-			Object.keys(this.productForm.controls).forEach(key => {
-				const control = (this.productForm.controls as Record<string, AbstractControl>)[key];
-				control.setErrors(null);
-				control.markAsPristine();
-				control.markAsUntouched();
-			});
+			this.resetForm();
+			this.refreshCategories();
 			this.editMode = false;
+		});
+	}
+
+	refreshCategories(): void {
+		this.productService.getCategories().subscribe(categories => this.categories = categories)
+	}
+
+	resetForm(): void {
+		this.productForm.reset();
+		Object.keys(this.productForm.controls).forEach(key => {
+			const control = (this.productForm.controls as Record<string, AbstractControl>)[key];
+			control.setErrors(null);
+			control.markAsPristine();
+			control.markAsUntouched();
 		});
 	}
 
