@@ -60,7 +60,6 @@ const getAllOrders = async (req, res) => {
         let result = await conn.query('SELECT * FROM completeOrder ORDER BY FIELD(status, \'created\', \'confirmed\', \'shipped\', \'deleted\');\n');
         conn.release();
 
-        console.log(result)
         const orders = completeOrderMapper(result);
         return res.status(200).json(orders);
     } catch (err) {

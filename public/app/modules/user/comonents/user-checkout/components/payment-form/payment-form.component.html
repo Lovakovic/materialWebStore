@@ -9,12 +9,15 @@
     </mat-form-field>
 
     <ng-container *ngIf="paymentForm.get('paymentOption')!.value === 'Bank transfer'">
-        <p>Bank transfer info</p>
+        <p class="font-bold">Bank transfer info:</p>
+        <p><span class="font-bold">Account number: </span>{{ bankAccountInfo.accountNumber }}</p>
+        <p><span class="font-bold">Bank name: </span>{{ bankAccountInfo.bankName }}</p>
+        <p><span class="font-bold">Recipient name: </span>{{ bankAccountInfo.recipientName }}</p>
         <button mat-raised-button color="primary" type="submit">Confirm</button>
     </ng-container>
 
     <ng-container *ngIf="paymentForm.get('paymentOption')!.value === 'Payment on delivery'">
-        <p>Payment on delivery info</p>
+        <p>Pay the courier on delivery.</p>
         <button mat-raised-button color="primary" type="submit">Confirm</button>
     </ng-container>
 </form>

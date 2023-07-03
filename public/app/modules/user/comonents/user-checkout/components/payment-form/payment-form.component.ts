@@ -14,6 +14,12 @@ export class PaymentFormComponent {
 	paymentForm: FormGroup;
 	paymentOptions: string[] = ['Bank transfer', 'Payment on delivery'];
 
+	bankAccountInfo = {
+		accountNumber: 'HR1234567890123456789',
+		bankName: 'Hippo Alpe Adria Bank',
+		recipientName: 'Ivo Sanader'
+	};
+
 	constructor(private formBuilder: FormBuilder) {
 		this.paymentForm = this.formBuilder.group({
 			paymentOption: ['', Validators.required]
@@ -21,8 +27,11 @@ export class PaymentFormComponent {
 	}
 
 	onSelectPaymentOption() {
-		this.selectPaymentOption.emit({
-			type: this.paymentForm.get('paymentOption')!.value == 'Bank transfer' ? 'bank-transfer' : 'on-delivery'
-		});
+		const selectedOption = this.paymentForm.get('paymentOption')!.value;
+		if (selectedOption === 'Bank transfer') {
+			this.selectPaymentOption.emit({ type: 'bank-transfer' });
+		} else if (selectedOption === 'Payment on delivery') {
+			this.selectPaymentOption.emit({ type: 'on-delivery' });
+		}
 	}
 }
