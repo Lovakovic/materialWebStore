@@ -1,25 +1,29 @@
-table {
-    width: 100%;
+/* users-list.component.css */
+
+.container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.table-container {
+    width: 80%; /* Adjust the width as desired */
     overflow: auto;
+}
+
+table.mat-table {
+    width: 100%;
     display: block;
 }
 
-th.mat-header-cell {
+th.mat-header-cell,
+td.mat-cell {
     color: #1f2937;
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
     padding: 16px;
     text-align: start;
-    border-bottom-width: 1px;
-    border-bottom-color: #e5e7eb;
-}
-
-td.mat-cell {
-    color: #374151;
-    font-size: 14px;
-    line-height: 20px;
-    padding: 16px;
     border-bottom-width: 1px;
     border-bottom-color: #e5e7eb;
 }

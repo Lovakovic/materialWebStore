@@ -4,6 +4,7 @@ import {User} from "../../models/user.model";
 import {UserService} from "../../services/admin/user.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth/auth.service";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-user-details',
@@ -20,6 +21,7 @@ export class UserDetailsComponent implements OnInit {
 				public authService: AuthService,
 				private router: Router,
 				private route: ActivatedRoute,
+				private location: Location,
 				private fb: FormBuilder) {
 
 		const validators = this.authService.isAdmin() ? [] : [
@@ -86,7 +88,7 @@ export class UserDetailsComponent implements OnInit {
 	deleteUser() {
 		if (this.user) {
 			this.userService.deleteUser(this.user).subscribe(() => {
-				// Implement navigation the user list
+				this.location.back();
 			});
 		}
 	}

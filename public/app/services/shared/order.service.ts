@@ -28,7 +28,7 @@ export class OrderService {
 	}
 
 	getAdminOrders(): Observable<any> {
-		return this.http.get(`${environment.baseUrl}/order/all`, { withCredentials: true });
+		return this.http.get(`${environment.baseUrl}/order/all`, { withCredentials: true }).pipe(tap(orders => console.log(orders)));
 	}
 
 	createPayPalOrder(cartItems: CartItem[]) {

@@ -47,19 +47,19 @@ CREATE TABLE user (
 
 DROP TABLE IF EXISTS address;
 CREATE TABLE address (
-     id INT PRIMARY KEY AUTO_INCREMENT,
-     userId INT NOT NULL,
-     name VARCHAR(64) NOT NULL,
-     addressNickname VARCHAR(64),
-     companyName VARCHAR(128),
-     street VARCHAR(100) NOT NULL,
-     city VARCHAR(45) NOT NULL,
-     zipCode VARCHAR(16),
-     country VARCHAR(75) NOT NULL,
-     phone VARCHAR(20),
-     deliveryInstructions TEXT,
-     lastModified DATETIME DEFAULT NOW(),
-     CONSTRAINT fkAddress_userId FOREIGN KEY (userId) REFERENCES user(id)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    userId INT NOT NULL,
+    name VARCHAR(64) NOT NULL,
+    addressNickname VARCHAR(64),
+    companyName VARCHAR(128),
+    street VARCHAR(100) NOT NULL,
+    city VARCHAR(45) NOT NULL,
+    zipCode VARCHAR(16),
+    country VARCHAR(75) NOT NULL,
+    phone VARCHAR(20),
+    deliveryInstructions TEXT,
+    lastModified DATETIME DEFAULT NOW(),
+    CONSTRAINT fkAddress_userId FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE
 );
 
 # View with added `isPrimary` column for primary address distinction
@@ -105,7 +105,7 @@ CREATE TABLE cartItem (
     productId INT NOT NULL,
     quantity INT DEFAULT 1,
     addedAt DATETIME DEFAULT NOW(),
-    CONSTRAINT fkCartItem_userId FOREIGN KEY (userId) REFERENCES user(id),
+    CONSTRAINT fkCartItem_userId FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE,
     CONSTRAINT fkCartItem_productId FOREIGN KEY (productId) REFERENCES product(id)
 );
 
@@ -144,7 +144,7 @@ DELIMITER ;
 DROP TABLE IF EXISTS archivedAddress;
 CREATE TABLE archivedAddress (
      id INT PRIMARY KEY AUTO_INCREMENT,
-     userId INT NOT NULL,
+     userId INT,
      name VARCHAR(64) NOT NULL,
      companyName VARCHAR(128),
      street VARCHAR(100) NOT NULL,
@@ -154,7 +154,7 @@ CREATE TABLE archivedAddress (
      phone VARCHAR(20),
      deliveryInstructions TEXT,
      archivedAt DATETIME DEFAULT NOW(),
-     CONSTRAINT fkArchivedAddress_userId FOREIGN KEY (userId) REFERENCES user(id)
+     CONSTRAINT fkArchivedAddress_userId FOREIGN KEY (userId) REFERENCES user(id) ON DELETE SET NULL
 );
 
 DROP TABLE IF EXISTS paypalTransaction;
@@ -175,7 +175,7 @@ END;
 DROP TABLE IF EXISTS `order`;
 CREATE TABLE `order` (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    userId INT NOT NULL,
+    userId INT,
     shippingAddressId INT NOT NULL,
     billingAddressId INT,
     status ENUM('created', 'confirmed', 'shipped', 'deleted') DEFAULT 'created',
@@ -184,7 +184,7 @@ CREATE TABLE `order` (
     total DECIMAL(10, 2) NOT NULL,
     createdAt DATETIME DEFAULT NOW(),
     updatedAt DATETIME,
-    CONSTRAINT fkOrder_userId FOREIGN KEY (userId) REFERENCES user(id),
+    CONSTRAINT fkOrder_userId FOREIGN KEY (userId) REFERENCES user(id) ON DELETE SET NULL,
     CONSTRAINT fkOrder_shippingAddressId FOREIGN KEY (shippingAddressId) REFERENCES archivedAddress(id),
     CONSTRAINT fkOrder_billingAddressId FOREIGN KEY (billingAddressId) REFERENCES archivedAddress(id),
     CONSTRAINT fkOrder_paypalTransactionId FOREIGN KEY (paypalTransactionId) REFERENCES paypalTransaction(id)
@@ -196,11 +196,12 @@ CREATE TRIGGER orderModified BEFORE UPDATE ON `order`
 DROP TABLE IF EXISTS orderItem;
 CREATE TABLE orderItem (
     orderId INT NOT NULL,
-    productId INT NOT NULL,
+    productId INT,
+    productName VARCHAR(255) NOT NULL,
     quantity INT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     CONSTRAINT fkOrderItem_orderId FOREIGN KEY (orderId) REFERENCES `order`(id),
-    CONSTRAINT fkOrderItem_productId FOREIGN KEY (productId) REFERENCES product(id)
+    CONSTRAINT fkOrderItem_productId FOREIGN KEY (productId) REFERENCES product(id) ON DELETE SET NULL
 );
 
 # Checks if an address with a given id has been archived, if not archives it, returns archived address's
@@ -267,8 +268,8 @@ BEGIN
     SELECT LAST_INSERT_ID() INTO v_orderId;
 
     # Copy items from `cartItem` to `orderItem`
-    INSERT INTO orderItem (orderId, productId, quantity, price)
-        SELECT v_orderId, productId, quantity, price FROM cartItem JOIN product
+    INSERT INTO orderItem (orderId, productId, productName,  quantity, price)
+        SELECT v_orderId, productId, name, quantity, price FROM cartItem JOIN product
             WHERE productId = product.id AND userId = i_userId;
 
     # Delete the items from cartItem
@@ -279,12 +280,21 @@ END //
 DELIMITER ;
 
 # Used for displaying user's user-orders
-CREATE VIEW orderWithItems AS
+CREATE VIEW completeOrder AS
 SELECT
-    o.*,
+    o.id,
+    o.userId,
+    o.shippingAddressId,
+    o.billingAddressId,
+    o.status,
+    o.paymentMethod,
+    o.paypalTransactionId,
+    o.total,
+    o.createdAt,
+    o.updatedAt,
     oi.quantity,
     oi.price,
-    p.name as productName,
+    oi.productName AS productName,
     sa.street AS shippingStreet,
     sa.city AS shippingCity,
     sa.country AS shippingCountry,
@@ -295,9 +305,7 @@ SELECT
     u.username AS username
 FROM `order` o
          JOIN orderItem oi ON oi.orderId = o.id
-         JOIN product p ON oi.productId = p.id
          JOIN archivedAddress sa ON sa.id = o.shippingAddressId
          LEFT JOIN archivedAddress ba ON ba.id = o.billingAddressId
          LEFT JOIN paypalTransaction pt ON pt.id = o.paypalTransactionId
-         JOIN user u ON u.id = o.userId;
-
+         LEFT JOIN user u ON u.id = o.userId;

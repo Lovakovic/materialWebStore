@@ -42,7 +42,7 @@ const getOrders = async (req, res) => {
 
         // Fetch user's user-orders
         let conn = await pool.getConnection();
-        let result = await conn.query('SELECT * FROM orderWithItems WHERE userId = ?', [userId]);
+        let result = await conn.query('SELECT * FROM completeOrder WHERE userId = ?', [userId]);
         conn.release();
 
         const orders = completeOrderMapper(result);
@@ -57,9 +57,10 @@ const getAllOrders = async (req, res) => {
     try {
         // Fetch all orders
         let conn = await pool.getConnection();
-        let result = await conn.query('SELECT * FROM orderWithItems ORDER BY FIELD(status, "created", "confirmed", "shipped", "deleted")');
+        let result = await conn.query('SELECT * FROM completeOrder ORDER BY FIELD(status, \'created\', \'confirmed\', \'shipped\', \'deleted\');\n');
         conn.release();
 
+        console.log(result)
         const orders = completeOrderMapper(result);
         return res.status(200).json(orders);
     } catch (err) {
