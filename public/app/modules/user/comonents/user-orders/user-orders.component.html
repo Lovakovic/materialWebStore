@@ -1,5 +1,9 @@
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
     <h1 class="text-2xl font-semibold text-gray-900">Your Orders</h1>
+    <div *ngIf="noOrders" class="flex flex-col items-center mt-8">
+        <mat-icon>error_outline</mat-icon>
+        <p class="mt-4 text-gray-400">No orders to display</p>
+    </div>
     <mat-accordion>
         <mat-expansion-panel *ngFor="let order of orders; index as i">
             <mat-expansion-panel-header>

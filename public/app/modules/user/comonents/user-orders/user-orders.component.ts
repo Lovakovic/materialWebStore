@@ -10,14 +10,15 @@ import {Order} from "../../../../models/order.model";
 })
 export class UserOrdersComponent implements OnInit {
 	orders: Order[] = [];
+	noOrders: boolean = true;
 
 	constructor(private orderService: OrderService) { }
 
 	ngOnInit(): void {
 		this.orderService.getOrders().subscribe({
 			next: (data) => {
-				console.log(data);
 				this.orders = data;
+				this.noOrders = this.orders.length === 0;
 			},
 			error: (error) => {
 				console.error(error);

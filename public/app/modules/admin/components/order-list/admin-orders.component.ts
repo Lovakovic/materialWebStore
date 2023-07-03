@@ -10,7 +10,7 @@ import {Order} from "../../../../models/order.model";
 })
 export class AdminOrdersComponent implements OnInit {
 	orders: Order[] = [];
-	noOrders: boolean = false; // Flag to indicate if there are no orders
+	noOrders: boolean = false;
 
 	constructor(private orderService: OrderService) { }
 
