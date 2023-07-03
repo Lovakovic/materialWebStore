@@ -1,0 +1,49 @@
+<div class="flex justify-center mt-10">
+    <div class="w-2/3" *ngIf="!isEditing && user">
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <h1 class="text-xl mb-4">User Details</h1>
+            <p><strong>ID:</strong> {{user.id}}</p>
+            <p><strong>Username:</strong> {{user.username}}</p>
+            <p><strong>Email:</strong> {{user.email}}</p>
+            <p><strong>Role:</strong> {{user.role}}</p>
+            <p><strong>Registered At:</strong> {{user.registeredAt | date:'medium'}}</p>
+            <button mat-raised-button color="primary" type="button" (click)="startEditing()">Edit</button>
+        </div>
+    </div>
+
+    <div class="w-2/3" *ngIf="isEditing && user">
+        <form [formGroup]="userForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Username</mat-label>
+                <input matInput formControlName="username">
+                <ng-container *ngIf="f.username">
+                    <mat-error *ngIf="f.username.invalid && (f.username.dirty || f.username.touched)">Username is invalid</mat-error>
+                </ng-container>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email">
+                <ng-container *ngIf="f.email">
+                    <mat-error *ngIf="f.email.invalid && (f.email.dirty || f.email.touched)">Email is invalid</mat-error>
+                </ng-container>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Role</mat-label>
+                <select matNativeControl formControlName="role">
+                    <option value="usr">User</option>
+                    <option value="adm">Admin</option>
+                </select>
+            </mat-form-field>
+
+            <div class="flex items-center justify-between mt-4">
+                <button mat-flat-button color="primary" type="button" (click)="updateUser()">Update User</button>
+                <div>
+                    <button mat-stroked-button color="warn" class="mr-3" type="button" (click)="cancelEditing()">Cancel</button>
+                    <button *ngIf="authService.isAdmin()" mat-flat-button color="warn" type="button" (click)="deleteUser()">Delete User</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

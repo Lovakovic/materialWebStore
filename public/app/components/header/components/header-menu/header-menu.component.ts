@@ -39,6 +39,6 @@ export class HeaderMenuComponent {
 	}
 
 	onUsersClicked() {
-		this.router.navigate(['admin/users']);
+		this.router.navigate(['admin/user-list']);
 	}
 }

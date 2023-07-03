@@ -14,6 +14,9 @@ import {MatIconModule} from "@angular/material/icon";
 import { ManageProductsComponent } from './components/manage-products/manage-products.component';
 import { AddNewProductComponent } from './components/manage-products/components/add-new-product/add-new-product.component';
 import {UserModule} from "../user/user.module";
+import { UsersListComponent } from './components/user-list/users-list.component';
+import {MatTableModule} from "@angular/material/table";
+import { UserDetailsComponent } from './components/user-list/components/user-details/user-details.component';
 
 
 @NgModule({
@@ -22,7 +25,9 @@ import {UserModule} from "../user/user.module";
     AdminOrdersComponent,
     OrderDetailComponent,
     ManageProductsComponent,
-    AddNewProductComponent
+    AddNewProductComponent,
+    UsersListComponent,
+    UserDetailsComponent
   ],
 	imports: [
 		CommonModule,
@@ -34,7 +39,8 @@ import {UserModule} from "../user/user.module";
 		MatSelectModule,
 		MatIconModule,
 		ReactiveFormsModule,
-		UserModule
+		UserModule,
+		MatTableModule
 	]
 })
 export class AdminModule { }

@@ -55,4 +55,7 @@ app.use('/cart', cartRouter);
 const orderRouter = require('./routes/order.routes');
 app.use('/order', orderRouter);
 
+const userRouter = require('./routes/user.routes');
+app.use('/user', userRouter);
+
 module.exports = app;

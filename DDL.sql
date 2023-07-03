@@ -40,7 +40,7 @@ CREATE TABLE user (
     password CHAR(60) NOT NULL,
     email VARCHAR(256) NOT NULL,
     primaryAddressId INT,
-    createdAt DATETIME DEFAULT NOW(),
+    registeredAt DATETIME DEFAULT NOW(),
     updatedAt DATETIME,
     role ENUM('usr', 'adm') DEFAULT 'usr'
 );
