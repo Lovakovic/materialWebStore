@@ -1,7 +1,7 @@
 <mat-card *ngIf="product" [ngClass]="{'text-center': !fullWidthMode}" >
     <div [ngClass]="{'flex': fullWidthMode}" class="p-5">
-        <img class="mb-1 mx-auto h-[200px]"
-             [ngClass]="{'h-200px': !fullWidthMode, 'h-[360px]': fullWidthMode}"
+        <img class="mb-1 mx-auto product-image"
+             [ngClass]="{'h-200px': !fullWidthMode, 'h-360px': fullWidthMode}"
              [src]="product.image"
              alt=""
         />
@@ -15,7 +15,7 @@
             </div>
             <div class="flex justify-between">
                 <span class="text-red-400">{{ product.price | currency: 'EUR'}}</span>
-                <div class="action-buttons">
+                <div class="action-buttons" [ngClass]="{'flex-justify-end': !fullWidthMode}">
                     <button *ngIf="editable" mat-button (click)="onEditProduct()">
                         <mat-icon class="text-gray-500">edit</mat-icon>
                     </button>

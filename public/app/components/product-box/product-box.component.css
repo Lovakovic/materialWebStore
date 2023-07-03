@@ -1,5 +1,28 @@
 .action-buttons {
     display: flex;
     justify-content: space-between;
-    width: 60%;
+    width: 100%;
+}
+
+.product-image {
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
+}
+
+.h-200px {
+    height: 200px;
+}
+
+.h-360px {
+    height: 360px;
+    max-width: 360px;
+}
+
+.action-buttons button:not(:last-child) {
+    margin-right: 10px;
+}
+
+.flex-justify-end {
+    justify-content: flex-end;
 }
