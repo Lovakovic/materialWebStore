@@ -200,9 +200,9 @@ Bugs to squash:
 + if address is marked as primary and then deleted the card doesn't disappear
 + if new address is added, deleting it right after (without first refreshing the page) doesn't
 	trigger component refresh
-- clear the `new-address` form's inputs upon submit
++ clear the `new-address` form's inputs upon submit
 + incrementing item quantity in `cart-items.component` doesn't work
 + hide the name of the address if it overflows the container
 - allow the user to unselect the product filter (to show all products again)
-- fix SQL injection vulnerability in products.controller.js when injecting sort parameter into query
++ fix SQL injection vulnerability in products.controller.js when injecting sort parameter into query
 + don't fetch user's cart from server if user is not logged in (produces 401 HTTP)

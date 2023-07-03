@@ -118,5 +118,6 @@ export class UserNewAddressComponent {
       }
 
       this.addAddress.emit(flatAddress);
+	  this.newAddressForm.reset();
   }
 }

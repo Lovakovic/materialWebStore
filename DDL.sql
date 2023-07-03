@@ -69,7 +69,7 @@ CREATE VIEW userAddress AS
         FROM address a JOIN user u on u.id = a.userId;
 
 ALTER TABLE user ADD CONSTRAINT fkUser_primaryAddressId
-    FOREIGN KEY (primaryAddressId) REFERENCES address(id);
+    FOREIGN KEY (primaryAddressId) REFERENCES address(id) ON DELETE SET NULL ;
 
 # Update modifiedAt fields automatically
 CREATE TRIGGER userModified BEFORE UPDATE ON user
