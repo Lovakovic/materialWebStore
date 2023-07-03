@@ -36,6 +36,8 @@ to set the project up.
 2. Edit the credentials in `backend/config.js` so you can connect to your local database 
 3. Set up your MySQL database by executing SQL scripts in project root: `DDL.sql` for DB structure and `DML.sql` for mock data
    * Mock users are: `admin@mail.com` + `adminpass` and `user@mail.com` + `userpass`
+4. Run `node server.js` in project root to start up the backend server
+5. Run `npm run start` in project root for running frontend client
 
 [^1]: I know, I know, that's pretty dumb, and that is in fact me being lazy. In my defense, there aren't many packages
 required for backend server, so it's not THAT cluttered.
