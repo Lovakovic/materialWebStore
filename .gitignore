@@ -48,5 +48,4 @@ Thumbs.db
 /public/environment/dev.environment.ts
 /public/environment/development.ts
 /public/environment/environment.ts
-/public/environment/dev.environment.ts
 /.env
