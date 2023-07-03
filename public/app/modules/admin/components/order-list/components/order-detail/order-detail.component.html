@@ -26,7 +26,7 @@
         <div>
             <p class="text-lg font-semibold">Order Status</p>
             <p *ngIf="!editMode">{{order.status}}</p>
-            <mat-form-field *ngIf="editMode">
+            <mat-form-field *ngIf="editMode" appearance="outline">
                 <mat-select [(ngModel)]="editedStatus">
                     <mat-option value="created">Created</mat-option>
                     <mat-option value="confirmed">Confirmed</mat-option>
@@ -34,7 +34,10 @@
                     <mat-option value="deleted">Deleted</mat-option>
                 </mat-select>
             </mat-form-field>
-            <button mat-button *ngIf="editMode" (click)="saveEdit()">Save</button>
+            <ng-container *ngIf="editMode" class="flex justify-between">
+                <button class="ml-3" mat-raised-button color="primary" (click)="saveEdit()">Save</button>
+                <button class="ml-3" mat-raised-button color="warn" (click)="onCancelEdit()">Cancel</button>
+            </ng-container>
         </div>
         <div>
             <p class="text-lg font-semibold">Created At</p>

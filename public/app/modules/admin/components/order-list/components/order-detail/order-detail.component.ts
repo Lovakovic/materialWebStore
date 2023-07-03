@@ -35,4 +35,9 @@ export class OrderDetailComponent {
 			this.editMode = false;
 		});
 	}
+
+	onCancelEdit() {
+		this.editedStatus = '';
+		this.editMode = false;
+	}
 }
