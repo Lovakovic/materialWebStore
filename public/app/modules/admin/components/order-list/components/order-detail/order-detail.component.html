@@ -46,19 +46,23 @@
         </div>
         <div>
             <p class="text-lg font-semibold">Total</p>
-            <p>{{order.total}}</p>
+            <p>{{order.total | currency: 'EUR' }}</p>
         </div>
         <div *ngIf="order.paypalTransactionId">
             <p class="text-lg font-semibold">PayPal Transaction ID</p>
             <p>{{order.paypalTransactionId}}</p>
+            <p class="text-lg font-semibold">PayPal Transaction Status</p>
+            <p>{{order.paypalStatus}}</p>
         </div>
     </div>
-
-    <div class="mt-4 grid grid-cols-3 gap-4">
-        <div *ngFor="let item of order.items">
-            <div>
-                <h4 class="text-md font-semibold">{{item.name}}</h4>
-                <p class="text-sm">{{item.quantity}} x {{item.price}}</p>
+    <div>
+        <p class="text-lg font-semibold">Items ordered</p>
+        <div class="mt-4 grid grid-cols-3 gap-4">
+            <div *ngFor="let item of order.items">
+                <div>
+                    <h4 class="text-md font-semibold">{{item.name}}</h4>
+                    <p class="text-sm">{{item.quantity}} x {{item.price | currency: 'EUR' }}</p>
+                </div>
             </div>
         </div>
     </div>

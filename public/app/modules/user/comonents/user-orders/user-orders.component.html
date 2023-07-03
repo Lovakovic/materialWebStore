@@ -23,7 +23,7 @@
             <div *ngIf="order.items && order.items.length > 0" class="mt-4">
                 <h2 class="text-lg font-semibold text-gray-900">Items</h2>
                 <div *ngFor="let item of order.items" class="py-2">
-                    <p>{{item.name}} x {{item.quantity}} - {{item.price}}</p>
+                    <p>{{item.name}} x {{item.quantity}} - {{item.price | currency: 'EUR' }}</p>
                 </div>
             </div>
             <div *ngIf="order.paypalTransactionId" class="mt-4">
