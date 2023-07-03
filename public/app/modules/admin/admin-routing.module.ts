@@ -5,7 +5,7 @@ import { AdminHomeComponent } from "./components/admin-home/admin-home.component
 import {AdminOrdersComponent} from "./components/order-list/admin-orders.component";
 import {ManageProductsComponent} from "./components/manage-products/manage-products.component";
 import {UsersListComponent} from "./components/user-list/users-list.component";
-import {UserDetailsComponent} from "./components/user-list/components/user-details/user-details.component";
+import {UserDetailsComponent} from "../../components/user-details/user-details.component";
 
 const routes: Routes = [
 	{

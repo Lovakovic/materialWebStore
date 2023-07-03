@@ -7,6 +7,10 @@
         Addresses
         <mat-icon>streetview</mat-icon>
     </button>
+    <button mat-menu-item class="min-width-btn" *ngIf="!authService.isAdmin()" (click)="onAccountClicked()">
+        Account
+        <mat-icon>account_circle</mat-icon>
+    </button>
     <button mat-menu-item class="min-width-btn" *ngIf="authService.isAdmin()" (click)="onProductsClicked()">
         Products
         <mat-icon>storefront</mat-icon>

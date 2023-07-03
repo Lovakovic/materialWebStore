@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {User} from "../../../../../../models/user.model";
-import {UserService} from "../../../../../../services/admin/user.service";
+import {User} from "../../models/user.model";
+import {UserService} from "../../services/admin/user.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthService} from "../../../../../../services/auth/auth.service";
+import {AuthService} from "../../services/auth/auth.service";
 
 @Component({
   selector: 'app-user-details',
@@ -39,18 +39,31 @@ export class UserDetailsComponent implements OnInit {
 	ngOnInit() {
 		// @ts-ignore
 		const id = +this.route.snapshot.paramMap.get('id');
-		this.userService.getUser(id).subscribe(user => {
-			this.user = user;
-			this.userForm.patchValue({
-				username: user.username,
-				email: user.email,
-				role: user.role
+		if (id) {
+			this.userService.getUser(id).subscribe(user => {
+				this.user = user;
+				this.populateForm();
 			});
-			if (!this.authService.isAdmin()) {
-				this.userForm.get('role')?.disable();
-			}
-		});
+		} else {
+			// If id is not provided, use the logged in user
+			this.authService.user$.subscribe(user => {
+				this.user = user;
+				this.populateForm();
+			});
+		}
 	}
+
+	populateForm() {
+		this.userForm.patchValue({
+			username: this.user!.username,
+			email: this.user!.email,
+			role: this.user!.role
+		});
+		if (!this.authService.isAdmin()) {
+			this.userForm.get('role')?.disable();
+		}
+	}
+
 
 	get f() {
 		return {
@@ -63,7 +76,8 @@ export class UserDetailsComponent implements OnInit {
 	updateUser() {
 		if (this.userForm.valid) {
 			this.userService.updateUser({...this.user, ...this.userForm.value}).subscribe(updatedUser => {
-				// Use snackbar to notify user of successful update
+				this.user = updatedUser;
+				this.populateForm();
 				this.isEditing = false;
 			});
 		}

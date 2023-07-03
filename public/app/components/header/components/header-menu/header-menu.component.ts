@@ -30,6 +30,10 @@ export class HeaderMenuComponent {
 		}
 	}
 
+	onAccountClicked() {
+		this.router.navigate(['user/account']);
+	}
+
 	onAddressesClicked() {
 		this.router.navigate(['user/addresses'])
 	}

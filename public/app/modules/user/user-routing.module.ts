@@ -6,6 +6,7 @@ import { UserCartComponent } from "./comonents/user-cart/user-cart.component";
 import { UserAddressesComponent } from "./comonents/user-addresses/user-addresses.component";
 import { UserOrdersComponent } from "./comonents/user-orders/user-orders.component";
 import { UserHomeComponent } from "./comonents/user-home/user-home.component";
+import {UserDetailsComponent} from "../../components/user-details/user-details.component";
 
 const routes: Routes = [
 	{
@@ -34,6 +35,11 @@ const routes: Routes = [
 	{
 		path: 'orders',
 		component: UserOrdersComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'account',
+		component: UserDetailsComponent,
 		canActivate: [AuthGuard]
 	}
 ];

@@ -2,7 +2,7 @@
     <div class="w-2/3" *ngIf="!isEditing && user">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <h1 class="text-xl mb-4">User Details</h1>
-            <p><strong>ID:</strong> {{user.id}}</p>
+            <p *ngIf="user.role == 'adm'"><strong>ID:</strong> {{user.id}}</p>
             <p><strong>Username:</strong> {{user.username}}</p>
             <p><strong>Email:</strong> {{user.email}}</p>
             <p><strong>Role:</strong> {{user.role}}</p>
@@ -38,7 +38,7 @@
             </mat-form-field>
 
             <div class="flex items-center justify-between mt-4">
-                <button mat-flat-button color="primary" type="button" (click)="updateUser()">Update User</button>
+                <button mat-flat-button color="primary" type="button" [disabled]="userForm.invalid" (click)="updateUser()">Update User</button>
                 <div>
                     <button mat-stroked-button color="warn" class="mr-3" type="button" (click)="cancelEditing()">Cancel</button>
                     <button *ngIf="authService.isAdmin()" mat-flat-button color="warn" type="button" (click)="deleteUser()">Delete User</button>

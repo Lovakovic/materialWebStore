@@ -46,22 +46,29 @@ const updateUser = async (req, res) => {
         const { username, email, role } = req.body;
 
         let conn = await pool.getConnection();
+
+        // Perform the update
         let result = await conn.query('UPDATE user SET username = ?, email = ?, role = ? WHERE id = ?',
             [username, email, role, id]);
 
-        conn.release();
-
         if(!result.affectedRows) {
+            conn.release();
             return res.status(404).json('No user found with the provided ID.');
         }
 
+        // Retrieve the updated user
+        let [updatedUser] = await conn.query('SELECT id, username, email, role, registeredAt FROM user WHERE id = ?', [id]);
+
+        conn.release();
+
         console.log(`Updated user (id: ${id})`);
-        return res.json({ message: 'User updated successfully.' });
+        return res.json(updatedUser);
     } catch (e) {
         console.log(e);
         return res.status(500).json('Internal server error.');
     }
 };
+
 
 const deleteUser = async (req, res) => {
     try {

@@ -16,7 +16,7 @@ import { AddNewProductComponent } from './components/manage-products/components/
 import {UserModule} from "../user/user.module";
 import { UsersListComponent } from './components/user-list/users-list.component';
 import {MatTableModule} from "@angular/material/table";
-import { UserDetailsComponent } from './components/user-list/components/user-details/user-details.component';
+import { UserDetailsComponent } from '../../components/user-details/user-details.component';
 
 
 @NgModule({
