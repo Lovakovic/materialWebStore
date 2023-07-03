@@ -59,14 +59,14 @@ const addProduct = async (req, res) => {
         let conn = await pool.getConnection();
 
         if(newCategory) {
-            let [rows] = await conn.query('INSERT INTO category(name) VALUES(?)', [newCategory]);
+            let rows = await conn.query('INSERT INTO category(name) VALUES(?)', [newCategory]);
             category = rows.insertId;
         } else {
-            let [rows] = await conn.query('SELECT id FROM category WHERE name = ?', [category]);
+            let rows = await conn.query('SELECT id FROM category WHERE name = ?', [category]);
             category = rows[0].id;
         }
 
-        let [result] = await conn.query(`INSERT INTO product(name, price, categoryId, description, image) 
+        let result = await conn.query(`INSERT INTO product(name, price, categoryId, description, image) 
                           VALUES(?, ?, ?, ?, ?)`, [name, price, category, description, image]);
 
         let [rows] = await conn.query(`SELECT * FROM completeProducts WHERE id = ?`, [result.insertId]);
@@ -80,16 +80,17 @@ const addProduct = async (req, res) => {
     }
 };
 
+
 const updateProduct = async (req, res) => {
     try {
         let { id, name, price, category, newCategory, description, image } = req.body;
         let conn = await pool.getConnection();
 
         if(newCategory) {
-            let [rows] = await conn.query('INSERT INTO category(name) VALUES(?)', [newCategory]);
+            let rows = await conn.query('INSERT INTO category(name) VALUES(?)', [newCategory]);
             category = rows.insertId;
         } else {
-            let [rows] = await conn.query('SELECT id FROM category WHERE name = ?', [category]);
+            let rows = await conn.query('SELECT id FROM category WHERE name = ?', [category]);
             category = rows[0].id;
         }
 

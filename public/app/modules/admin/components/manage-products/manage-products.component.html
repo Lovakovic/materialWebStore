@@ -1,4 +1,4 @@
-<app-add-new-product></app-add-new-product>
+<app-add-new-product (productChanged)="refreshProducts()"></app-add-new-product>
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
     <app-product-box *ngFor="let product of products"
                      [product]="product"

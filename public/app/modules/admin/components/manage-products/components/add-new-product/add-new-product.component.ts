@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from "@angular/forms";
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {AbstractControl, FormBuilder, FormControl, Validators} from "@angular/forms";
 import {ProductService} from "../../../../../../services/shared/product.service";
 import {Product} from "../../../../../../models/product.model";
 
@@ -10,6 +10,8 @@ import {Product} from "../../../../../../models/product.model";
 })
 export class AddNewProductComponent implements OnInit{
 	editMode: boolean = false;
+	@Output() productChanged = new EventEmitter();
+
 
 	productForm = this.fb.group({
 		name: ['', Validators.required],
@@ -55,7 +57,8 @@ export class AddNewProductComponent implements OnInit{
 				price: Number(this.productForm.controls.price.value!),
 				category: this.productForm.controls.category.value!,
 				description: this.productForm.controls.description.value ?? undefined,
-				image: this.productForm.controls.image.value!
+				image: this.productForm.controls.image.value!,
+				newCategory: this.productForm.controls.newCategory.value ?? undefined
 			};
 			if(this.editMode){
 				this.updateProduct(product);
@@ -67,6 +70,7 @@ export class AddNewProductComponent implements OnInit{
 
 	addProduct(product: Product): void {
 		this.productService.addProduct(product).subscribe(() => {
+			this.productChanged.emit();
 			console.log('Added product:', product);
 			this.productForm.reset();
 			this.editMode = false;
@@ -75,8 +79,15 @@ export class AddNewProductComponent implements OnInit{
 
 	updateProduct(product: Product): void {
 		this.productService.updateProduct(product).subscribe(() => {
+			this.productChanged.emit();
 			console.log('Updated product:', product);
 			this.productForm.reset();
+			Object.keys(this.productForm.controls).forEach(key => {
+				const control = (this.productForm.controls as Record<string, AbstractControl>)[key];
+				control.setErrors(null);
+				control.markAsPristine();
+				control.markAsUntouched();
+			});
 			this.editMode = false;
 		});
 	}

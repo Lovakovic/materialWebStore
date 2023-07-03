@@ -1,5 +1,16 @@
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-gap: 1em;
+.form-flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.form-section {
+    min-width: 200px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.form-buttons {
+    flex-basis: 100%;
+    margin-right: 0;
 }
