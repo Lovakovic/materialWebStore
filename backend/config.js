@@ -5,7 +5,7 @@ module.exports = {
         host: 'localhost',
         user: 'dev',
         password: 'devpass',
-        database: 'webShop',
+        database: 'webShop', // Leave this as is, since DDL creates this DB
         debug: false
     },
     secret: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',

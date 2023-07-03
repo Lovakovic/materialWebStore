@@ -25,7 +25,7 @@ reload if you change any of the source files.
 Run `node server.js` from project root dir for a backend Express server. The server will likely listen on port `8081` if available, otherwise 
 check console of the server to see which port it's running on.
 
-## Setting up the project
+## Setting up the project locally
 
 For now, the setting up the project isn't as user-friendly as I'd like it to be, and I definitely improve this in the
 future, when I create a more final database design. But before I implement the functionality this is the only way
@@ -33,11 +33,9 @@ to set the project up.
 
 1. Execute `npm install` to install packages for frontend and backend 
    * Packages for frontend and backend are both bundled in the same `package.json` file[^1]
-2. Set up your MySQL database, execute `DDL.sql` except for the last few lines 
-(the reason is explained in comments above them)
-3. Edit the `backend/config.js` to your needs or desires 
-4. Make a `media` directory inside of project root directory and add pictures of products inside of them, remember
-to update rows of products in your DB with file names for each product 
+2. Edit the credentials in `backend/config.js` so you can connect to your local database 
+3. Set up your MySQL database by executing SQL scripts in project root: `DDL.sql` for DB structure and `DML.sql` for mock data
+   * Mock users are: `admin@mail.com` + `adminpass` and `user@mail.com` + `userpass`
 
 [^1]: I know, I know, that's pretty dumb, and that is in fact me being lazy. In my defense, there aren't many packages
 required for backend server, so it's not THAT cluttered.
